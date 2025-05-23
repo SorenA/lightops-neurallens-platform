@@ -1,0 +1,24 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Observability API",
+    "description": "A Web API for observability as part of the LightOps NeuralLens Platform.",
+    "version": "v1"
+  },
+  "paths": {
+    "/traces": {
+      "get": {
+        "tags": [
+          "Trace"
+        ],
+        "operationId": "GetTraces",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": { }
+}

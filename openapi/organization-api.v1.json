@@ -1,0 +1,24 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Organization API",
+    "description": "A Web API for organizations as part of the LightOps NeuralLens Platform.",
+    "version": "v1"
+  },
+  "paths": {
+    "/orgs": {
+      "get": {
+        "tags": [
+          "Organization"
+        ],
+        "operationId": "GetOrganizations",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": { }
+}

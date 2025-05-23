@@ -1,0 +1,24 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Evaluation API",
+    "description": "A Web API for evaluation as part of the LightOps NeuralLens Platform.",
+    "version": "v1"
+  },
+  "paths": {
+    "/evaluations": {
+      "get": {
+        "tags": [
+          "Evaluation"
+        ],
+        "operationId": "GetEvaluations",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": { }
+}
