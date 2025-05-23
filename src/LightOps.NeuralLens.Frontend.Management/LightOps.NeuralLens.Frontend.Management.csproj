@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LightOps.NeuralLens.Component.EvaluationApiClient\LightOps.NeuralLens.Component.EvaluationApiClient.csproj" />
+    <ProjectReference Include="..\LightOps.NeuralLens.Component.ObservabilityApiClient\LightOps.NeuralLens.Component.ObservabilityApiClient.csproj" />
+    <ProjectReference Include="..\LightOps.NeuralLens.Component.OrganizationApiClient\LightOps.NeuralLens.Component.OrganizationApiClient.csproj" />
+    <ProjectReference Include="..\LightOps.NeuralLens.Component.ProjectApiClient\LightOps.NeuralLens.Component.ProjectApiClient.csproj" />
+    <ProjectReference Include="..\LightOps.NeuralLens.Component.ServiceDefaults\LightOps.NeuralLens.Component.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+</Project>
