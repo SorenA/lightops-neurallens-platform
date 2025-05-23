@@ -1,0 +1,126 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.36105.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.AppHost", "src\LightOps.NeuralLens.AppHost\LightOps.NeuralLens.AppHost.csproj", "{92B1362B-BDD6-44D3-A163-8E3479CFAFB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.Component.ServiceDefaults", "src\LightOps.NeuralLens.Component.ServiceDefaults\LightOps.NeuralLens.Component.ServiceDefaults.csproj", "{30CA19B3-C155-DB72-1DA4-838D8AEB0B8D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		Directory.Build.props = Directory.Build.props
+		openapi-update.bat = openapi-update.bat
+		lib\settings\Rules.ruleset = lib\settings\Rules.ruleset
+		lib\settings\stylecop.json = lib\settings\stylecop.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API Services", "API Services", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", "{AB981933-FCBD-4642-9609-4CB24683A4CA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontends", "Frontends", "{523B8D76-EBEF-490C-8CEF-519DE1A39FAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.Frontend.Management", "src\LightOps.NeuralLens.Frontend.Management\LightOps.NeuralLens.Frontend.Management.csproj", "{CD25576E-A192-4AE8-8A62-AF24C323E36E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Runtimes", "Runtimes", "{77117863-B62A-4DCC-9793-22E68E3A1BD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.ObservabilityApi", "src\LightOps.NeuralLens.ObservabilityApi\LightOps.NeuralLens.ObservabilityApi.csproj", "{F9AC15E1-7689-4CCF-A599-388E834C6EC4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.Frontend.OpenAPI", "src\LightOps.NeuralLens.Frontend.OpenAPI\LightOps.NeuralLens.Frontend.OpenAPI.csproj", "{C8BB3688-58EB-45A0-B9D0-3CE53C0D5516}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.EvaluationApi", "src\LightOps.NeuralLens.EvaluationApi\LightOps.NeuralLens.EvaluationApi.csproj", "{8602A3EA-FF25-4F11-B9E1-0E67CB347741}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{B477B74D-6D2B-42CD-8FD6-E18C948B88A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.Component.EvaluationApiClient", "src\LightOps.NeuralLens.Component.EvaluationApiClient\LightOps.NeuralLens.Component.EvaluationApiClient.csproj", "{A06415CE-7717-4CD6-A520-56B9E7D4A285}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.Component.ObservabilityApiClient", "src\LightOps.NeuralLens.Component.ObservabilityApiClient\LightOps.NeuralLens.Component.ObservabilityApiClient.csproj", "{CA059F06-41A1-48C8-90EF-D38B80DCD66D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.ProjectApi", "src\LightOps.NeuralLens.ProjectApi\LightOps.NeuralLens.ProjectApi.csproj", "{08D5B9CD-A6E1-48CE-B1DD-33B5A5B0D833}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.Component.ProjectApiClient", "src\LightOps.NeuralLens.Component.ProjectApiClient\LightOps.NeuralLens.Component.ProjectApiClient.csproj", "{B732C024-F42B-4C99-AB50-BB71C19FEA23}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.OrganizationApi", "src\LightOps.NeuralLens.OrganizationApi\LightOps.NeuralLens.OrganizationApi.csproj", "{5E379BA6-C669-4272-AA63-82412092F288}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.Component.OrganizationApiClient", "src\LightOps.NeuralLens.Component.OrganizationApiClient\LightOps.NeuralLens.Component.OrganizationApiClient.csproj", "{D7C1FB8F-DBED-4682-A4CA-83A3D7DA6F1C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{92B1362B-BDD6-44D3-A163-8E3479CFAFB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92B1362B-BDD6-44D3-A163-8E3479CFAFB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92B1362B-BDD6-44D3-A163-8E3479CFAFB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92B1362B-BDD6-44D3-A163-8E3479CFAFB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30CA19B3-C155-DB72-1DA4-838D8AEB0B8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30CA19B3-C155-DB72-1DA4-838D8AEB0B8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30CA19B3-C155-DB72-1DA4-838D8AEB0B8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30CA19B3-C155-DB72-1DA4-838D8AEB0B8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD25576E-A192-4AE8-8A62-AF24C323E36E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD25576E-A192-4AE8-8A62-AF24C323E36E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD25576E-A192-4AE8-8A62-AF24C323E36E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD25576E-A192-4AE8-8A62-AF24C323E36E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9AC15E1-7689-4CCF-A599-388E834C6EC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9AC15E1-7689-4CCF-A599-388E834C6EC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9AC15E1-7689-4CCF-A599-388E834C6EC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9AC15E1-7689-4CCF-A599-388E834C6EC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8BB3688-58EB-45A0-B9D0-3CE53C0D5516}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8BB3688-58EB-45A0-B9D0-3CE53C0D5516}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8BB3688-58EB-45A0-B9D0-3CE53C0D5516}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8BB3688-58EB-45A0-B9D0-3CE53C0D5516}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8602A3EA-FF25-4F11-B9E1-0E67CB347741}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8602A3EA-FF25-4F11-B9E1-0E67CB347741}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8602A3EA-FF25-4F11-B9E1-0E67CB347741}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8602A3EA-FF25-4F11-B9E1-0E67CB347741}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A06415CE-7717-4CD6-A520-56B9E7D4A285}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A06415CE-7717-4CD6-A520-56B9E7D4A285}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A06415CE-7717-4CD6-A520-56B9E7D4A285}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A06415CE-7717-4CD6-A520-56B9E7D4A285}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA059F06-41A1-48C8-90EF-D38B80DCD66D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA059F06-41A1-48C8-90EF-D38B80DCD66D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA059F06-41A1-48C8-90EF-D38B80DCD66D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA059F06-41A1-48C8-90EF-D38B80DCD66D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08D5B9CD-A6E1-48CE-B1DD-33B5A5B0D833}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08D5B9CD-A6E1-48CE-B1DD-33B5A5B0D833}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08D5B9CD-A6E1-48CE-B1DD-33B5A5B0D833}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08D5B9CD-A6E1-48CE-B1DD-33B5A5B0D833}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B732C024-F42B-4C99-AB50-BB71C19FEA23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B732C024-F42B-4C99-AB50-BB71C19FEA23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B732C024-F42B-4C99-AB50-BB71C19FEA23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B732C024-F42B-4C99-AB50-BB71C19FEA23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E379BA6-C669-4272-AA63-82412092F288}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E379BA6-C669-4272-AA63-82412092F288}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E379BA6-C669-4272-AA63-82412092F288}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E379BA6-C669-4272-AA63-82412092F288}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7C1FB8F-DBED-4682-A4CA-83A3D7DA6F1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7C1FB8F-DBED-4682-A4CA-83A3D7DA6F1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7C1FB8F-DBED-4682-A4CA-83A3D7DA6F1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7C1FB8F-DBED-4682-A4CA-83A3D7DA6F1C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{92B1362B-BDD6-44D3-A163-8E3479CFAFB6} = {77117863-B62A-4DCC-9793-22E68E3A1BD1}
+		{30CA19B3-C155-DB72-1DA4-838D8AEB0B8D} = {AB981933-FCBD-4642-9609-4CB24683A4CA}
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {77117863-B62A-4DCC-9793-22E68E3A1BD1}
+		{523B8D76-EBEF-490C-8CEF-519DE1A39FAF} = {77117863-B62A-4DCC-9793-22E68E3A1BD1}
+		{CD25576E-A192-4AE8-8A62-AF24C323E36E} = {523B8D76-EBEF-490C-8CEF-519DE1A39FAF}
+		{F9AC15E1-7689-4CCF-A599-388E834C6EC4} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{C8BB3688-58EB-45A0-B9D0-3CE53C0D5516} = {523B8D76-EBEF-490C-8CEF-519DE1A39FAF}
+		{8602A3EA-FF25-4F11-B9E1-0E67CB347741} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{B477B74D-6D2B-42CD-8FD6-E18C948B88A7} = {AB981933-FCBD-4642-9609-4CB24683A4CA}
+		{A06415CE-7717-4CD6-A520-56B9E7D4A285} = {B477B74D-6D2B-42CD-8FD6-E18C948B88A7}
+		{CA059F06-41A1-48C8-90EF-D38B80DCD66D} = {B477B74D-6D2B-42CD-8FD6-E18C948B88A7}
+		{08D5B9CD-A6E1-48CE-B1DD-33B5A5B0D833} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{B732C024-F42B-4C99-AB50-BB71C19FEA23} = {B477B74D-6D2B-42CD-8FD6-E18C948B88A7}
+		{5E379BA6-C669-4272-AA63-82412092F288} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{D7C1FB8F-DBED-4682-A4CA-83A3D7DA6F1C} = {B477B74D-6D2B-42CD-8FD6-E18C948B88A7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1EAE1BC1-E411-46F1-8594-B6D92E0CF8AE}
+	EndGlobalSection
+EndGlobal

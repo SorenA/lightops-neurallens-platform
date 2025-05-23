@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <Sdk Name="Aspire.AppHost.Sdk" Version="9.0.0" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <IsAspireHost>true</IsAspireHost>
+    <UserSecretsId>61ed699a-1cf4-4836-a095-57d6983f8d65</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LightOps.NeuralLens.EvaluationApi\LightOps.NeuralLens.EvaluationApi.csproj" />
+    <ProjectReference Include="..\LightOps.NeuralLens.Frontend.Management\LightOps.NeuralLens.Frontend.Management.csproj" />
+    <ProjectReference Include="..\LightOps.NeuralLens.Frontend.OpenAPI\LightOps.NeuralLens.Frontend.OpenAPI.csproj" />
+    <ProjectReference Include="..\LightOps.NeuralLens.ObservabilityApi\LightOps.NeuralLens.ObservabilityApi.csproj" />
+    <ProjectReference Include="..\LightOps.NeuralLens.OrganizationApi\LightOps.NeuralLens.OrganizationApi.csproj" />
+    <ProjectReference Include="..\LightOps.NeuralLens.ProjectApi\LightOps.NeuralLens.ProjectApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="9.3.0" />
+  </ItemGroup>
+
+</Project>
