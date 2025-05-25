@@ -1,0 +1,211 @@
+@page "/organizations"
+@using LightOps.NeuralLens.Component.OrganizationApiConnector.Codegen
+@inject IOrganizationApiClient OrganizationApiClient
+@rendermode InteractiveServer
+
+<PageTitle>Organizations</PageTitle>
+
+<h1>Organizations</h1>
+
+<div class="organizations-container">
+    <div class="organizations-header">
+        <button class="btn btn-primary me-2" @onclick="StartCreateOrganization">Create new organization</button>
+        <button class="btn btn-secondary" @onclick="LoadOrganizations">Refresh organizations</button>
+    </div>
+
+    @if (_organizationToEdit != null)
+    {
+        <div class="edit-organization-form mb-3">
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" class="form-control" @bind="_organizationToEdit.Name" />
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea class="form-control" @bind="_organizationToEdit.Description"></textarea>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-success" @onclick="SaveOrganization">Save</button>
+                <button class="btn btn-secondary" @onclick="CancelEditing">Cancel</button>
+            </div>
+        </div>
+    }
+
+    @if (_organizationToDelete != null)
+    {
+        <div class="modal" style="display:block" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm Deletion</h5>
+                        <button type="button" class="btn-close" @onclick="CancelDelete"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete the organization "@_organizationToDelete.Name"?
+                        This action cannot be undone.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="CancelDelete">Cancel</button>
+                        <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (_organizations == null)
+            {
+                <tr>
+                    <td colspan="6">Loading organizations...</td>
+                </tr>
+            }
+            else if (_organizations.Count == 0)
+            {
+                <tr>
+                    <td colspan="6">No organizations found.</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var org in _organizations)
+                {
+                    <tr>
+                        <td>@org.Id</td>
+                        <td>@org.Name</td>
+                        <td>@org.Description</td>
+                        <td>@org.CreatedAt.ToString("f")</td>
+                        <td>@org.UpdatedAt.ToString("f")</td>
+                        <td>
+                            <button class="btn btn-sm btn-info me-1" @onclick="() => StartEditOrganization(org)">Edit</button>
+                            <button class="btn btn-sm btn-danger" @onclick="() => StartDeleteOrganization(org)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    private ICollection<OrganizationViewModel>? _organizations;
+    private OrganizationViewModel? _organizationToEdit;
+    private OrganizationViewModel? _organizationToDelete;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadOrganizations();
+    }
+
+    private async Task LoadOrganizations()
+    {
+        _organizations = await OrganizationApiClient.GetOrganizationsAsync();
+        StateHasChanged();
+    }
+
+    private void StartCreateOrganization()
+    {
+        _organizationToEdit = new OrganizationViewModel();
+    }
+
+    private void StartEditOrganization(OrganizationViewModel organization)
+    {
+        _organizationToEdit = new OrganizationViewModel
+        {
+            Id = organization.Id,
+            Name = organization.Name,
+            Description = organization.Description,
+        };
+    }
+
+    private async Task SaveOrganization()
+    {
+        if (_organizationToEdit == null)
+        {
+            return;
+        }
+
+        try 
+        {
+            if (string.IsNullOrWhiteSpace(_organizationToEdit.Id))
+            {
+                // Create new organization
+                await OrganizationApiClient.CreateOrganizationAsync(new CreateOrganizationRequest 
+                { 
+                        Name = _organizationToEdit.Name,
+                        Description = _organizationToEdit.Description,
+                });
+            }
+            else
+            {
+                // Update existing organization
+                await OrganizationApiClient.UpdateOrganizationAsync(_organizationToEdit.Id, new UpdateOrganizationRequest
+                { 
+                        Name = _organizationToEdit.Name,
+                        Description = _organizationToEdit.Description,
+                });
+            }
+
+            // Refresh the list
+            await LoadOrganizations();
+
+            // Reset editing state
+            _organizationToEdit = null;
+        }
+        catch (Exception ex)
+        {
+            // TODO: Add proper error handling (e.g., show error message)
+            Console.WriteLine($"Error saving organization: {ex.Message}");
+        }
+    }
+
+    private void CancelEditing()
+    {
+        _organizationToEdit = null;
+    }
+
+    private void StartDeleteOrganization(OrganizationViewModel organization)
+    {
+        _organizationToDelete = organization;
+    }
+
+    private void CancelDelete()
+    {
+        _organizationToDelete = null;
+    }
+
+    private async Task ConfirmDelete()
+    {
+        if (_organizationToDelete == null)
+        {
+            return;
+        }
+
+        try 
+        {
+            await OrganizationApiClient.DeleteOrganizationAsync(_organizationToDelete.Id);
+            
+            // Refresh the list
+            await LoadOrganizations();
+
+            // Reset delete confirmation state
+            _organizationToDelete = null;
+        }
+        catch (Exception ex)
+        {
+            // TODO: Add proper error handling (e.g., show error message)
+            Console.WriteLine($"Error deleting organization: {ex.Message}");
+        }
+    }
+}
