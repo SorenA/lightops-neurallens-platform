@@ -7,61 +7,59 @@ namespace LightOps.NeuralLens.OrganizationApi.Domain.Repositories;
 
 public class MongoOrganizationRepository(IMongoDatabase mongoDatabase) : IOrganizationRepository
 {
+    private IMongoCollection<Organization> Collection => mongoDatabase
+        .GetCollection<Organization>(MongoConstants.OrganizationCollection);
+
     public Task<List<Organization>> GetAll()
     {
-        return mongoDatabase
-            .GetCollection<Organization>(MongoConstants.OrganizationCollection)
-            .Find(o =>
-                !o.IsDeleted)
+        return Collection
+            .Find(m =>
+                !m.IsDeleted)
             .ToListAsync();
     }
 
     public Task<Organization?> GetById(string id)
     {
-        return mongoDatabase
-            .GetCollection<Organization?>(MongoConstants.OrganizationCollection)
-            .Find(o =>
-                !o!.IsDeleted
-                && o!.Id == id)
-            .FirstOrDefaultAsync();
+        return Collection
+            .Find(m =>
+                !m.IsDeleted
+                && m.Id == id)
+            .FirstOrDefaultAsync()!;
     }
 
     public Task<bool> NameExists(string name, string? exceptId = null)
     {
-        return mongoDatabase
-            .GetCollection<Organization>(MongoConstants.OrganizationCollection)
-            .Find(o =>
-                !o.IsDeleted
-                && o.Name == name
-                && o.Id != exceptId)
+        return Collection
+            .Find(m =>
+                !m.IsDeleted
+                && m.Name == name
+                && m.Id != exceptId)
             .AnyAsync();
     }
 
     public Task<Organization> Create(Organization organization)
     {
-        return mongoDatabase
-            .GetCollection<Organization>(MongoConstants.OrganizationCollection)
+        return Collection
             .InsertOneAsync(organization)
             .ContinueWith(_ => organization);
     }
 
     public Task<Organization> Update(string id, Organization organization)
     {
-        return mongoDatabase
-            .GetCollection<Organization>(MongoConstants.OrganizationCollection)
+        return Collection
             .FindOneAndReplaceAsync(
-                o =>
-                    !o.IsDeleted
-                    && o.Id == id,
+                m =>
+                    !m.IsDeleted
+                    && m.Id == id,
                 organization)
             .ContinueWith(_ => organization);
     }
 
     public Task<Organization> Delete(string id)
     {
-        return mongoDatabase
-            .GetCollection<Organization>(MongoConstants.OrganizationCollection)
-            .FindOneAndDeleteAsync(o => o.Id == id)
+        return Collection
+            .FindOneAndDeleteAsync(m =>
+                m.Id == id)
             .ContinueWith(task => task.Result ?? throw new OrganizationNotFoundException(id));
     }
 }

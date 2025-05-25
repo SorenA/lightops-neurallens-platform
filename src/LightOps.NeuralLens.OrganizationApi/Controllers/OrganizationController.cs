@@ -1,9 +1,7 @@
-using Amazon.Runtime.Internal;
 using LightOps.Mapping.Api.Services;
 using LightOps.NeuralLens.OrganizationApi.Domain.Exceptions;
 using LightOps.NeuralLens.OrganizationApi.Domain.Models;
 using LightOps.NeuralLens.OrganizationApi.Domain.Services;
-using LightOps.NeuralLens.OrganizationApi.Extensions;
 using LightOps.NeuralLens.OrganizationApi.Models;
 using LightOps.NeuralLens.OrganizationApi.Requests;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace LightOps.NeuralLens.OrganizationApi.Controllers;
 
 [ApiController]
-[Route("orgs")]
+[Route("organizations")]
 public class OrganizationController(
     ILogger<OrganizationController> logger,
     IMappingService mappingService,
@@ -47,7 +45,7 @@ public class OrganizationController(
         }
     }
 
-    [HttpPost("{id}", Name = "UpdateOrganization")]
+    [HttpPatch("{id}", Name = "UpdateOrganization")]
     [ProducesResponseType<OrganizationViewModel>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> UpdateOrganization(string id, [FromBody] UpdateOrganizationRequest request)

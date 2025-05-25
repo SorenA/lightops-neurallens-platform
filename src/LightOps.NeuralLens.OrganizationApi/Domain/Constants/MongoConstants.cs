@@ -1,6 +1,6 @@
 ﻿namespace LightOps.NeuralLens.OrganizationApi.Domain.Constants;
 
-internal class MongoConstants
+internal static class MongoConstants
 {
-    public static string OrganizationCollection => "organizations";
+    public const string OrganizationCollection = "organizations";
 }
