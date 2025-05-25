@@ -1,11 +1,44 @@
 using System.Reflection;
+using FluentValidation;
+using LightOps.DependencyInjection.Configuration;
+using LightOps.Mapping.Api.Mappers;
+using LightOps.Mapping.Configuration;
 using LightOps.NeuralLens.Component.ServiceDefaults;
+using LightOps.NeuralLens.WorkspaceApi.Domain.Mappers;
+using LightOps.NeuralLens.WorkspaceApi.Domain.Models;
+using LightOps.NeuralLens.WorkspaceApi.Domain.Repositories;
+using LightOps.NeuralLens.WorkspaceApi.Domain.RequestValidators;
+using LightOps.NeuralLens.WorkspaceApi.Domain.Services;
+using LightOps.NeuralLens.WorkspaceApi.Models;
+using LightOps.NeuralLens.WorkspaceApi.Requests;
 using Microsoft.OpenApi.Models;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
-// Add services to the container.
+// Add databases
+builder.AddMongoDBClient(connectionName: "mongo-workspace-db");
+
+// Add repositories
+builder.Services.AddTransient<IWorkspaceRepository, MongoWorkspaceRepository>();
+
+// Add services
+builder.Services.AddTransient<WorkspaceService>();
+
+// Add mappers
+builder.Services.AddTransient<IMapper<Workspace, WorkspaceViewModel>, WorkspaceViewModelMapper>();
+
+// Add validators
+builder.Services.AddScoped<IValidator<CreateWorkspaceRequest>, CreateWorkspaceRequestValidator>();
+builder.Services.AddScoped<IValidator<UpdateWorkspaceRequest>, UpdateWorkspaceRequestValidator>();
+
+// Add other services to the container
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddLightOpsDependencyInjection(root =>
+{
+    root.AddMapping();
+});
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>

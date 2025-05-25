@@ -8,7 +8,7 @@ var mongo = builder.AddMongoDB("mongo", 27017)
     .WithDataBindMount("./../../data/mongo")
     .WithMongoExpress(expressBuilder => expressBuilder.WithHostPort(20590));
 var mongoOrganizationDb = mongo.AddDatabase("mongo-organization-db", "organization_db");
-var mongoWorkspaceDb = mongo.AddDatabase("mongo-workspace-db", "project_db");
+var mongoWorkspaceDb = mongo.AddDatabase("mongo-workspace-db", "workspace_db");
 var mongoObservabilityDb = mongo.AddDatabase("mongo-observability-db", "observability_db");
 var mongoEvaluationDb = mongo.AddDatabase("mongo-evaluation-db", "evaluation_db");
 
