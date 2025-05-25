@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace LightOps.NeuralLens.ProjectApi.Controllers;
+namespace LightOps.NeuralLens.WorkspaceApi.Controllers;
 
 [ApiController]
 [Route("projects")]

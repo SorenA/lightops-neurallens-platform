@@ -1,8 +1,8 @@
 using LightOps.NeuralLens.Component.EvaluationApiConnector;
 using LightOps.NeuralLens.Component.ObservabilityApiConnector;
 using LightOps.NeuralLens.Component.OrganizationApiConnector;
-using LightOps.NeuralLens.Component.ProjectApiConnector;
 using LightOps.NeuralLens.Component.ServiceDefaults;
+using LightOps.NeuralLens.Component.WorkspaceApiConnector;
 using LightOps.NeuralLens.Frontend.Management.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 builder.Services
     .AddOrganizationApiConnector("https+http://organization-api")
-    .AddProjectApiConnector("https+http://project-api")
+    .AddWorkspaceApiConnector("https+http://workspace-api")
     .AddObservabilityApiConnector("https+http://observability-api")
     .AddEvaluationApiConnector("https+http://evaluation-api");
 

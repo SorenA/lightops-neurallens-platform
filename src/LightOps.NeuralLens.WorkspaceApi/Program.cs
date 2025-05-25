@@ -12,8 +12,8 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "Project API",
-        Description = "A Web API for projects as part of the LightOps NeuralLens Platform.",
+        Title = "Workspace API",
+        Description = "A Web API for workspaces as part of the LightOps NeuralLens Platform.",
         Version = "v1",
     });
 

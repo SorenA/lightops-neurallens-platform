@@ -19,8 +19,8 @@ if (app.Environment.IsDevelopment())
         var organizationApiBase = Environment.GetEnvironmentVariable("services__organization-api__https__0");
         options.SwaggerEndpoint($"{organizationApiBase}/openapi/v1.json", "Organization API v1");
 
-        var projectApiBase = Environment.GetEnvironmentVariable("services__project-api__https__0");
-        options.SwaggerEndpoint($"{projectApiBase}/openapi/v1.json", "Project API v1");
+        var workspaceApiBase = Environment.GetEnvironmentVariable("services__workspace-api__https__0");
+        options.SwaggerEndpoint($"{workspaceApiBase}/openapi/v1.json", "Workspace API v1");
 
         var observabilityApiBase = Environment.GetEnvironmentVariable("services__observability-api__https__0");
         options.SwaggerEndpoint($"{observabilityApiBase}/openapi/v1.json", "Observability API v1");

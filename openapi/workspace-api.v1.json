@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Project API",
-    "description": "A Web API for projects as part of the LightOps NeuralLens Platform.",
+    "title": "Workspace API",
+    "description": "A Web API for workspaces as part of the LightOps NeuralLens Platform.",
     "version": "v1"
   },
   "paths": {
