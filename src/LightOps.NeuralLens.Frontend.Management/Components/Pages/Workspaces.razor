@@ -1,0 +1,223 @@
+@page "/organizations/{organizationId}/workspaces"
+@using LightOps.NeuralLens.Component.WorkspaceApiConnector.Codegen
+@inject IWorkspaceApiClient WorkspaceApiClient
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Organization workspaces</PageTitle>
+
+<div class="workspaces-header d-flex justify-content-between align-items-center">
+    <h1>Organization workspaces</h1>
+    <button class="btn btn-secondary" @onclick="NavigateToOrganizations">Back to organizations</button>
+</div>
+
+<div class="workspaces-container">
+    <div class="workspaces-header">
+        <button class="btn btn-primary me-2" @onclick="StartCreateWorkspace">Create new workspace</button>
+        <button class="btn btn-secondary" @onclick="LoadWorkspaces">Refresh workspaces</button>
+    </div>
+
+    @if (_workspaceToEdit != null)
+    {
+        <div class="edit-workspace-form mb-3">
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" class="form-control" @bind="_workspaceToEdit.Name" />
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea class="form-control" @bind="_workspaceToEdit.Description"></textarea>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-success" @onclick="SaveWorkspace">Save</button>
+                <button class="btn btn-secondary" @onclick="CancelEditing">Cancel</button>
+            </div>
+        </div>
+    }
+
+    @if (_workspaceToDelete != null)
+    {
+        <div class="modal" style="display:block" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm Deletion</h5>
+                        <button type="button" class="btn-close" @onclick="CancelDelete"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete the workspace "@_workspaceToDelete.Name"?
+                        This action cannot be undone.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="CancelDelete">Cancel</button>
+                        <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (_workspaces == null)
+            {
+                <tr>
+                    <td colspan="6">Loading workspaces...</td>
+                </tr>
+            }
+            else if (_workspaces.Count == 0)
+            {
+                <tr>
+                    <td colspan="6">No workspaces found.</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var org in _workspaces)
+                {
+                    <tr>
+                        <td>@org.Id</td>
+                        <td>@org.Name</td>
+                        <td>@org.Description</td>
+                        <td>@org.CreatedAt.ToString("f")</td>
+                        <td>@org.UpdatedAt.ToString("f")</td>
+                        <td>
+                            <button class="btn btn-sm btn-info me-1" @onclick="() => StartEditWorkspace(org)">Edit</button>
+                            <button class="btn btn-sm btn-danger" @onclick="() => StartDeleteWorkspace(org)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    [Parameter]
+    public string? OrganizationId { get; set; }
+
+    private ICollection<WorkspaceViewModel>? _workspaces;
+    private WorkspaceViewModel? _workspaceToEdit;
+    private WorkspaceViewModel? _workspaceToDelete;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadWorkspaces();
+    }
+
+    private async Task LoadWorkspaces()
+    {
+        _workspaces = await WorkspaceApiClient.GetWorkspacesAsync(OrganizationId);
+        StateHasChanged();
+    }
+
+    private void StartCreateWorkspace()
+    {
+        _workspaceToEdit = new WorkspaceViewModel();
+    }
+
+    private void StartEditWorkspace(WorkspaceViewModel workspace)
+    {
+        _workspaceToEdit = new WorkspaceViewModel
+            {
+                Id = workspace.Id,
+                Name = workspace.Name,
+                Description = workspace.Description,
+            };
+    }
+
+    private async Task SaveWorkspace()
+    {
+        if (_workspaceToEdit == null)
+        {
+            return;
+        }
+
+        try
+        {
+            if (string.IsNullOrWhiteSpace(_workspaceToEdit.Id))
+            {
+                // Create new workspace
+                await WorkspaceApiClient.CreateWorkspaceAsync(OrganizationId, new CreateWorkspaceRequest
+                    {
+                        Name = _workspaceToEdit.Name,
+                        Description = _workspaceToEdit.Description,
+                    });
+            }
+            else
+            {
+                // Update existing workspace
+                await WorkspaceApiClient.UpdateWorkspaceAsync(OrganizationId, _workspaceToEdit.Id, new UpdateWorkspaceRequest
+                    {
+                        Name = _workspaceToEdit.Name,
+                        Description = _workspaceToEdit.Description,
+                    });
+            }
+
+            // Refresh the list
+            await LoadWorkspaces();
+
+            // Reset editing state
+            _workspaceToEdit = null;
+        }
+        catch (Exception ex)
+        {
+            // TODO: Add proper error handling (e.g., show error message)
+            Console.WriteLine($"Error saving workspace: {ex.Message}");
+        }
+    }
+
+    private void CancelEditing()
+    {
+        _workspaceToEdit = null;
+    }
+
+    private void StartDeleteWorkspace(WorkspaceViewModel workspace)
+    {
+        _workspaceToDelete = workspace;
+    }
+
+    private void CancelDelete()
+    {
+        _workspaceToDelete = null;
+    }
+
+    private async Task ConfirmDelete()
+    {
+        if (_workspaceToDelete == null)
+        {
+            return;
+        }
+
+        try
+        {
+            await WorkspaceApiClient.DeleteWorkspaceAsync(OrganizationId, _workspaceToDelete.Id);
+
+            // Refresh the list
+            await LoadWorkspaces();
+
+            // Reset delete confirmation state
+            _workspaceToDelete = null;
+        }
+        catch (Exception ex)
+        {
+            // TODO: Add proper error handling (e.g., show error message)
+            Console.WriteLine($"Error deleting workspace: {ex.Message}");
+        }
+    }
+
+    private void NavigateToOrganizations()
+    {
+        NavigationManager.NavigateTo("/organizations");
+    }
+}

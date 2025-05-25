@@ -1,6 +1,9 @@
 @page "/organizations"
 @using LightOps.NeuralLens.Component.OrganizationApiConnector.Codegen
+@using LightOps.NeuralLens.Component.WorkspaceApiConnector.Codegen
 @inject IOrganizationApiClient OrganizationApiClient
+@inject IWorkspaceApiClient WorkspaceApiClient
+@inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 <PageTitle>Organizations</PageTitle>
@@ -61,6 +64,7 @@
                 <th>Description</th>
                 <th>Created At</th>
                 <th>Updated At</th>
+                <th>Workspaces</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -87,6 +91,9 @@
                         <td>@org.Description</td>
                         <td>@org.CreatedAt.ToString("f")</td>
                         <td>@org.UpdatedAt.ToString("f")</td>
+                        <td>
+                            <button class="btn btn-sm btn-secondary" @onclick="() => NavigateToWorkspaces(org.Id)">View Workspaces</button>
+                        </td>
                         <td>
                             <button class="btn btn-sm btn-info me-1" @onclick="() => StartEditOrganization(org)">Edit</button>
                             <button class="btn btn-sm btn-danger" @onclick="() => StartDeleteOrganization(org)">Delete</button>
@@ -168,6 +175,11 @@
             // TODO: Add proper error handling (e.g., show error message)
             Console.WriteLine($"Error saving organization: {ex.Message}");
         }
+    }
+
+    private void NavigateToWorkspaces(string organizationId)
+    {
+        NavigationManager.NavigateTo($"/organizations/{organizationId}/workspaces");
     }
 
     private void CancelEditing()
