@@ -7,5 +7,6 @@ public class Organization(string id, string name, DateTime createdAt, DateTime u
     public string Description { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = createdAt;
     public DateTime UpdatedAt { get; set; } = updatedAt;
+    public bool IsDeleted { get; set; } = false;
     public DateTime? DeletedAt { get; set; }
 }

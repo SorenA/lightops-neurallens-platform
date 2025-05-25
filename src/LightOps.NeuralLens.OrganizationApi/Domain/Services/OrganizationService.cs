@@ -54,4 +54,19 @@ public class OrganizationService(
 
         return await organizationRepository.Update(id, entity);
     }
+
+    public async Task<Organization> Delete(string id)
+    {
+        var entity = await organizationRepository.GetById(id);
+        if (entity == null)
+        {
+            throw new OrganizationNotFoundException(id);
+        }
+
+        // Soft-delete
+        entity.IsDeleted = true;
+        entity.DeletedAt = DateTime.UtcNow;
+
+        return await organizationRepository.Update(id, entity);
+    }
 }

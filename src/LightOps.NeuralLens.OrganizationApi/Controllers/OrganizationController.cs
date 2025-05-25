@@ -64,6 +64,23 @@ public class OrganizationController(
         }
     }
 
+    [HttpDelete("{id}", Name = "DeleteOrganization")]
+    [ProducesResponseType<OrganizationViewModel>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> DeleteOrganization(string id)
+    {
+        logger.LogInformation("DeleteOrganization called");
+        try
+        {
+            var entity = await organizationService.Delete(id);
+            return Ok(mappingService.Map<Organization, OrganizationViewModel>(entity));
+        }
+        catch (OrganizationNotFoundException)
+        {
+            return NotFound();
+        }
+    }
+
     [HttpPost("", Name = "CreateOrganization")]
     [ProducesResponseType<OrganizationViewModel>(StatusCodes.Status200OK)]
     public async Task<ActionResult> CreateOrganization([FromBody] CreateOrganizationRequest request)

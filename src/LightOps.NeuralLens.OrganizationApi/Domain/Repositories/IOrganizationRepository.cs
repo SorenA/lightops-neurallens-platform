@@ -9,4 +9,5 @@ public interface IOrganizationRepository
     Task<bool> NameExists(string name, string? exceptId = null);
     Task<Organization> Create(Organization organization);
     Task<Organization> Update(string id, Organization organization);
+    Task<Organization> Delete(string id);
 }
