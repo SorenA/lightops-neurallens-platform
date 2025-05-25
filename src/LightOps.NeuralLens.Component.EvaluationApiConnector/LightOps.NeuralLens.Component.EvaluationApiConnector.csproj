@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <OpenApiReference Include="../../openapi/evaluation-api.v1.json" Namespace="LightOps.NeuralLens.Component.EvaluationApiClient.Codegen">
+    <OpenApiReference Include="../../openapi/evaluation-api.v1.json" Namespace="LightOps.NeuralLens.Component.EvaluationApiConnector.Codegen">
       <ClassName>EvaluationApiClient</ClassName>
       <OutputPath>EvaluationApiClient.cs</OutputPath>
       <Options>/GenerateClientInterfaces:true /ExposeJsonSerializerSettings:true /ExcludedParameterNames:Authorization,X-Api-Key</Options>

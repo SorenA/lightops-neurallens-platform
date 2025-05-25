@@ -1,7 +1,7 @@
-using LightOps.NeuralLens.Component.EvaluationApiClient;
-using LightOps.NeuralLens.Component.ObservabilityApiClient;
-using LightOps.NeuralLens.Component.OrganizationApiClient;
-using LightOps.NeuralLens.Component.ProjectApiClient;
+using LightOps.NeuralLens.Component.EvaluationApiConnector;
+using LightOps.NeuralLens.Component.ObservabilityApiConnector;
+using LightOps.NeuralLens.Component.OrganizationApiConnector;
+using LightOps.NeuralLens.Component.ProjectApiConnector;
 using LightOps.NeuralLens.Component.ServiceDefaults;
 using LightOps.NeuralLens.Frontend.Management.Components;
 
@@ -10,10 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add service defaults & Aspire client integrations.
 builder.AddServiceDefaults();
 builder.Services
-    .AddOrganizationApiClient("https+http://organization-api")
-    .AddProjectApiClient("https+http://project-api")
-    .AddObservabilityApiClient("https+http://observability-api")
-    .AddEvaluationApiClient("https+http://evaluation-api");
+    .AddOrganizationApiConnector("https+http://organization-api")
+    .AddProjectApiConnector("https+http://project-api")
+    .AddObservabilityApiConnector("https+http://observability-api")
+    .AddEvaluationApiConnector("https+http://evaluation-api");
 
 // Add services to the container.
 builder.Services.AddRazorComponents()

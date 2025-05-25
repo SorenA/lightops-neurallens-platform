@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <OpenApiReference Include="../../openapi/organization-api.v1.json" Namespace="LightOps.NeuralLens.Component.OrganizationApiClient.Codegen">
+    <OpenApiReference Include="../../openapi/organization-api.v1.json" Namespace="LightOps.NeuralLens.Component.OrganizationApiConnector.Codegen">
       <ClassName>OrganizationApiClient</ClassName>
       <OutputPath>OrganizationApiClient.cs</OutputPath>
       <Options>/GenerateClientInterfaces:true /ExposeJsonSerializerSettings:true /ExcludedParameterNames:Authorization,X-Api-Key</Options>

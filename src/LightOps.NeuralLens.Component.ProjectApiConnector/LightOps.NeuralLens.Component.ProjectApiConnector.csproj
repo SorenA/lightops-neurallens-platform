@@ -14,9 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <OpenApiReference Include="../../openapi/observability-api.v1.json" Namespace="LightOps.NeuralLens.Component.ObservabilityApiClient.Codegen">
-      <ClassName>ObservabilityApiClient</ClassName>
-      <OutputPath>ObservabilityApiClient.cs</OutputPath>
+    <OpenApiReference Include="../../openapi/project-api.v1.json" Namespace="LightOps.NeuralLens.Component.ProjectApiConnector.Codegen">
+      <ClassName>ProjectApiClient</ClassName>
+      <OutputPath>ProjectApiClient.cs</OutputPath>
       <Options>/GenerateClientInterfaces:true /ExposeJsonSerializerSettings:true /ExcludedParameterNames:Authorization,X-Api-Key</Options>
     </OpenApiReference>
   </ItemGroup>

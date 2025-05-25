@@ -5,10 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\LightOps.NeuralLens.Component.EvaluationApiClient\LightOps.NeuralLens.Component.EvaluationApiClient.csproj" />
-    <ProjectReference Include="..\LightOps.NeuralLens.Component.ObservabilityApiClient\LightOps.NeuralLens.Component.ObservabilityApiClient.csproj" />
-    <ProjectReference Include="..\LightOps.NeuralLens.Component.OrganizationApiClient\LightOps.NeuralLens.Component.OrganizationApiClient.csproj" />
-    <ProjectReference Include="..\LightOps.NeuralLens.Component.ProjectApiClient\LightOps.NeuralLens.Component.ProjectApiClient.csproj" />
+    <ProjectReference Include="..\LightOps.NeuralLens.Component.EvaluationApiConnector\LightOps.NeuralLens.Component.EvaluationApiConnector.csproj" />
+    <ProjectReference Include="..\LightOps.NeuralLens.Component.ObservabilityApiConnector\LightOps.NeuralLens.Component.ObservabilityApiConnector.csproj" />
+    <ProjectReference Include="..\LightOps.NeuralLens.Component.OrganizationApiConnector\LightOps.NeuralLens.Component.OrganizationApiConnector.csproj" />
+    <ProjectReference Include="..\LightOps.NeuralLens.Component.ProjectApiConnector\LightOps.NeuralLens.Component.ProjectApiConnector.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.Component.ServiceDefaults\LightOps.NeuralLens.Component.ServiceDefaults.csproj" />
   </ItemGroup>
 

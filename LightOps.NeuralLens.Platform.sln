@@ -33,17 +33,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.Evaluat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{B477B74D-6D2B-42CD-8FD6-E18C948B88A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.Component.EvaluationApiClient", "src\LightOps.NeuralLens.Component.EvaluationApiClient\LightOps.NeuralLens.Component.EvaluationApiClient.csproj", "{A06415CE-7717-4CD6-A520-56B9E7D4A285}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.Component.EvaluationApiConnector", "src\LightOps.NeuralLens.Component.EvaluationApiConnector\LightOps.NeuralLens.Component.EvaluationApiConnector.csproj", "{A06415CE-7717-4CD6-A520-56B9E7D4A285}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.Component.ObservabilityApiClient", "src\LightOps.NeuralLens.Component.ObservabilityApiClient\LightOps.NeuralLens.Component.ObservabilityApiClient.csproj", "{CA059F06-41A1-48C8-90EF-D38B80DCD66D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.Component.ObservabilityApiConnector", "src\LightOps.NeuralLens.Component.ObservabilityApiConnector\LightOps.NeuralLens.Component.ObservabilityApiConnector.csproj", "{CA059F06-41A1-48C8-90EF-D38B80DCD66D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.ProjectApi", "src\LightOps.NeuralLens.ProjectApi\LightOps.NeuralLens.ProjectApi.csproj", "{08D5B9CD-A6E1-48CE-B1DD-33B5A5B0D833}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.Component.ProjectApiClient", "src\LightOps.NeuralLens.Component.ProjectApiClient\LightOps.NeuralLens.Component.ProjectApiClient.csproj", "{B732C024-F42B-4C99-AB50-BB71C19FEA23}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.Component.ProjectApiConnector", "src\LightOps.NeuralLens.Component.ProjectApiConnector\LightOps.NeuralLens.Component.ProjectApiConnector.csproj", "{B732C024-F42B-4C99-AB50-BB71C19FEA23}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.OrganizationApi", "src\LightOps.NeuralLens.OrganizationApi\LightOps.NeuralLens.OrganizationApi.csproj", "{5E379BA6-C669-4272-AA63-82412092F288}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.Component.OrganizationApiClient", "src\LightOps.NeuralLens.Component.OrganizationApiClient\LightOps.NeuralLens.Component.OrganizationApiClient.csproj", "{D7C1FB8F-DBED-4682-A4CA-83A3D7DA6F1C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.Component.OrganizationApiConnector", "src\LightOps.NeuralLens.Component.OrganizationApiConnector\LightOps.NeuralLens.Component.OrganizationApiConnector.csproj", "{D7C1FB8F-DBED-4682-A4CA-83A3D7DA6F1C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
