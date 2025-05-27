@@ -4,6 +4,7 @@ using LightOps.NeuralLens.Component.OrganizationApiConnector;
 using LightOps.NeuralLens.Component.ServiceDefaults;
 using LightOps.NeuralLens.Component.WorkspaceApiConnector;
 using LightOps.NeuralLens.Frontend.Management.Components;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,7 @@ builder.Services
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddMudServices();
 builder.Services.AddOutputCache();
 
 var app = builder.Build();

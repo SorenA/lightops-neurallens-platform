@@ -1,3 +1,4 @@
+@inherits LayoutComponentBase
 @page "/organizations/{organizationId}/workspaces"
 @using LightOps.NeuralLens.Component.WorkspaceApiConnector.Codegen
 @inject IWorkspaceApiClient WorkspaceApiClient
@@ -5,110 +6,100 @@
 @rendermode InteractiveServer
 
 <PageTitle>Organization workspaces</PageTitle>
+<MudBreadcrumbs Items="BreadcrumbItems"></MudBreadcrumbs>
 
-<div class="workspaces-header d-flex justify-content-between align-items-center">
-    <h1>Organization workspaces</h1>
-    <button class="btn btn-secondary" @onclick="NavigateToOrganizations">Back to organizations</button>
-</div>
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudText Typo="Typo.h4" GutterBottom="true">
+        Organization workspaces
+    </MudText>
 
-<div class="workspaces-container">
-    <div class="workspaces-header">
-        <button class="btn btn-primary me-2" @onclick="StartCreateWorkspace">Create new workspace</button>
-        <button class="btn btn-secondary" @onclick="LoadWorkspaces">Refresh workspaces</button>
+    <div class="d-flex mb-2">
+        <MudIconButton Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Refresh" @onclick="LoadWorkspaces" />
+        <MudSpacer />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" @onclick="StartCreateWorkspace">Create new</MudButton>
     </div>
 
-    @if (_workspaceToEdit != null)
-    {
-        <div class="edit-workspace-form mb-3">
-            <div class="form-group">
-                <label>Name</label>
-                <input type="text" class="form-control" @bind="_workspaceToEdit.Name" />
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea class="form-control" @bind="_workspaceToEdit.Description"></textarea>
-            </div>
-            <div class="form-actions">
-                <button class="btn btn-success" @onclick="SaveWorkspace">Save</button>
-                <button class="btn btn-secondary" @onclick="CancelEditing">Cancel</button>
-            </div>
-        </div>
-    }
-
-    @if (_workspaceToDelete != null)
-    {
-        <div class="modal" style="display:block" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Confirm Deletion</h5>
-                        <button type="button" class="btn-close" @onclick="CancelDelete"></button>
-                    </div>
-                    <div class="modal-body">
-                        Are you sure you want to delete the workspace "@_workspaceToDelete.Name"?
+    <MudTable Items="@_workspaces" Hover="true" Loading="@(_workspaces == null)">
+        <HeaderContent>
+            <MudTh>ID</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Description</MudTh>
+            <MudTh>Created At</MudTh>
+            <MudTh>Updated At</MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="ID">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Description">@context.Description</MudTd>
+            <MudTd DataLabel="Created At">@context.CreatedAt.ToString("f")</MudTd>
+            <MudTd DataLabel="Updated At">@context.UpdatedAt.ToString("f")</MudTd>
+            <MudTd DataLabel="Actions">
+                <MudIconButton Variant="Variant.Outlined" Color="Color.Default" Icon="@Icons.Material.Filled.Edit" @onclick="() => StartEditWorkspace(context)" />
+                <MudIconButton Variant="Variant.Outlined" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" @onclick="() => StartDeleteWorkspace(context)" />
+                <MudPopover Open="@(_workspaceToDelete == context)" Class="pa-4" Fixed="true" RelativeWidth="DropdownWidth.Adaptive" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopCenter">
+                    <MudText GutterBottom="true">
+                        Are you sure you want to delete the workspace "@context.Name"?<br />
                         This action cannot be undone.
+                    </MudText>
+                    <div class="d-flex">
+                        <MudButton Variant="Variant.Text" Color="Color.Default" OnClick="@CancelDelete">Cancel</MudButton>
+                        <MudSpacer />
+                        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@ConfirmDelete">Delete</MudButton>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" @onclick="CancelDelete">Cancel</button>
-                        <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
+                </MudPopover>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Created At</th>
-                <th>Updated At</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (_workspaces == null)
-            {
-                <tr>
-                    <td colspan="6">Loading workspaces...</td>
-                </tr>
-            }
-            else if (_workspaces.Count == 0)
-            {
-                <tr>
-                    <td colspan="6">No workspaces found.</td>
-                </tr>
-            }
-            else
-            {
-                @foreach (var org in _workspaces)
-                {
-                    <tr>
-                        <td>@org.Id</td>
-                        <td>@org.Name</td>
-                        <td>@org.Description</td>
-                        <td>@org.CreatedAt.ToString("f")</td>
-                        <td>@org.UpdatedAt.ToString("f")</td>
-                        <td>
-                            <button class="btn btn-sm btn-info me-1" @onclick="() => StartEditWorkspace(org)">Edit</button>
-                            <button class="btn btn-sm btn-danger" @onclick="() => StartDeleteWorkspace(org)">Delete</button>
-                        </td>
-                    </tr>
-                }
-            }
-        </tbody>
-    </table>
-</div>
+</MudContainer>
+
+@if (_workspaceToEdit != null)
+{
+    <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-4">
+        <MudText Typo="Typo.h5" GutterBottom="true">
+            @(_workspaceToEdit.Id == null ? "Create new workspace" : "Edit workspace")
+        </MudText>
+        <MudCard>
+            <MudForm Model="@_workspaceToEdit" @ref="@_form">
+                <MudCardContent>
+                    <MudTextField @bind-Value="_workspaceToEdit.Name"
+                    For="@(() => _workspaceToEdit.Name)"
+                    Immediate="true"
+                    Label="Name" />
+
+                    <MudTextField @bind-Value="_workspaceToEdit.Description"
+                    For="@(() => _workspaceToEdit.Description)"
+                    Immediate="true"
+                    Label="Description" />
+                </MudCardContent>
+            </MudForm>
+            <MudCardActions>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@SaveWorkspace">Save</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Default" Class="ml-2" OnClick="@CancelEditing">Cancel</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudContainer>
+}
 
 @code {
+    private MudForm _form = new();
+
     [Parameter]
     public string? OrganizationId { get; set; }
 
     private ICollection<WorkspaceViewModel>? _workspaces;
     private WorkspaceViewModel? _workspaceToEdit;
     private WorkspaceViewModel? _workspaceToDelete;
+
+    private List<BreadcrumbItem> BreadcrumbItems =>
+    [
+        new("Dashboard", href: "/"),
+        new("Organizations", href: "/organizations"),
+        new(OrganizationId!, href: null, disabled: true),
+        new("Workspaces", href: null, disabled: true),
+    ];
+
 
     protected override async Task OnInitializedAsync()
     {

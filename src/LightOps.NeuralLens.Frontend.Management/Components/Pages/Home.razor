@@ -1,9 +1,28 @@
-﻿@page "/"
+﻿@inherits LayoutComponentBase
+@page "/"
 
 <PageTitle>LightOps NeuralLens</PageTitle>
+<MudBreadcrumbs Items="_breadcrumbItems"></MudBreadcrumbs>
 
-<h1>LightOps NeuralLens</h1>
+<MudContainer>
+    <MudText Typo="Typo.h4" GutterBottom="true">
+        See Beyond the Prompt - Clarity in Artificial Intelligence
+    </MudText>
 
-<blockquote>See Beyond the Prompt - Clarity in Artificial Intelligence</blockquote>
+    <MudText GutterBottom="true" Class="mb-4">
+        Welcome to the management interface of this LightOps NeuralLens instance.
+    </MudText>
 
-<p>Welcome to the management interface of this LightOps NeuralLens instance.</p>
+    <MudAlert Severity="Severity.Warning" ContentAlignment="HorizontalAlignment.Start">
+        The platform is currently under heavy development and is a work in progress.
+    </MudAlert>
+</MudContainer>
+
+@code {
+
+    private readonly List<BreadcrumbItem> _breadcrumbItems =
+    [
+        new("Dashboard", href: null, disabled: true),
+    ];
+
+}

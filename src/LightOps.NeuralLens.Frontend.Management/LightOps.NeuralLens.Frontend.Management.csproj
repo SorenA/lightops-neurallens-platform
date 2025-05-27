@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MudBlazor" Version="8.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\LightOps.NeuralLens.Component.EvaluationApiConnector\LightOps.NeuralLens.Component.EvaluationApiConnector.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.Component.ObservabilityApiConnector\LightOps.NeuralLens.Component.ObservabilityApiConnector.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.Component.OrganizationApiConnector\LightOps.NeuralLens.Component.OrganizationApiConnector.csproj" />

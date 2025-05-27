@@ -1,114 +1,99 @@
+@inherits LayoutComponentBase
 @page "/organizations"
 @using LightOps.NeuralLens.Component.OrganizationApiConnector.Codegen
-@using LightOps.NeuralLens.Component.WorkspaceApiConnector.Codegen
 @inject IOrganizationApiClient OrganizationApiClient
-@inject IWorkspaceApiClient WorkspaceApiClient
 @inject NavigationManager NavigationManager
-@rendermode InteractiveServer
 
 <PageTitle>Organizations</PageTitle>
+<MudBreadcrumbs Items="_breadcrumbItems"></MudBreadcrumbs>
 
-<h1>Organizations</h1>
-
-<div class="organizations-container">
-    <div class="organizations-header">
-        <button class="btn btn-primary me-2" @onclick="StartCreateOrganization">Create new organization</button>
-        <button class="btn btn-secondary" @onclick="LoadOrganizations">Refresh organizations</button>
+<MudContainer MaxWidth="MaxWidth.ExtraLarge">
+    <MudText Typo="Typo.h4" GutterBottom="true">
+        Organizations
+    </MudText>
+    
+    <div class="d-flex mb-2">
+        <MudIconButton Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Refresh" @onclick="LoadOrganizations" />
+        <MudSpacer />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" @onclick="StartCreateOrganization">Create new</MudButton>
     </div>
 
-    @if (_organizationToEdit != null)
-    {
-        <div class="edit-organization-form mb-3">
-            <div class="form-group">
-                <label>Name</label>
-                <input type="text" class="form-control" @bind="_organizationToEdit.Name" />
-            </div>
-            <div class="form-group">
-                <label>Description</label>
-                <textarea class="form-control" @bind="_organizationToEdit.Description"></textarea>
-            </div>
-            <div class="form-actions">
-                <button class="btn btn-success" @onclick="SaveOrganization">Save</button>
-                <button class="btn btn-secondary" @onclick="CancelEditing">Cancel</button>
-            </div>
-        </div>
-    }
-
-    @if (_organizationToDelete != null)
-    {
-        <div class="modal" style="display:block" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Confirm Deletion</h5>
-                        <button type="button" class="btn-close" @onclick="CancelDelete"></button>
-                    </div>
-                    <div class="modal-body">
-                        Are you sure you want to delete the organization "@_organizationToDelete.Name"?
+    <MudTable Items="@_organizations" Hover="true" Loading="@(_organizations == null)">
+        <HeaderContent>
+            <MudTh>ID</MudTh>
+            <MudTh>Name</MudTh>
+            <MudTh>Description</MudTh>
+            <MudTh>Created At</MudTh>
+            <MudTh>Updated At</MudTh>
+            <MudTh>Actions</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="ID">@context.Id</MudTd>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Description">@context.Description</MudTd>
+            <MudTd DataLabel="Created At">@context.CreatedAt.ToString("f")</MudTd>
+            <MudTd DataLabel="Updated At">@context.UpdatedAt.ToString("f")</MudTd>
+            <MudTd DataLabel="Actions">
+                <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.Workspaces" @onclick="() => NavigateToWorkspaces(context.Id)">Workspaces</MudButton>
+                <MudIconButton Variant="Variant.Outlined" Color="Color.Default" Icon="@Icons.Material.Filled.Edit" @onclick="() => StartEditOrganization(context)" />
+                <MudIconButton Variant="Variant.Outlined" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" @onclick="() => StartDeleteOrganization(context)" />
+                <MudPopover Open="@(_organizationToDelete == context)" Class="pa-4" Fixed="true" RelativeWidth="DropdownWidth.Adaptive" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopCenter">
+                    <MudText GutterBottom="true">
+                        Are you sure you want to delete the organization "@context.Name"?<br />
                         This action cannot be undone.
+                    </MudText>
+                    <div class="d-flex">
+                        <MudButton Variant="Variant.Text" Color="Color.Default" OnClick="@CancelDelete">Cancel</MudButton>
+                        <MudSpacer />
+                        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@ConfirmDelete">Delete</MudButton>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" @onclick="CancelDelete">Cancel</button>
-                        <button type="button" class="btn btn-danger" @onclick="ConfirmDelete">Delete</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    }
+                </MudPopover>
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
 
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Created At</th>
-                <th>Updated At</th>
-                <th>Workspaces</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (_organizations == null)
-            {
-                <tr>
-                    <td colspan="6">Loading organizations...</td>
-                </tr>
-            }
-            else if (_organizations.Count == 0)
-            {
-                <tr>
-                    <td colspan="6">No organizations found.</td>
-                </tr>
-            }
-            else
-            {
-                @foreach (var org in _organizations)
-                {
-                    <tr>
-                        <td>@org.Id</td>
-                        <td>@org.Name</td>
-                        <td>@org.Description</td>
-                        <td>@org.CreatedAt.ToString("f")</td>
-                        <td>@org.UpdatedAt.ToString("f")</td>
-                        <td>
-                            <button class="btn btn-sm btn-secondary" @onclick="() => NavigateToWorkspaces(org.Id)">View Workspaces</button>
-                        </td>
-                        <td>
-                            <button class="btn btn-sm btn-info me-1" @onclick="() => StartEditOrganization(org)">Edit</button>
-                            <button class="btn btn-sm btn-danger" @onclick="() => StartDeleteOrganization(org)">Delete</button>
-                        </td>
-                    </tr>
-                }
-            }
-        </tbody>
-    </table>
-</div>
+</MudContainer>
+
+@if (_organizationToEdit != null)
+{
+    <MudContainer MaxWidth="MaxWidth.Medium" Class="mt-4">
+        <MudText Typo="Typo.h5" GutterBottom="true">
+            @(_organizationToEdit.Id == null ? "Create new organization" : "Edit organization")
+        </MudText>
+        <MudCard>
+            <MudForm Model="@_organizationToEdit" @ref="@_form">
+                <MudCardContent>
+                    <MudTextField @bind-Value="_organizationToEdit.Name"
+                                  For="@(() => _organizationToEdit.Name)"
+                                  Immediate="true"
+                                  Label="Name"/>
+
+                    <MudTextField @bind-Value="_organizationToEdit.Description"
+                                  For="@(() => _organizationToEdit.Description)"
+                                  Immediate="true"
+                                  Label="Description"/>
+                </MudCardContent>
+            </MudForm>
+            <MudCardActions>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@SaveOrganization">Save</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Default" Class="ml-2" OnClick="@CancelEditing">Cancel</MudButton>
+            </MudCardActions>
+        </MudCard>
+    </MudContainer>
+}
 
 @code {
+    private MudForm _form = new();
+
     private ICollection<OrganizationViewModel>? _organizations;
     private OrganizationViewModel? _organizationToEdit;
     private OrganizationViewModel? _organizationToDelete;
+
+    private readonly List<BreadcrumbItem> _breadcrumbItems =
+    [
+        new("Dashboard", href: "/"),
+        new("Organizations", href: null, disabled: true),
+    ];
 
     protected override async Task OnInitializedAsync()
     {
