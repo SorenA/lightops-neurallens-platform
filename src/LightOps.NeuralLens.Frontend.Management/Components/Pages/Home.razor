@@ -2,7 +2,7 @@
 @page "/"
 
 <PageTitle>LightOps NeuralLens</PageTitle>
-<MudBreadcrumbs Items="_breadcrumbItems"></MudBreadcrumbs>
+<MudBreadcrumbs Items="BreadcrumbItems"></MudBreadcrumbs>
 
 <MudContainer>
     <MudText Typo="Typo.h4" GutterBottom="true">
@@ -20,9 +20,9 @@
 
 @code {
 
-    private readonly List<BreadcrumbItem> _breadcrumbItems =
+    private List<BreadcrumbItem> BreadcrumbItems =>
     [
-        new("Dashboard", href: null, disabled: true),
+        new("Home", href: "/", disabled: true),
     ];
 
 }

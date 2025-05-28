@@ -1,17 +1,17 @@
 @inherits LayoutComponentBase
-@page "/organizations"
+@page "/org"
 @using LightOps.NeuralLens.Component.OrganizationApiConnector.Codegen
 @inject IOrganizationApiClient OrganizationApiClient
 @inject NavigationManager NavigationManager
 
 <PageTitle>Organizations</PageTitle>
-<MudBreadcrumbs Items="_breadcrumbItems"></MudBreadcrumbs>
+<MudBreadcrumbs Items="BreadcrumbItems"></MudBreadcrumbs>
 
 <MudContainer MaxWidth="MaxWidth.ExtraLarge">
     <MudText Typo="Typo.h4" GutterBottom="true">
         Organizations
     </MudText>
-    
+
     <div class="d-flex mb-2">
         <MudIconButton Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Refresh" @onclick="LoadOrganizations" />
         <MudSpacer />
@@ -34,7 +34,7 @@
             <MudTd DataLabel="Created At">@context.CreatedAt.ToString("f")</MudTd>
             <MudTd DataLabel="Updated At">@context.UpdatedAt.ToString("f")</MudTd>
             <MudTd DataLabel="Actions">
-                <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.Workspaces" @onclick="() => NavigateToWorkspaces(context.Id)">Workspaces</MudButton>
+                <MudIconButton Variant="Variant.Outlined" Color="Color.Default" Icon="@Icons.Material.Filled.RemoveRedEye" Href="@($"/org/{context.Id}")" />
                 <MudIconButton Variant="Variant.Outlined" Color="Color.Default" Icon="@Icons.Material.Filled.Edit" @onclick="() => StartEditOrganization(context)" />
                 <MudIconButton Variant="Variant.Outlined" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" @onclick="() => StartDeleteOrganization(context)" />
                 <MudPopover Open="@(_organizationToDelete == context)" Class="pa-4" Fixed="true" RelativeWidth="DropdownWidth.Adaptive" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopCenter">
@@ -64,14 +64,14 @@
             <MudForm Model="@_organizationToEdit" @ref="@_form">
                 <MudCardContent>
                     <MudTextField @bind-Value="_organizationToEdit.Name"
-                                  For="@(() => _organizationToEdit.Name)"
-                                  Immediate="true"
-                                  Label="Name"/>
+                    For="@(() => _organizationToEdit.Name)"
+                    Immediate="true"
+                    Label="Name"/>
 
                     <MudTextField @bind-Value="_organizationToEdit.Description"
-                                  For="@(() => _organizationToEdit.Description)"
-                                  Immediate="true"
-                                  Label="Description"/>
+                    For="@(() => _organizationToEdit.Description)"
+                    Immediate="true"
+                    Label="Description"/>
                 </MudCardContent>
             </MudForm>
             <MudCardActions>
@@ -89,10 +89,10 @@
     private OrganizationViewModel? _organizationToEdit;
     private OrganizationViewModel? _organizationToDelete;
 
-    private readonly List<BreadcrumbItem> _breadcrumbItems =
+    private List<BreadcrumbItem> BreadcrumbItems =>
     [
-        new("Dashboard", href: "/"),
-        new("Organizations", href: null, disabled: true),
+        new("Home", href: "/"),
+        new("Organizations", href: "/org", disabled: true),
     ];
 
     protected override async Task OnInitializedAsync()
@@ -160,11 +160,6 @@
             // TODO: Add proper error handling (e.g., show error message)
             Console.WriteLine($"Error saving organization: {ex.Message}");
         }
-    }
-
-    private void NavigateToWorkspaces(string organizationId)
-    {
-        NavigationManager.NavigateTo($"/organizations/{organizationId}/workspaces");
     }
 
     private void CancelEditing()

@@ -4,6 +4,7 @@ using LightOps.NeuralLens.Component.OrganizationApiConnector;
 using LightOps.NeuralLens.Component.ServiceDefaults;
 using LightOps.NeuralLens.Component.WorkspaceApiConnector;
 using LightOps.NeuralLens.Frontend.Management.Components;
+using LightOps.NeuralLens.Frontend.Management.Domain.Services;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,10 @@ builder.Services
     .AddWorkspaceApiConnector("https+http://workspace-api")
     .AddObservabilityApiConnector("https+http://observability-api")
     .AddEvaluationApiConnector("https+http://evaluation-api");
+
+// Add states
+builder.Services.AddTransient<OrganizationService>();
+builder.Services.AddTransient<WorkspaceService>();
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -38,7 +43,6 @@ app.UseOutputCache();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
-
 app.MapDefaultEndpoints();
 
 app.Run();

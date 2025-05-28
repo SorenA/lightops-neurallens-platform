@@ -1,5 +1,6 @@
 @inherits LayoutComponentBase
-@page "/organizations/{organizationId}/workspaces"
+@page "/org/{organizationId}/space"
+@using LightOps.NeuralLens.Component.OrganizationApiConnector.Codegen
 @using LightOps.NeuralLens.Component.WorkspaceApiConnector.Codegen
 @inject IWorkspaceApiClient WorkspaceApiClient
 @inject NavigationManager NavigationManager
@@ -35,16 +36,17 @@
             <MudTd DataLabel="Created At">@context.CreatedAt.ToString("f")</MudTd>
             <MudTd DataLabel="Updated At">@context.UpdatedAt.ToString("f")</MudTd>
             <MudTd DataLabel="Actions">
-                <MudIconButton Variant="Variant.Outlined" Color="Color.Default" Icon="@Icons.Material.Filled.Edit" @onclick="() => StartEditWorkspace(context)" />
-                <MudIconButton Variant="Variant.Outlined" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" @onclick="() => StartDeleteWorkspace(context)" />
+                <MudIconButton Variant="Variant.Outlined" Color="Color.Default" Icon="@Icons.Material.Filled.RemoveRedEye" Href="@($"/org/{OrganizationId}/space/{context.Id}")" />
+                <MudIconButton Variant="Variant.Outlined" Color="Color.Default" Icon="@Icons.Material.Filled.Edit" @onclick="() => StartEditWorkspace(context)"/>
+                <MudIconButton Variant="Variant.Outlined" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" @onclick="() => StartDeleteWorkspace(context)"/>
                 <MudPopover Open="@(_workspaceToDelete == context)" Class="pa-4" Fixed="true" RelativeWidth="DropdownWidth.Adaptive" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopCenter">
                     <MudText GutterBottom="true">
-                        Are you sure you want to delete the workspace "@context.Name"?<br />
+                        Are you sure you want to delete the workspace "@context.Name"?<br/>
                         This action cannot be undone.
                     </MudText>
                     <div class="d-flex">
                         <MudButton Variant="Variant.Text" Color="Color.Default" OnClick="@CancelDelete">Cancel</MudButton>
-                        <MudSpacer />
+                        <MudSpacer/>
                         <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@ConfirmDelete">Delete</MudButton>
                     </div>
                 </MudPopover>
@@ -83,23 +85,24 @@
 }
 
 @code {
-    private MudForm _form = new();
+    [CascadingParameter(Name = "Organization")]
+    public OrganizationViewModel? Organization { get; set; }
 
     [Parameter]
     public string? OrganizationId { get; set; }
 
+    private MudForm _form = new();
     private ICollection<WorkspaceViewModel>? _workspaces;
     private WorkspaceViewModel? _workspaceToEdit;
     private WorkspaceViewModel? _workspaceToDelete;
 
     private List<BreadcrumbItem> BreadcrumbItems =>
     [
-        new("Dashboard", href: "/"),
-        new("Organizations", href: "/organizations"),
-        new(OrganizationId!, href: null, disabled: true),
-        new("Workspaces", href: null, disabled: true),
+        new("Home", href: "/"),
+        new("Organizations", href: "/org"),
+        new(Organization?.Name ?? string.Empty, href: $"/org/{OrganizationId}"),
+        new("Workspaces", href: $"/org/{OrganizationId}/space", disabled: true),
     ];
-
 
     protected override async Task OnInitializedAsync()
     {
@@ -209,6 +212,6 @@
 
     private void NavigateToOrganizations()
     {
-        NavigationManager.NavigateTo("/organizations");
+        NavigationManager.NavigateTo("/org");
     }
 }

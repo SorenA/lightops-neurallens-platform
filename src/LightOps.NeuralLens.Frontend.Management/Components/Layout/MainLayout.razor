@@ -1,4 +1,9 @@
-﻿@inherits LayoutComponentBase
+﻿@using LightOps.NeuralLens.Component.OrganizationApiConnector.Codegen
+@using LightOps.NeuralLens.Component.WorkspaceApiConnector.Codegen
+@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
+@inject OrganizationService OrganizationService
+@inject WorkspaceService WorkspaceService
 
 @* Mud providers *@
 <MudThemeProvider @bind-IsDarkMode="@_isDarkMode" Theme="_theme" />
@@ -6,34 +11,78 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<MudLayout>
-    <MudAppBar Elevation="1">
-        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => ToggleDrawer())" />
-        <MudText Typo="Typo.h5" Class="ml-3">LightOps NeuralLens</MudText>
-        <MudSpacer />
-        <MudToggleIconButton
-            @bind-Toggled="_isDarkMode"
-            Icon="@Icons.Material.Filled.LightMode"
-            ToggledIcon="@Icons.Material.Filled.DarkMode"
-            Color="Color.Inherit"/>
-        <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Color="Color.Inherit" Edge="Edge.End" />
-    </MudAppBar>
-    <MudDrawer @bind-Open="_isDrawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-        <NavMenu />
-    </MudDrawer>
-    <MudMainContent>
-        @Body
-    </MudMainContent>
-</MudLayout>
+<CascadingValue Name="Organization" Value="_organization">
+    <CascadingValue Name="Workspace" Value="_workspace">
+        <MudLayout>
+            <MudAppBar Elevation="1">
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => ToggleDrawer())" />
+                <MudText Typo="Typo.h5" Class="ml-3">LightOps NeuralLens</MudText>
+                <MudSpacer />
+                <MudToggleIconButton
+                @bind-Toggled="_isDarkMode"
+                Icon="@Icons.Material.Filled.LightMode"
+                ToggledIcon="@Icons.Material.Filled.DarkMode"
+                Color="Color.Inherit"/>
+                <MudIconButton Icon="@Icons.Material.Filled.Person" Color="Color.Inherit" Edge="Edge.End" />
+            </MudAppBar>
+            <MudDrawer @bind-Open="_isDrawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+                <NavMenu />
+            </MudDrawer>
+            <MudMainContent>
+                @Body
+            </MudMainContent>
+        </MudLayout>
+    </CascadingValue>
+</CascadingValue>
 
 @code {
+    [CascadingParameter(Name = "RouteData")]
+    public RouteData? RouteData { get; set; }
+
+    private OrganizationViewModel? _organization;
+    private WorkspaceViewModel? _workspace;
+
     private bool _isDrawerOpen = true;
     private bool _isDarkMode = true;
     private readonly MudTheme _theme = new();
 
-    
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshCurrentSettings();
 
-    void ToggleDrawer()
+        NavigationManager.LocationChanged += async (_, _) => await RefreshCurrentSettings();
+    }
+
+    private async Task RefreshCurrentSettings()
+    {
+        if (RouteData != null)
+        {
+            var stateHasChanged = false;
+
+            RouteData.RouteValues.TryGetValue("organizationId", out var organizationIdValue);
+            var organizationId = organizationIdValue as string;
+            if (_organization?.Id != organizationId || organizationId == null)
+            {
+                _organization = await OrganizationService.GetCurrent(organizationId);
+                stateHasChanged = true;
+            }
+
+            RouteData.RouteValues.TryGetValue("workspaceId", out var workspaceIdValue);
+            var workspaceId = workspaceIdValue as string;
+            if (_workspace?.Id != workspaceId || workspaceId == null)
+            {
+                _workspace = await WorkspaceService.GetCurrent(_organization?.Id, workspaceId);
+                stateHasChanged = true;
+            }
+
+            if (stateHasChanged)
+            {
+                StateHasChanged();
+            }
+        }
+    }
+
+    private void ToggleDrawer()
     {
         _isDrawerOpen = !_isDrawerOpen;
     }

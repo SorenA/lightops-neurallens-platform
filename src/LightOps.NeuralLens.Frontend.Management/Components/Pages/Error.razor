@@ -3,7 +3,7 @@
 @using System.Diagnostics
 
 <PageTitle>Error</PageTitle>
-<MudBreadcrumbs Items="_breadcrumbItems"></MudBreadcrumbs>
+<MudBreadcrumbs Items="BreadcrumbItems"></MudBreadcrumbs>
 
 <MudContainer>
     <MudText Typo="Typo.h4" GutterBottom="true">
@@ -40,10 +40,10 @@
     private string? _requestId;
     private bool ShowRequestId => !string.IsNullOrEmpty(_requestId);
 
-    private readonly List<BreadcrumbItem> _breadcrumbItems =
+    private List<BreadcrumbItem> BreadcrumbItems =>
     [
         new("Dashboard", href: "/"),
-        new("Error", href: null, disabled: true),
+        new("Error", href: "/error", disabled: true),
     ];
 
     protected override void OnInitialized()

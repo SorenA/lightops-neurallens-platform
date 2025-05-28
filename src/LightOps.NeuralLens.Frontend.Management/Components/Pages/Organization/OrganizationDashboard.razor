@@ -1,0 +1,27 @@
+﻿@using LightOps.NeuralLens.Component.OrganizationApiConnector.Codegen
+@inherits LayoutComponentBase
+@page "/org/{organizationId}"
+
+<PageTitle>Organization dashboard</PageTitle>
+<MudBreadcrumbs Items="BreadcrumbItems"></MudBreadcrumbs>
+
+<MudContainer>
+    <MudText Typo="Typo.h4" GutterBottom="true">
+        Organization dashboard
+    </MudText>
+</MudContainer>
+
+@code {
+    [CascadingParameter(Name = "Organization")]
+    public OrganizationViewModel? Organization { get; set; }
+
+    [Parameter]
+    public string? OrganizationId { get; set; }
+
+    private List<BreadcrumbItem> BreadcrumbItems =>
+    [
+        new("Home", href: "/"),
+        new("Organizations", href: "/org"),
+        new(Organization?.Name ?? string.Empty, href: $"/org/{OrganizationId}", disabled: true),
+    ];
+}
