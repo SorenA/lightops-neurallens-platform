@@ -1,0 +1,65 @@
+﻿@using LightOps.NeuralLens.Component.OrganizationApiConnector.Codegen
+
+@inject IOrganizationApiClient OrganizationApiClient
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.subtitle1">@(Organization.Id == null ? "Create new organization" : "Edit organization")</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm Model="@Organization" @ref="@_form">
+            <MudTextField @bind-Value="Organization.Name"
+            For="@(() => Organization.Name)"
+            Immediate="true"
+            Label="Name"/>
+
+            <MudTextField @bind-Value="Organization.Description"
+            For="@(() => Organization.Description)"
+            Immediate="true"
+            Label="Description"/>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit" Disabled="@(string.IsNullOrWhiteSpace(Organization.Name))">
+            @(Organization.Id == null ? "Create" : "Update")
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance? MudDialog { get; set; }
+
+    [Parameter]
+    public OrganizationViewModel Organization { get; set; } = new();
+
+    private MudForm _form = new();
+    
+    private async Task Submit()
+    {
+        if (Organization.Id == null)
+        {
+            // Create new
+            var newOrganization = await OrganizationApiClient.CreateOrganizationAsync(new CreateOrganizationRequest
+                {
+                    Name = Organization.Name,
+                    Description = Organization.Description,
+                });
+            Snackbar.Add("Organization created", Severity.Success);
+            MudDialog?.Close(DialogResult.Ok(newOrganization));
+        }
+        
+        // Update existing
+        var updatedOrganization = await OrganizationApiClient.UpdateOrganizationAsync(Organization.Id, new UpdateOrganizationRequest
+        {
+            Name = Organization.Name,
+            Description = Organization.Description,
+        });
+        Snackbar.Add("Organization updated", Severity.Success);
+        MudDialog?.Close(DialogResult.Ok(updatedOrganization));
+    }
+
+    private void Cancel() => MudDialog?.Cancel();
+}

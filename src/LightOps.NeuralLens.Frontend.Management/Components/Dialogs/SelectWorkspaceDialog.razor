@@ -1,0 +1,186 @@
+﻿@using LightOps.NeuralLens.Component.OrganizationApiConnector.Codegen
+@using LightOps.NeuralLens.Component.WorkspaceApiConnector.Codegen
+
+@inject IOrganizationApiClient OrganizationApiClient
+@inject IWorkspaceApiClient WorkspaceApiClient
+@inject IDialogService DialogService
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.subtitle1">Select organization and workspace</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="6">
+                <MudStack Row="true" Class="px-4 pb-4" StretchItems="StretchItems.Middle">
+                    <MudStack Justify="Justify.Center" Spacing="0">
+                        <MudIcon Size="Size.Small" Icon="@Icons.Material.TwoTone.Business" />
+                    </MudStack>
+                    <MudStack Justify="Justify.Center" Spacing="0">
+                        <MudText Typo="Typo.body2" Style="font-weight: bold;">Organizations</MudText>
+                    </MudStack>
+                    <MudStack Justify="Justify.Center" Spacing="0">
+                        <MudIconButton
+                            Size="Size.Small"
+                            Icon="@Icons.Material.TwoTone.Add"
+                            OnClick="@((_) => OpenEditOrganizationDialog())" />
+                    </MudStack>
+                </MudStack>
+                <MudDivider />
+                <MudList
+                T="OrganizationViewModel"
+                SelectedValue="@_selectedOrganization"
+                SelectedValueChanged="(o) => SelectOrganization(o)">
+                    @if (_organizations != null)
+                    {
+                        @foreach (var item in _organizations)
+                        {
+                            <MudListItem Value="@item" Text="@item.Name"/>
+                        }
+                    }
+                    else
+                    {
+                        <MudListItem Text="Fetching organizations..." Disabled="true" />
+                    }
+                </MudList>
+            </MudItem>
+            <MudItem xs="6">
+                <MudStack Row="true" Class="px-4 pb-4" StretchItems="StretchItems.Middle">
+                    <MudStack Justify="Justify.Center" Spacing="0">
+                        <MudIcon Size="Size.Small" Icon="@Icons.Material.TwoTone.Workspaces" />
+                    </MudStack>
+                    <MudStack Justify="Justify.Center" Spacing="0">
+                        <MudText Typo="Typo.body2" Style="font-weight: bold;">Workspaces</MudText>
+                    </MudStack>
+                    <MudStack Justify="Justify.Center" Spacing="0">
+                        <MudIconButton
+                            Size="Size.Small"
+                            Icon="@Icons.Material.TwoTone.Add"
+                            OnClick="@((_) => OpenEditWorkspaceDialog(_selectedOrganization!))"
+                            Disabled="_selectedOrganization == null" />
+                    </MudStack>
+                </MudStack>
+                <MudDivider />
+                <MudList
+                T="WorkspaceViewModel"
+                SelectedValue="@_selectedWorkspace"
+                SelectedValueChanged="(w) => SelectWorkspace(w)">
+                    @if (_organizationWorkspaces != null)
+                    {
+                        @if (_organizationWorkspaces.Count == 0)
+                        {
+                            <MudListItem Text="No available workspaces" Disabled="true" />
+                        }
+
+                        @foreach (var item in _organizationWorkspaces)
+                        {
+                            <MudListItem Value="@item" Text="@item.Name" />
+                        }
+                    }
+                    else
+                    {
+                        <MudListItem Text="Please select an organization" Disabled="true" />
+                    }
+                </MudList>
+            </MudItem>
+        </MudGrid>
+
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit" Disabled="@(_selectedWorkspace == null)">Select</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance? MudDialog { get; set; }
+
+    private ICollection<OrganizationViewModel>? _organizations;
+    private ICollection<WorkspaceViewModel>? _organizationWorkspaces;
+
+    private OrganizationViewModel? _selectedOrganization;
+    private WorkspaceViewModel? _selectedWorkspace;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadOrganizations();
+    }
+
+    private void Submit() => MudDialog?.Close(DialogResult.Ok(_selectedWorkspace));
+
+    private void Cancel() => MudDialog?.Cancel();
+
+    private async Task LoadOrganizations()
+    {
+        _organizationWorkspaces = null;
+        _organizations = await OrganizationApiClient.GetOrganizationsAsync();
+        StateHasChanged();
+    }
+    private async Task LoadOrganizationWorkspaces()
+    {
+        _organizationWorkspaces = null;
+        _organizationWorkspaces = await WorkspaceApiClient.GetWorkspacesAsync(_selectedOrganization?.Id);
+        StateHasChanged();
+    }
+
+    private async Task SelectOrganization(OrganizationViewModel? organization)
+    {
+        _selectedOrganization = organization;
+
+        // Load workspaces for selected organization
+        await LoadOrganizationWorkspaces();
+    }
+
+    private void SelectWorkspace(WorkspaceViewModel? workspace)
+    {
+        _selectedWorkspace = workspace;
+    }
+
+    private async Task OpenEditOrganizationDialog(OrganizationViewModel? organization = null)
+    {
+        var parameters = new DialogParameters<EditOrganizationDialog>
+        {
+            { x => x.Organization, organization ?? new() },
+        };
+
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            FullWidth = true,
+        };
+
+        var dialogRef = await DialogService.ShowAsync<EditOrganizationDialog>("Edit organization", parameters, options);
+        var dialogResult = await dialogRef.Result;
+        if (!(dialogResult?.Canceled ?? true))
+        {
+            // Reload organizations
+            await LoadOrganizations();
+        }
+    }
+
+    private async Task OpenEditWorkspaceDialog(OrganizationViewModel organization, WorkspaceViewModel? workspace = null)
+    {
+        var parameters = new DialogParameters<EditWorkspaceDialog>
+        {
+            { x => x.Workspace, workspace ?? new()
+            {
+                OrganizationId = organization.Id,
+            } },
+        };
+
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            FullWidth = true,
+        };
+
+        var dialogRef = await DialogService.ShowAsync<EditWorkspaceDialog>("Edit workspace", parameters, options);
+        var dialogResult = await dialogRef.Result;
+        if (!(dialogResult?.Canceled ?? true))
+        {
+            // Reload workspaces
+            await LoadOrganizationWorkspaces();
+        }
+    }
+}

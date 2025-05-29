@@ -3,8 +3,6 @@
 namespace LightOps.NeuralLens.Frontend.Management.Domain.Services;
 public class WorkspaceService(IWorkspaceApiClient workspaceApiClient)
 {
-    private readonly Dictionary<string, Dictionary<string, WorkspaceViewModel?>> _workspacesByOrganizationIds = new();
-
     public async Task<WorkspaceViewModel?> GetCurrent(string? organizationId, string? workspaceId)
     {
         if (organizationId == null || workspaceId == null)
@@ -13,26 +11,15 @@ public class WorkspaceService(IWorkspaceApiClient workspaceApiClient)
         }
 
         return await workspaceApiClient.GetWorkspaceByIdAsync(organizationId, workspaceId);
+    }
 
-        /*
-        if (!_workspacesByOrganizationIds.ContainsKey(organizationId))
+    public async Task<WorkspaceViewModel> GetCurrentOrDefault(string? organizationId, string? workspaceId)
+    {
+        // Try getting selected workspace
+        var selectedWorkspace = await GetCurrent(organizationId, workspaceId);
+        if (selectedWorkspace != null)
         {
-            _workspacesByOrganizationIds.Add(organizationId, new Dictionary<string, WorkspaceViewModel?>());
-        }
-
-        var workspaces = _workspacesByOrganizationIds[organizationId];
-
-        // Check if workspace is already loaded
-        if (workspaces.TryGetValue(workspaceId, out var cachedWorkspace))
-        {
-            return cachedWorkspace!;
-        }
-
-        // Try loading selected workspace
-        workspaces[organizationId] = await workspaceApiClient.GetWorkspaceByIdAsync(organizationId, workspaceId);
-        if (workspaces.TryGetValue(workspaceId, out var fetchedWorkspace))
-        {
-            return fetchedWorkspace!;
+            return selectedWorkspace;
         }
 
         // No valid workspace selected, select first available
@@ -40,7 +27,6 @@ public class WorkspaceService(IWorkspaceApiClient workspaceApiClient)
         var firstWorkspace = availableWorkspaces.FirstOrDefault();
         if (firstWorkspace != null)
         {
-            workspaces[firstWorkspace.Id] = firstWorkspace;
             return firstWorkspace;
         }
 
@@ -51,8 +37,6 @@ public class WorkspaceService(IWorkspaceApiClient workspaceApiClient)
             Description = "Default workspace created automatically.",
         });
 
-        workspaces[defaultWorkspace.Id] = defaultWorkspace;
         return defaultWorkspace;
-        */
     }
 }

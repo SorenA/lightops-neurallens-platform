@@ -16,4 +16,8 @@
     <ProjectReference Include="..\LightOps.NeuralLens.Component.ServiceDefaults\LightOps.NeuralLens.Component.ServiceDefaults.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Domain\Constants\" />
+  </ItemGroup>
+
 </Project>

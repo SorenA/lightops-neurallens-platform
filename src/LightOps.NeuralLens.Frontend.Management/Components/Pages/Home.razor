@@ -1,28 +1,15 @@
 ﻿@inherits LayoutComponentBase
 @page "/"
-
-<PageTitle>LightOps NeuralLens</PageTitle>
-<MudBreadcrumbs Items="BreadcrumbItems"></MudBreadcrumbs>
-
-<MudContainer>
-    <MudText Typo="Typo.h4" GutterBottom="true">
-        See Beyond the Prompt - Clarity in Artificial Intelligence
-    </MudText>
-
-    <MudText GutterBottom="true" Class="mb-4">
-        Welcome to the management interface of this LightOps NeuralLens instance.
-    </MudText>
-
-    <MudAlert Severity="Severity.Warning" ContentAlignment="HorizontalAlignment.Start">
-        The platform is currently under heavy development and is a work in progress.
-    </MudAlert>
-</MudContainer>
+@inject OrganizationService OrganizationService
+@inject NavigationManager NavigationManager
 
 @code {
 
-    private List<BreadcrumbItem> BreadcrumbItems =>
-    [
-        new("Home", href: "/", disabled: true),
-    ];
+    protected override async Task OnInitializedAsync()
+    {
+        // Send user to default organization
+        var organization = await OrganizationService.GetCurrentOrDefault(null);
+        NavigationManager.NavigateTo(RouteUris.Organization(organization.Id));
+    }
 
 }

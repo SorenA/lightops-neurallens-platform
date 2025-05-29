@@ -1,5 +1,6 @@
 ﻿@using LightOps.NeuralLens.Component.OrganizationApiConnector.Codegen
 @using LightOps.NeuralLens.Component.WorkspaceApiConnector.Codegen
+
 @inherits LayoutComponentBase
 @inject NavigationManager NavigationManager
 @inject OrganizationService OrganizationService
@@ -15,15 +16,13 @@
     <CascadingValue Name="Workspace" Value="_workspace">
         <MudLayout>
             <MudAppBar Elevation="1">
-                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => ToggleDrawer())" />
+                <MudIconButton Icon="@Icons.Material.TwoTone.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((_) => ToggleDrawer())" />
                 <MudText Typo="Typo.h5" Class="ml-3">LightOps NeuralLens</MudText>
                 <MudSpacer />
-                <MudToggleIconButton
-                @bind-Toggled="_isDarkMode"
-                Icon="@Icons.Material.Filled.LightMode"
-                ToggledIcon="@Icons.Material.Filled.DarkMode"
-                Color="Color.Inherit"/>
-                <MudIconButton Icon="@Icons.Material.Filled.Person" Color="Color.Inherit" Edge="Edge.End" />
+                <MudToggleIconButton @bind-Toggled="_isDarkMode"
+                                     Icon="@Icons.Material.TwoTone.LightMode"
+                                     ToggledIcon="@Icons.Material.TwoTone.DarkMode"
+                                     Color="Color.Inherit" />
             </MudAppBar>
             <MudDrawer @bind-Open="_isDrawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
                 <NavMenu />

@@ -1,0 +1,16 @@
+﻿@inherits LayoutComponentBase
+@page "/org/{organizationId}"
+@inject WorkspaceService WorkspaceService
+@inject NavigationManager NavigationManager
+
+@code {
+    [Parameter]
+    public string? OrganizationId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Send user to default workspace
+        var workspace = await WorkspaceService.GetCurrentOrDefault(OrganizationId, null);
+        NavigationManager.NavigateTo(RouteUris.Workspace(workspace.OrganizationId, workspace.Id));
+    }
+}

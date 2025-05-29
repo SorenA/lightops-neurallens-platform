@@ -4,8 +4,6 @@ namespace LightOps.NeuralLens.Frontend.Management.Domain.Services;
 
 public class OrganizationService(IOrganizationApiClient organizationApiClient)
 {
-    private readonly Dictionary<string, OrganizationViewModel?> _organizations = new();
-
     public async Task<OrganizationViewModel?> GetCurrent(string? organizationId)
     {
         if (organizationId == null)
@@ -14,19 +12,15 @@ public class OrganizationService(IOrganizationApiClient organizationApiClient)
         }
 
         return await organizationApiClient.GetOrganizationByIdAsync(organizationId);
+    }
 
-        /*
-        // Check if organization is already loaded
-        if (_organizations.TryGetValue(organizationId, out var cachedOrganization))
+    public async Task<OrganizationViewModel> GetCurrentOrDefault(string? organizationId)
+    {
+        // Try getting selected organization
+        var selectedOrganization = await GetCurrent(organizationId);
+        if (selectedOrganization != null)
         {
-            return cachedOrganization!;
-        }
-
-        // Try loading selected organization
-        _organizations[organizationId] = await organizationApiClient.GetOrganizationByIdAsync(organizationId);
-        if (_organizations.TryGetValue(organizationId, out var fetchedOrganization))
-        {
-            return fetchedOrganization!;
+            return selectedOrganization;
         }
 
         // No valid organization selected, select first available
@@ -34,7 +28,6 @@ public class OrganizationService(IOrganizationApiClient organizationApiClient)
         var firstOrganization = availableOrganizations.FirstOrDefault();
         if (firstOrganization != null)
         {
-            _organizations[firstOrganization.Id] = firstOrganization;
             return firstOrganization;
         }
 
@@ -45,8 +38,6 @@ public class OrganizationService(IOrganizationApiClient organizationApiClient)
             Description = "Default organization created automatically.",
         });
 
-        _organizations[defaultOrganization.Id] = defaultOrganization;
         return defaultOrganization;
-        */
     }
 }

@@ -1,84 +1,83 @@
 ﻿@using LightOps.NeuralLens.Component.OrganizationApiConnector.Codegen
 @using LightOps.NeuralLens.Component.WorkspaceApiConnector.Codegen
+
 @inject NavigationManager NavigationManager
+@inject IDialogService DialogService
 
-<MudStack StretchItems="StretchItems.Middle">
-    <!-- Site navigation -->
+<!-- Organization and Workspace selector -->
+<MudContainer Gutters="false">
+    <MudStack Row="true" StretchItems="StretchItems.Middle" Class="pa-4">
+        <MudStack Justify="Justify.Center" Spacing="0">
+            <MudIcon Size="Size.Small" Icon="@Icons.Material.TwoTone.Business" />
+        </MudStack>
+        <MudStack Justify="Justify.Center" Spacing="0">
+            <MudText Typo="Typo.caption">Workspace</MudText>
+            <MudText Typo="Typo.body2">@(Workspace?.Name ?? "-")</MudText>
+            <MudText Typo="Typo.caption">@(Organization?.Name ?? "-")</MudText>
+        </MudStack>
+        <MudStack Justify="Justify.Center" Spacing="0">
+            <MudIconButton Size="Size.Small" Icon="@Icons.Material.TwoTone.SwapVert" OnClick="@((_) => OpenSelectWorkspaceDialog())" />
+        </MudStack>
+    </MudStack>
+    <MudDivider/>
+</MudContainer>
+
+<!-- Site navigation -->
+<MudContainer Gutters="false">
+    <MudNavMenu>
+        <MudNavLink Href="@(Organization != null
+                      ? Workspace != null
+                          ? RouteUris.Workspace(Organization.Id, Workspace.Id)
+                          : RouteUris.Organization(Organization.Id)
+                      : RouteUris.Home)"
+            Icon="@Icons.Material.TwoTone.Home"
+            Match="NavLinkMatch.All">
+            Home
+        </MudNavLink>
+    </MudNavMenu>
+    <MudDivider />
+</MudContainer>
+
+<MudSpacer />
+
+@if (Organization != null)
+{
+    <!-- Organization settings navigation -->
     <MudContainer Gutters="false">
+        <MudText Typo="Typo.overline" Class="px-4">Organization settings</MudText>
         <MudNavMenu>
-            <MudNavLink Href="/" Match="NavLinkMatch.All">Home</MudNavLink>
-            <MudNavGroup Title="Settings" Expanded="true">
-                <MudNavLink Href="/org" Match="NavLinkMatch.All">Organizations</MudNavLink>
-            </MudNavGroup>
+            <MudNavLink Href="@($"/org/{Organization.Id}/space")" Icon="@Icons.Material.TwoTone.Workspaces" Match="NavLinkMatch.All">Workspaces</MudNavLink>
         </MudNavMenu>
-        <MudDivider />
     </MudContainer>
+}
 
-    @if (Organization != null)
-    {
-        <!-- Organization header -->
-        <MudContainer Gutters="false">
-            <MudContainer Class="pa-4">
-                <MudStack Row="true" StretchItems="StretchItems.Middle">
-                    <MudStack Justify="Justify.Center" Spacing="0">
-                        <MudAvatar Size="Size.Small">
-                            <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Business"/>
-                        </MudAvatar>
-                    </MudStack>
-                    <MudStack Justify="Justify.Center" Spacing="0">
-                        <MudText Typo="Typo.body2">@(Organization.Name)</MudText>
-                    </MudStack>
-                    <MudStack Justify="Justify.Center" Spacing="0">
-                        <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.SwapHoriz" Href="/org"/>
-                    </MudStack>
-                </MudStack>
-            </MudContainer>
-            <MudDivider/>
-        </MudContainer>
+<!-- Global settings navigation -->
+<MudContainer Gutters="false">
+    <MudText Typo="Typo.overline" Class="px-4">Settings</MudText>
+    <MudNavMenu>
+        <MudNavLink Href="/org" Icon="@Icons.Material.TwoTone.Business" Match="NavLinkMatch.All">Organizations</MudNavLink>
+    </MudNavMenu>
+</MudContainer>
 
-        <!-- Organization navigation -->
-        <MudContainer Gutters="false" Class="object-bottom">
-            <MudNavMenu>
-                <MudNavLink Href="@($"/org/{Organization.Id}")" Match="NavLinkMatch.All">Dashboard</MudNavLink>
-                <MudNavGroup Title="Settings" Expanded="true">
-                    <MudNavLink Href="@($"/org/{Organization.Id}/space")" Match="NavLinkMatch.All">Workspaces</MudNavLink>
-                </MudNavGroup>
-            </MudNavMenu>
-            <MudDivider/>
-        </MudContainer>
-
-        @if (Workspace != null)
-        {
-            <!-- Workspace header -->
-            <MudContainer Gutters="false">
-                <MudContainer Class="pa-4">
-                    <MudStack Row="true" StretchItems="StretchItems.Middle">
-                        <MudStack Justify="Justify.Center" Spacing="0">
-                            <MudAvatar Size="Size.Small">
-                                <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Workspaces"/>
-                            </MudAvatar>
-                        </MudStack>
-                        <MudStack Justify="Justify.Center" Spacing="0">
-                            <MudText Typo="Typo.body2">@(Workspace.Name)</MudText>
-                        </MudStack>
-                        <MudStack Justify="Justify.Center" Spacing="0">
-                            <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.SwapHoriz" Href="@($"/org/{Organization?.Id}/space")"/>
-                        </MudStack>
-                    </MudStack>
-                </MudContainer>
-                <MudDivider/>
-            </MudContainer>
-
-            <!-- Workspace navigation -->
-            <MudContainer Gutters="false" Class="object-bottom">
-                <MudNavMenu>
-                    <MudNavLink Href="@($"/org/{Organization.Id}/space/{Workspace.Id}")" Match="NavLinkMatch.All">Dashboard</MudNavLink>
-                </MudNavMenu>
-                <MudDivider/>
-            </MudContainer>
-        }
-    }
-</MudStack>
+<!-- User navigation -->
+<MudPaper Square="true" Elevation="0" Class="mt-4">
+    <MudContainer Gutters="false">
+        <MudStack Row="true" StretchItems="StretchItems.Middle" Class="pa-4">
+            <MudStack Justify="Justify.Center" Spacing="0">
+                <MudAvatar Size="Size.Small">
+                    <MudIcon Size="Size.Small" Icon="@Icons.Material.TwoTone.Person" />
+                </MudAvatar>
+            </MudStack>
+            <MudStack Justify="Justify.Center" Spacing="0">
+                <MudText Typo="Typo.body2" Style="word-break: break-word; font-weight: bold;">Unauthenticated</MudText>
+                <MudText Typo="Typo.caption">Guest</MudText>
+            </MudStack>
+            <MudStack Justify="Justify.Center" Spacing="0">
+                <MudIconButton Size="Size.Small" Icon="@Icons.Material.TwoTone.MoreVert" Href="#" Disabled="true" />
+            </MudStack>
+        </MudStack>
+    </MudContainer>
+</MudPaper>
 
 @code {
     [CascadingParameter(Name = "Organization")]
@@ -86,4 +85,22 @@
 
     [CascadingParameter(Name = "Workspace")]
     public WorkspaceViewModel? Workspace { get; set; }
+
+    private async Task OpenSelectWorkspaceDialog()
+    {
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            FullWidth = true,
+        };
+
+        var dialogRef = await DialogService.ShowAsync<SelectWorkspaceDialog>("Select workspace", options);
+        var selectedWorkspace = await dialogRef.GetReturnValueAsync<WorkspaceViewModel>();
+        if (selectedWorkspace != null)
+        {
+            // Send user to selected workspace
+            NavigationManager.NavigateTo(RouteUris.Workspace(selectedWorkspace.OrganizationId, selectedWorkspace.Id));
+        }
+    }
+
 }

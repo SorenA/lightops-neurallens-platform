@@ -1,6 +1,7 @@
+@using LightOps.NeuralLens.Component.OrganizationApiConnector.Codegen
+
 @inherits LayoutComponentBase
 @page "/org"
-@using LightOps.NeuralLens.Component.OrganizationApiConnector.Codegen
 @inject IOrganizationApiClient OrganizationApiClient
 @inject NavigationManager NavigationManager
 
@@ -13,30 +14,31 @@
     </MudText>
 
     <div class="d-flex mb-2">
-        <MudIconButton Variant="Variant.Outlined" Icon="@Icons.Material.Filled.Refresh" @onclick="LoadOrganizations" />
+        <MudIconButton Variant="Variant.Outlined" Icon="@Icons.Material.TwoTone.Refresh" @onclick="LoadOrganizations" />
         <MudSpacer />
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" @onclick="StartCreateOrganization">Create new</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.TwoTone.Add" @onclick="StartCreateOrganization">Create new</MudButton>
     </div>
 
     <MudTable Items="@_organizations" Hover="true" Loading="@(_organizations == null)">
         <HeaderContent>
-            <MudTh>ID</MudTh>
             <MudTh>Name</MudTh>
-            <MudTh>Description</MudTh>
             <MudTh>Created At</MudTh>
             <MudTh>Updated At</MudTh>
             <MudTh>Actions</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="ID">@context.Id</MudTd>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Description">@context.Description</MudTd>
+            <MudTd DataLabel="Name" UserAttributes="@(new Dictionary<string, object?> { ["title"] = context.Description})">
+                <MudLink Href="@($"/org/{context.Id}")">
+                    <MudText Typo="Typo.subtitle1" Style="font-weight: bold;">@context.Name</MudText>
+                </MudLink>
+                <MudText Typo="Typo.caption">@context.Id</MudText>
+            </MudTd>
             <MudTd DataLabel="Created At">@context.CreatedAt.ToString("f")</MudTd>
             <MudTd DataLabel="Updated At">@context.UpdatedAt.ToString("f")</MudTd>
             <MudTd DataLabel="Actions">
-                <MudIconButton Variant="Variant.Outlined" Color="Color.Default" Icon="@Icons.Material.Filled.RemoveRedEye" Href="@($"/org/{context.Id}")" />
-                <MudIconButton Variant="Variant.Outlined" Color="Color.Default" Icon="@Icons.Material.Filled.Edit" @onclick="() => StartEditOrganization(context)" />
-                <MudIconButton Variant="Variant.Outlined" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" @onclick="() => StartDeleteOrganization(context)" />
+                <MudIconButton Variant="Variant.Text" Color="Color.Default" Icon="@Icons.Material.TwoTone.RemoveRedEye" Href="@($"/org/{context.Id}")" />
+                <MudIconButton Variant="Variant.Text" Color="Color.Default" Icon="@Icons.Material.TwoTone.Edit" @onclick="() => StartEditOrganization(context)" />
+                <MudIconButton Variant="Variant.Text" Color="Color.Error" Icon="@Icons.Material.TwoTone.Delete" @onclick="() => StartDeleteOrganization(context)" />
                 <MudPopover Open="@(_organizationToDelete == context)" Class="pa-4" Fixed="true" RelativeWidth="DropdownWidth.Adaptive" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopCenter">
                     <MudText GutterBottom="true">
                         Are you sure you want to delete the organization "@context.Name"?<br />
