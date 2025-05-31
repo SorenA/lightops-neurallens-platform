@@ -68,4 +68,10 @@ builder
     .WithReference(ingestApi)
     .WaitFor(ingestApi);
 
+// Add sample runtimes
+builder
+    .AddProject<Projects.Sample_SemanticKernel_WebApi>("sample-semantickernel-api")
+    .WithReference(ingestApi)
+    .WaitFor(ingestApi);
+
 builder.Build().Run();
