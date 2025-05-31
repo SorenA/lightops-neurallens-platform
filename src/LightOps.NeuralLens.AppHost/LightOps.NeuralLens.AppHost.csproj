@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\samples\Sample.SemanticKernel.WebApi\Sample.SemanticKernel.WebApi.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.EvaluationApi\LightOps.NeuralLens.EvaluationApi.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.Frontend.Management\LightOps.NeuralLens.Frontend.Management.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.Frontend.OpenAPI\LightOps.NeuralLens.Frontend.OpenAPI.csproj" />
@@ -22,6 +23,7 @@
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" Version="9.3.0" />
     <PackageReference Include="Aspire.Hosting.MongoDB" Version="9.3.0" />
+    <PackageReference Include="Aspire.Hosting.Redis" Version="9.3.0" />
   </ItemGroup>
 
 </Project>

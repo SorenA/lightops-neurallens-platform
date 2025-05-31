@@ -1,3 +1,4 @@
+using Aspire.Hosting;
 using Google.Protobuf.WellKnownTypes;
 
 var builder = DistributedApplication.CreateBuilder(args);
@@ -5,12 +6,18 @@ var builder = DistributedApplication.CreateBuilder(args);
 // Add databases
 var mongo = builder.AddMongoDB("mongo", 27017)
     .WithLifetime(ContainerLifetime.Persistent)
-    .WithDataBindMount("./../../data/mongo")
-    .WithMongoExpress(expressBuilder => expressBuilder.WithHostPort(20590));
+    .WithDataBindMount("./../../data/mongo");
 var mongoOrganizationDb = mongo.AddDatabase("mongo-organization-db", "organization_db");
 var mongoWorkspaceDb = mongo.AddDatabase("mongo-workspace-db", "workspace_db");
 var mongoObservabilityDb = mongo.AddDatabase("mongo-observability-db", "observability_db");
 var mongoEvaluationDb = mongo.AddDatabase("mongo-evaluation-db", "evaluation_db");
+
+var redis = builder.AddRedis("redis", 6379)
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithDataBindMount("./../../data/redis")
+    .WithPersistence(
+        interval: TimeSpan.FromSeconds(30),
+        keysChangedThreshold: 10);
 
 // Add API services
 var ingestApi = builder
