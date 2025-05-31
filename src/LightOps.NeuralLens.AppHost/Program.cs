@@ -13,6 +13,10 @@ var mongoObservabilityDb = mongo.AddDatabase("mongo-observability-db", "observab
 var mongoEvaluationDb = mongo.AddDatabase("mongo-evaluation-db", "evaluation_db");
 
 // Add API services
+var ingestApi = builder
+    .AddProject<Projects.LightOps_NeuralLens_IngestApi>("ingest-api")
+    .WithReference(redis)
+    .WaitFor(redis);
 var organizationApi = builder
     .AddProject<Projects.LightOps_NeuralLens_OrganizationApi>("organization-api")
     .WithReference(mongoOrganizationDb)
@@ -35,24 +39,26 @@ builder
     .AddProject<Projects.LightOps_NeuralLens_Frontend_Management>("frontend-management")
     .WithExternalHttpEndpoints()
     .WithReference(organizationApi)
-    .WithReference(workspaceApi)
-    .WithReference(observabilityApi)
-    .WithReference(evaluationApi)
     .WaitFor(organizationApi)
+    .WithReference(workspaceApi)
     .WaitFor(workspaceApi)
+    .WithReference(observabilityApi)
     .WaitFor(observabilityApi)
+    .WithReference(evaluationApi)
     .WaitFor(evaluationApi);
 
 builder
     .AddProject<Projects.LightOps_NeuralLens_Frontend_OpenAPI>("frontend-openapi")
     .WithExternalHttpEndpoints()
     .WithReference(organizationApi)
-    .WithReference(workspaceApi)
-    .WithReference(observabilityApi)
-    .WithReference(evaluationApi)
     .WaitFor(organizationApi)
+    .WithReference(workspaceApi)
     .WaitFor(workspaceApi)
+    .WithReference(observabilityApi)
     .WaitFor(observabilityApi)
-    .WaitFor(evaluationApi);
+    .WithReference(evaluationApi)
+    .WaitFor(evaluationApi)
+    .WithReference(ingestApi)
+    .WaitFor(ingestApi);
 
 builder.Build().Run();

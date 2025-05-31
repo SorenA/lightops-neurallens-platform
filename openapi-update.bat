@@ -20,5 +20,9 @@ rem Evaluation API
 echo Downloading Evaluation OpenAPI specifications...
 curl --output openapi/evaluation-api.v1.json --url https://localhost:20613/openapi/v1.json
 
+rem Ingest API
+echo Downloading Ingest OpenAPI specifications...
+curl --output openapi/ingest-api.v1.json --url https://localhost:20614/openapi/v1.json
+
 echo OpenAPI specifications updated.
 echo ---

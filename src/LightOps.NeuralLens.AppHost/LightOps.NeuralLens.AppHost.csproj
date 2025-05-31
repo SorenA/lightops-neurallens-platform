@@ -13,6 +13,7 @@
     <ProjectReference Include="..\LightOps.NeuralLens.EvaluationApi\LightOps.NeuralLens.EvaluationApi.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.Frontend.Management\LightOps.NeuralLens.Frontend.Management.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.Frontend.OpenAPI\LightOps.NeuralLens.Frontend.OpenAPI.csproj" />
+    <ProjectReference Include="..\LightOps.NeuralLens.IngestApi\LightOps.NeuralLens.IngestApi.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.ObservabilityApi\LightOps.NeuralLens.ObservabilityApi.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.OrganizationApi\LightOps.NeuralLens.OrganizationApi.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.WorkspaceApi\LightOps.NeuralLens.WorkspaceApi.csproj" />

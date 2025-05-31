@@ -27,6 +27,9 @@ if (app.Environment.IsDevelopment())
 
         var evaluationApiBase = Environment.GetEnvironmentVariable("services__evaluation-api__https__0");
         options.SwaggerEndpoint($"{evaluationApiBase}/openapi/v1.json", "Evaluation API v1");
+
+        var ingestApiBase = Environment.GetEnvironmentVariable("services__ingest-api__https__0");
+        options.SwaggerEndpoint($"{ingestApiBase}/openapi/v1.json", "Ingest API v1");
     });
 }
 
