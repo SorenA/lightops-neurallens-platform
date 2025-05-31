@@ -14,9 +14,15 @@ namespace LightOps.NeuralLens.WorkspaceApi.Controllers;
 public class WorkspaceController(
     ILogger<WorkspaceController> logger,
     IMappingService mappingService,
-    WorkspaceService workspaceService)
+    WorkspaceService workspaceService,
+    IngestKeyService ingestKeyService)
     : ControllerBase
 {
+    /// <summary>
+    /// Get all workspaces for the organization.
+    /// </summary>
+    /// <param name="organizationId">The ID of the organization.</param>
+    /// <returns>A list of workspaces in the organization.</returns>
     [HttpGet("", Name = "GetWorkspaces")]
     [ProducesResponseType<List<WorkspaceViewModel>>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -30,6 +36,12 @@ public class WorkspaceController(
             .ToList());
     }
 
+    /// <summary>
+    /// Get a workspace by its ID or Ingest Key.
+    /// </summary>
+    /// <param name="organizationId">The ID of the organization.</param>
+    /// <param name="id">The ID of the workspace, or the Ingest Key.</param>
+    /// <returns>A workspace in the organization, if found.</returns>
     [HttpGet("{id}", Name = "GetWorkspaceById")]
     [ProducesResponseType<WorkspaceViewModel>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -37,11 +49,22 @@ public class WorkspaceController(
         [FromHeader(Name = HeaderNameConstants.OrganizationId)] string organizationId,
         string id)
     {
-        logger.LogInformation("GetWorkspaceById called");
         try
         {
-            var entity = await workspaceService.GetById(organizationId, id);
-            return Ok(mappingService.Map<Workspace, WorkspaceViewModel>(entity));
+            if (ingestKeyService.IsFormatValid(id))
+            {
+                logger.LogInformation("GetWorkspaceById called with Ingest Key");
+                // We assume the ID is an Ingest Key
+                return Ok(mappingService.Map<Workspace, WorkspaceViewModel>(
+                    await workspaceService.GetByIngestKey(organizationId, id)));
+            }
+            else
+            {
+                logger.LogInformation("GetWorkspaceById called");
+                // We assume the ID is a workspace ID
+                return Ok(mappingService.Map<Workspace, WorkspaceViewModel>(
+                    await workspaceService.GetById(organizationId, id)));
+            }
         }
         catch (WorkspaceNotFoundException)
         {
@@ -49,6 +72,13 @@ public class WorkspaceController(
         }
     }
 
+    /// <summary>
+    /// Update a workspace by its ID.
+    /// </summary>
+    /// <param name="organizationId">The ID of the organization.</param>
+    /// <param name="id">The ID of the workspace, or the Ingest Key.</param>
+    /// <param name="request">The update request to apply.</param>
+    /// <returns>The updated organization.</returns>
     [HttpPatch("{id}", Name = "UpdateWorkspace")]
     [ProducesResponseType<WorkspaceViewModel>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -69,6 +99,12 @@ public class WorkspaceController(
         }
     }
 
+    /// <summary>
+    /// Delete a workspace by its ID.
+    /// </summary>
+    /// <param name="organizationId">The ID of the organization.</param>
+    /// <param name="id">The ID of the workspace, or the Ingest Key.</param>
+    /// <returns>The deleted organization.</returns>
     [HttpDelete("{id}", Name = "DeleteWorkspace")]
     [ProducesResponseType<WorkspaceViewModel>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -88,6 +124,12 @@ public class WorkspaceController(
         }
     }
 
+    /// <summary>
+    /// Create a new workspace in the organization.
+    /// </summary>
+    /// <param name="organizationId">The ID of the organization.</param>
+    /// <param name="request">The create request to apply.</param>
+    /// <returns>The newly created organization.</returns>
     [HttpPost("", Name = "CreateWorkspace")]
     [ProducesResponseType<WorkspaceViewModel>(StatusCodes.Status200OK)]
     public async Task<ActionResult> CreateWorkspace(

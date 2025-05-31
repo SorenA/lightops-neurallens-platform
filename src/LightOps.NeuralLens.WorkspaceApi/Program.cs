@@ -25,6 +25,7 @@ builder.Services.AddTransient<IWorkspaceRepository, MongoWorkspaceRepository>();
 
 // Add services
 builder.Services.AddTransient<WorkspaceService>();
+builder.Services.AddTransient<IngestKeyService>();
 
 // Add mappers
 builder.Services.AddTransient<IMapper<Workspace, WorkspaceViewModel>, WorkspaceViewModelMapper>();

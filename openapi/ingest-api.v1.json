@@ -1,0 +1,561 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Ingest API",
+    "description": "A Web API for ingest as part of the LightOps NeuralLens Platform.",
+    "version": "v1"
+  },
+  "paths": {
+    "/otlp/v1/traces": {
+      "post": {
+        "tags": [
+          "TraceService"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OpenTelemetry.Proto.Collector.Trace.V1.ExportTraceServiceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OpenTelemetry.Proto.Collector.Trace.V1.ExportTraceServiceResponse"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Google.Rpc.Status"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Google.Protobuf.WellKnownTypes.Any": {
+        "required": [
+          "@type"
+        ],
+        "type": "object",
+        "properties": {
+          "@type": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": {
+          "$ref": "#/components/schemas/Google.Protobuf.WellKnownTypes.Value"
+        }
+      },
+      "Google.Protobuf.WellKnownTypes.ListValue": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Google.Protobuf.WellKnownTypes.Value"
+            },
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Google.Protobuf.WellKnownTypes.NullValue": {
+        "enum": [
+          0
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "Google.Protobuf.WellKnownTypes.Struct": {
+        "type": "object",
+        "properties": {
+          "fields": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Google.Protobuf.WellKnownTypes.Value"
+            },
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Google.Protobuf.WellKnownTypes.Value": {
+        "type": "object",
+        "properties": {
+          "nullValue": {
+            "$ref": "#/components/schemas/Google.Protobuf.WellKnownTypes.NullValue"
+          },
+          "hasNullValue": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "numberValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "hasNumberValue": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "stringValue": {
+            "type": "string",
+            "nullable": true
+          },
+          "hasStringValue": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "boolValue": {
+            "type": "boolean"
+          },
+          "hasBoolValue": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "structValue": {
+            "$ref": "#/components/schemas/Google.Protobuf.WellKnownTypes.Struct"
+          },
+          "listValue": {
+            "$ref": "#/components/schemas/Google.Protobuf.WellKnownTypes.ListValue"
+          },
+          "kindCase": {
+            "$ref": "#/components/schemas/Google.Protobuf.WellKnownTypes.Value.KindOneofCase"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Google.Protobuf.WellKnownTypes.Value.KindOneofCase": {
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "Google.Rpc.Status": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "message": {
+            "type": "string"
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Google.Protobuf.WellKnownTypes.Any"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "OpenTelemetry.Proto.Collector.Trace.V1.ExportTracePartialSuccess": {
+        "type": "object",
+        "properties": {
+          "rejectedSpans": {
+            "type": "integer",
+            "description": "The number of rejected spans.\r\n            \r\nA `rejected_<signal>` field holding a `0` value indicates that the\r\nrequest was fully accepted.",
+            "format": "int64"
+          },
+          "errorMessage": {
+            "type": "string",
+            "description": "A developer-facing human-readable message in English. It should be used\r\neither to explain why the server rejected parts of the data during a partial\r\nsuccess or to convey warnings/suggestions during a full success. The message\r\nshould offer guidance on how users can address such issues.\r\n            \r\nerror_message is an optional field. An error_message with an empty value\r\nis equivalent to it not being set."
+          }
+        },
+        "additionalProperties": false
+      },
+      "OpenTelemetry.Proto.Collector.Trace.V1.ExportTraceServiceRequest": {
+        "type": "object",
+        "properties": {
+          "resourceSpans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenTelemetry.Proto.Trace.V1.ResourceSpans"
+            },
+            "description": "An array of ResourceSpans.\r\nFor data coming from a single resource this array will typically contain one\r\nelement. Intermediary nodes (such as OpenTelemetry Collector) that receive\r\ndata from multiple origins typically batch the data before forwarding further and\r\nin that case this array will contain multiple elements."
+          }
+        },
+        "additionalProperties": false
+      },
+      "OpenTelemetry.Proto.Collector.Trace.V1.ExportTraceServiceResponse": {
+        "type": "object",
+        "properties": {
+          "partialSuccess": {
+            "$ref": "#/components/schemas/OpenTelemetry.Proto.Collector.Trace.V1.ExportTracePartialSuccess"
+          }
+        },
+        "additionalProperties": false
+      },
+      "OpenTelemetry.Proto.Common.V1.AnyValue": {
+        "type": "object",
+        "properties": {
+          "stringValue": {
+            "type": "string"
+          },
+          "boolValue": {
+            "type": "boolean"
+          },
+          "intValue": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "doubleValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "arrayValue": {
+            "$ref": "#/components/schemas/OpenTelemetry.Proto.Common.V1.ArrayValue"
+          },
+          "kvlistValue": {
+            "$ref": "#/components/schemas/OpenTelemetry.Proto.Common.V1.KeyValueList"
+          },
+          "bytesValue": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "description": "AnyValue is used to represent any type of attribute value. AnyValue may contain a\r\nprimitive value such as a string or integer or it may contain an arbitrary nested\r\nobject containing arrays, key-value lists and primitives."
+      },
+      "OpenTelemetry.Proto.Common.V1.ArrayValue": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenTelemetry.Proto.Common.V1.AnyValue"
+            },
+            "description": "Array of values. The array may be empty (contain 0 elements)."
+          }
+        },
+        "additionalProperties": false,
+        "description": "ArrayValue is a list of AnyValue messages. We need ArrayValue as a message\r\nsince oneof in AnyValue does not allow repeated fields."
+      },
+      "OpenTelemetry.Proto.Common.V1.InstrumentationScope": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "An empty instrumentation scope name means the name is unknown."
+          },
+          "version": {
+            "type": "string"
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenTelemetry.Proto.Common.V1.KeyValue"
+            },
+            "description": "Additional attributes that describe the scope. [Optional].\r\nAttribute keys MUST be unique (it is not allowed to have more than one\r\nattribute with the same key)."
+          },
+          "droppedAttributesCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "InstrumentationScope is a message representing the instrumentation scope information\r\nsuch as the fully qualified name and version."
+      },
+      "OpenTelemetry.Proto.Common.V1.KeyValue": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "$ref": "#/components/schemas/OpenTelemetry.Proto.Common.V1.AnyValue"
+          }
+        },
+        "additionalProperties": false,
+        "description": "KeyValue is a key-value pair that is used to store Span attributes, Link\r\nattributes, etc."
+      },
+      "OpenTelemetry.Proto.Common.V1.KeyValueList": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenTelemetry.Proto.Common.V1.KeyValue"
+            },
+            "description": "A collection of key/value pairs of key-value pairs. The list may be empty (may\r\ncontain 0 elements).\r\nThe keys MUST be unique (it is not allowed to have more than one\r\nvalue with the same key)."
+          }
+        },
+        "additionalProperties": false,
+        "description": "KeyValueList is a list of KeyValue messages. We need KeyValueList as a message\r\nsince `oneof` in AnyValue does not allow repeated fields. Everywhere else where we need\r\na list of KeyValue messages (e.g. in Span) we use `repeated KeyValue` directly to\r\navoid unnecessary extra wrapping (which slows down the protocol). The 2 approaches\r\nare semantically equivalent."
+      },
+      "OpenTelemetry.Proto.Resource.V1.Resource": {
+        "type": "object",
+        "properties": {
+          "attributes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenTelemetry.Proto.Common.V1.KeyValue"
+            },
+            "description": "Set of attributes that describe the resource.\r\nAttribute keys MUST be unique (it is not allowed to have more than one\r\nattribute with the same key)."
+          },
+          "droppedAttributesCount": {
+            "type": "integer",
+            "description": "dropped_attributes_count is the number of dropped attributes. If the value is 0, then\r\nno attributes were dropped.",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Resource information."
+      },
+      "OpenTelemetry.Proto.Trace.V1.ResourceSpans": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "$ref": "#/components/schemas/OpenTelemetry.Proto.Resource.V1.Resource"
+          },
+          "scopeSpans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenTelemetry.Proto.Trace.V1.ScopeSpans"
+            },
+            "description": "A list of ScopeSpans that originate from a resource."
+          },
+          "schemaUrl": {
+            "type": "string",
+            "description": "The Schema URL, if known. This is the identifier of the Schema that the resource data\r\nis recorded in. Notably, the last part of the URL path is the version number of the\r\nschema: http[s]://server[:port]/path/<version>. To learn more about Schema URL see\r\nhttps://opentelemetry.io/docs/specs/otel/schemas/#schema-url\r\nThis schema_url applies to the data in the \"resource\" field. It does not apply\r\nto the data in the \"scope_spans\" field which have their own schema_url field."
+          }
+        },
+        "additionalProperties": false,
+        "description": "A collection of ScopeSpans from a Resource."
+      },
+      "OpenTelemetry.Proto.Trace.V1.ScopeSpans": {
+        "type": "object",
+        "properties": {
+          "scope": {
+            "$ref": "#/components/schemas/OpenTelemetry.Proto.Common.V1.InstrumentationScope"
+          },
+          "spans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenTelemetry.Proto.Trace.V1.Span"
+            },
+            "description": "A list of Spans that originate from an instrumentation scope."
+          },
+          "schemaUrl": {
+            "type": "string",
+            "description": "The Schema URL, if known. This is the identifier of the Schema that the span data\r\nis recorded in. Notably, the last part of the URL path is the version number of the\r\nschema: http[s]://server[:port]/path/<version>. To learn more about Schema URL see\r\nhttps://opentelemetry.io/docs/specs/otel/schemas/#schema-url\r\nThis schema_url applies to all spans and span events in the \"spans\" field."
+          }
+        },
+        "additionalProperties": false,
+        "description": "A collection of Spans produced by an InstrumentationScope."
+      },
+      "OpenTelemetry.Proto.Trace.V1.Span": {
+        "type": "object",
+        "properties": {
+          "traceId": {
+            "type": "string",
+            "description": "A unique identifier for a trace. All spans from the same trace share\r\nthe same `trace_id`. The ID is a 16-byte array. An ID with all zeroes OR\r\nof length other than 16 bytes is considered invalid (empty string in OTLP/JSON\r\nis zero-length and thus is also invalid).\r\n            \r\nThis field is required."
+          },
+          "spanId": {
+            "type": "string",
+            "description": "A unique identifier for a span within a trace, assigned when the span\r\nis created. The ID is an 8-byte array. An ID with all zeroes OR of length\r\nother than 8 bytes is considered invalid (empty string in OTLP/JSON\r\nis zero-length and thus is also invalid).\r\n            \r\nThis field is required."
+          },
+          "traceState": {
+            "type": "string",
+            "description": "trace_state conveys information about request position in multiple distributed tracing graphs.\r\nIt is a trace_state in w3c-trace-context format: https://www.w3.org/TR/trace-context/#tracestate-header\r\nSee also https://github.com/w3c/distributed-tracing for more details about this field."
+          },
+          "parentSpanId": {
+            "type": "string",
+            "description": "The `span_id` of this span's parent span. If this is a root span, then this\r\nfield must be empty. The ID is an 8-byte array."
+          },
+          "name": {
+            "type": "string",
+            "description": "A description of the span's operation.\r\n            \r\nFor example, the name can be a qualified method name or a file name\r\nand a line number where the operation is called. A best practice is to use\r\nthe same display name at the same call point in an application.\r\nThis makes it easier to correlate spans in different traces.\r\n            \r\nThis field is semantically required to be set to non-empty string.\r\nEmpty value is equivalent to an unknown span name.\r\n            \r\nThis field is required."
+          },
+          "kind": {
+            "$ref": "#/components/schemas/OpenTelemetry.Proto.Trace.V1.Span.Types.SpanKind"
+          },
+          "startTimeUnixNano": {
+            "type": "integer",
+            "description": "start_time_unix_nano is the start time of the span. On the client side, this is the time\r\nkept by the local machine where the span execution starts. On the server side, this\r\nis the time when the server's application handler starts running.\r\nValue is UNIX Epoch time in nanoseconds since 00:00:00 UTC on 1 January 1970.\r\n            \r\nThis field is semantically required and it is expected that end_time >= start_time.",
+            "format": "int64"
+          },
+          "endTimeUnixNano": {
+            "type": "integer",
+            "description": "end_time_unix_nano is the end time of the span. On the client side, this is the time\r\nkept by the local machine where the span execution ends. On the server side, this\r\nis the time when the server application handler stops running.\r\nValue is UNIX Epoch time in nanoseconds since 00:00:00 UTC on 1 January 1970.\r\n            \r\nThis field is semantically required and it is expected that end_time >= start_time.",
+            "format": "int64"
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenTelemetry.Proto.Common.V1.KeyValue"
+            },
+            "description": "attributes is a collection of key/value pairs. Note, global attributes\r\nlike server name can be set using the resource API. Examples of attributes:\r\n            \r\n    \"/http/user_agent\": \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36\"\r\n    \"/http/server_latency\": 300\r\n    \"example.com/myattribute\": true\r\n    \"example.com/score\": 10.239\r\n            \r\nThe OpenTelemetry API specification further restricts the allowed value types:\r\nhttps://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/common/README.md#attribute\r\nAttribute keys MUST be unique (it is not allowed to have more than one\r\nattribute with the same key)."
+          },
+          "droppedAttributesCount": {
+            "type": "integer",
+            "description": "dropped_attributes_count is the number of attributes that were discarded. Attributes\r\ncan be discarded because their keys are too long or because there are too many\r\nattributes. If this value is 0, then no attributes were dropped.",
+            "format": "int32"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenTelemetry.Proto.Trace.V1.Span.Types.Event"
+            },
+            "description": "events is a collection of Event items."
+          },
+          "droppedEventsCount": {
+            "type": "integer",
+            "description": "dropped_events_count is the number of dropped events. If the value is 0, then no\r\nevents were dropped.",
+            "format": "int32"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenTelemetry.Proto.Trace.V1.Span.Types.Link"
+            },
+            "description": "links is a collection of Links, which are references from this span to a span\r\nin the same or different trace."
+          },
+          "droppedLinksCount": {
+            "type": "integer",
+            "description": "dropped_links_count is the number of dropped links after the maximum size was\r\nenforced. If this value is 0, then no links were dropped.",
+            "format": "int32"
+          },
+          "status": {
+            "$ref": "#/components/schemas/OpenTelemetry.Proto.Trace.V1.Status"
+          },
+          "flags": {
+            "type": "integer",
+            "description": "Flags, a bit field.\r\n            \r\nBits 0-7 (8 least significant bits) are the trace flags as defined in W3C Trace\r\nContext specification. To read the 8-bit W3C trace flag, use\r\n`flags & SPAN_FLAGS_TRACE_FLAGS_MASK`.\r\n            \r\nSee https://www.w3.org/TR/trace-context-2/#trace-flags for the flag definitions.\r\n            \r\nBits 8 and 9 represent the 3 states of whether a span's parent\r\nis remote. The states are (unknown, is not remote, is remote).\r\nTo read whether the value is known, use `(flags & SPAN_FLAGS_CONTEXT_HAS_IS_REMOTE_MASK) != 0`.\r\nTo read whether the span is remote, use `(flags & SPAN_FLAGS_CONTEXT_IS_REMOTE_MASK) != 0`.\r\n            \r\nWhen creating span messages, if the message is logically forwarded from another source\r\nwith an equivalent flags fields (i.e., usually another OTLP span message), the field SHOULD\r\nbe copied as-is. If creating from a source that does not have an equivalent flags field\r\n(such as a runtime representation of an OpenTelemetry span), the high 22 bits MUST\r\nbe set to zero.\r\nReaders MUST NOT assume that bits 10-31 (22 most significant bits) will be zero.\r\n            \r\n[Optional].",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "A Span represents a single operation performed by a single component of the system.\r\n            \r\nThe next available field id is 17."
+      },
+      "OpenTelemetry.Proto.Trace.V1.Span.Types.Event": {
+        "type": "object",
+        "properties": {
+          "timeUnixNano": {
+            "type": "integer",
+            "description": "time_unix_nano is the time the event occurred.",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string",
+            "description": "name of the event.\r\nThis field is semantically required to be set to non-empty string."
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenTelemetry.Proto.Common.V1.KeyValue"
+            },
+            "description": "attributes is a collection of attribute key/value pairs on the event.\r\nAttribute keys MUST be unique (it is not allowed to have more than one\r\nattribute with the same key)."
+          },
+          "droppedAttributesCount": {
+            "type": "integer",
+            "description": "dropped_attributes_count is the number of dropped attributes. If the value is 0,\r\nthen no attributes were dropped.",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Event is a time-stamped annotation of the span, consisting of user-supplied\r\ntext description and key-value pairs."
+      },
+      "OpenTelemetry.Proto.Trace.V1.Span.Types.Link": {
+        "type": "object",
+        "properties": {
+          "traceId": {
+            "type": "string",
+            "description": "A unique identifier of a trace that this linked span is part of. The ID is a\r\n16-byte array."
+          },
+          "spanId": {
+            "type": "string",
+            "description": "A unique identifier for the linked span. The ID is an 8-byte array."
+          },
+          "traceState": {
+            "type": "string",
+            "description": "The trace_state associated with the link."
+          },
+          "attributes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OpenTelemetry.Proto.Common.V1.KeyValue"
+            },
+            "description": "attributes is a collection of attribute key/value pairs on the link.\r\nAttribute keys MUST be unique (it is not allowed to have more than one\r\nattribute with the same key)."
+          },
+          "droppedAttributesCount": {
+            "type": "integer",
+            "description": "dropped_attributes_count is the number of dropped attributes. If the value is 0,\r\nthen no attributes were dropped.",
+            "format": "int32"
+          },
+          "flags": {
+            "type": "integer",
+            "description": "Flags, a bit field.\r\n            \r\nBits 0-7 (8 least significant bits) are the trace flags as defined in W3C Trace\r\nContext specification. To read the 8-bit W3C trace flag, use\r\n`flags & SPAN_FLAGS_TRACE_FLAGS_MASK`.\r\n            \r\nSee https://www.w3.org/TR/trace-context-2/#trace-flags for the flag definitions.\r\n            \r\nBits 8 and 9 represent the 3 states of whether the link is remote.\r\nThe states are (unknown, is not remote, is remote).\r\nTo read whether the value is known, use `(flags & SPAN_FLAGS_CONTEXT_HAS_IS_REMOTE_MASK) != 0`.\r\nTo read whether the link is remote, use `(flags & SPAN_FLAGS_CONTEXT_IS_REMOTE_MASK) != 0`.\r\n            \r\nReaders MUST NOT assume that bits 10-31 (22 most significant bits) will be zero.\r\nWhen creating new spans, bits 10-31 (most-significant 22-bits) MUST be zero.\r\n            \r\n[Optional].",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false,
+        "description": "A pointer from the current span to another span in the same trace or in a\r\ndifferent trace. For example, this can be used in batching operations,\r\nwhere a single batch handler processes multiple requests from different\r\ntraces or when the handler receives a request from a different project."
+      },
+      "OpenTelemetry.Proto.Trace.V1.Span.Types.SpanKind": {
+        "enum": [
+          "SPAN_KIND_UNSPECIFIED",
+          "SPAN_KIND_INTERNAL",
+          "SPAN_KIND_SERVER",
+          "SPAN_KIND_CLIENT",
+          "SPAN_KIND_PRODUCER",
+          "SPAN_KIND_CONSUMER"
+        ],
+        "type": "string",
+        "description": "SpanKind is the type of span. Can be used to specify additional relationships between spans\r\nin addition to a parent/child relationship."
+      },
+      "OpenTelemetry.Proto.Trace.V1.Status": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "A developer-facing human readable error message."
+          },
+          "code": {
+            "$ref": "#/components/schemas/OpenTelemetry.Proto.Trace.V1.Status.Types.StatusCode"
+          }
+        },
+        "additionalProperties": false,
+        "description": "The Status type defines a logical error model that is suitable for different\r\nprogramming environments, including REST APIs and RPC APIs."
+      },
+      "OpenTelemetry.Proto.Trace.V1.Status.Types.StatusCode": {
+        "enum": [
+          "STATUS_CODE_UNSET",
+          "STATUS_CODE_OK",
+          "STATUS_CODE_ERROR"
+        ],
+        "type": "string",
+        "description": "For the semantics of status codes see\r\nhttps://github.com/open-telemetry/opentelemetry-specification/blob/main/specification/trace/api.md#set-status"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "TraceService",
+      "description": "Service that can be used to push spans between one Application instrumented with\r\nOpenTelemetry and a collector, or between a collector and a central collector (in this\r\ncase spans are sent/received to/from multiple Applications)."
+    }
+  ]
+}

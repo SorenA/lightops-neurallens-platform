@@ -6,7 +6,8 @@ using LightOps.NeuralLens.WorkspaceApi.Requests;
 namespace LightOps.NeuralLens.WorkspaceApi.Domain.Services;
 
 public class WorkspaceService(
-    IWorkspaceRepository workspaceRepository)
+    IWorkspaceRepository workspaceRepository,
+    IngestKeyService ingestKeyService)
 {
     public async Task<List<Workspace>> GetAll(string organizationId)
     {
@@ -18,7 +19,18 @@ public class WorkspaceService(
         var entity = await workspaceRepository.GetById(organizationId, id);
         if (entity == null)
         {
-            throw new WorkspaceNotFoundException(id);
+            throw WorkspaceNotFoundException.FromId(id);
+        }
+
+        return entity;
+    }
+
+    public async Task<Workspace> GetByIngestKey(string organizationId, string ingestKey)
+    {
+        var entity = await workspaceRepository.GetByIngestKey(organizationId, ingestKey);
+        if (entity == null)
+        {
+            throw WorkspaceNotFoundException.FromIngestKey(ingestKey);
         }
 
         return entity;
@@ -31,6 +43,7 @@ public class WorkspaceService(
             Guid.NewGuid().ToString(),
             organizationId,
             request.Name,
+            ingestKeyService.GenerateKey(),
             DateTime.UtcNow,
             DateTime.UtcNow)
         {

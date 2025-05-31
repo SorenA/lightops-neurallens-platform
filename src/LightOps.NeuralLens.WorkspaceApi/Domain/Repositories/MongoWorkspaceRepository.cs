@@ -29,6 +29,16 @@ public class MongoWorkspaceRepository(IMongoDatabase mongoDatabase) : IWorkspace
             .FirstOrDefaultAsync()!;
     }
 
+    public Task<Workspace?> GetByIngestKey(string organizationId, string ingestKey)
+    {
+        return Collection
+            .Find(m =>
+                !m.IsDeleted
+                && m.OrganizationId == organizationId
+                && m.IngestKey == ingestKey)
+            .FirstOrDefaultAsync()!;
+    }
+
     public Task<bool> NameExists(string organizationId, string name, string? exceptId = null)
     {
         return Collection

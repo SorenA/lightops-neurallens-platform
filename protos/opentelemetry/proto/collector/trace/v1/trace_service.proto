@@ -17,6 +17,7 @@ syntax = "proto3";
 package opentelemetry.proto.collector.trace.v1;
 
 import "opentelemetry/proto/trace/v1/trace.proto";
+import "google/api/annotations.proto";
 
 option csharp_namespace = "OpenTelemetry.Proto.Collector.Trace.V1";
 option java_multiple_files = true;
@@ -28,7 +29,12 @@ option go_package = "go.opentelemetry.io/proto/otlp/collector/trace/v1";
 // OpenTelemetry and a collector, or between a collector and a central collector (in this
 // case spans are sent/received to/from multiple Applications).
 service TraceService {
-  rpc Export(ExportTraceServiceRequest) returns (ExportTraceServiceResponse) {}
+  rpc Export(ExportTraceServiceRequest) returns (ExportTraceServiceResponse) {
+      option (google.api.http) = {
+      post: "/otlp/v1/traces",
+      body: "*"
+    };
+  }
 }
 
 message ExportTraceServiceRequest {

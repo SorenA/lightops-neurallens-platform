@@ -11,11 +11,13 @@
         "tags": [
           "Workspace"
         ],
+        "summary": "Get all workspaces for the organization.",
         "operationId": "GetWorkspaces",
         "parameters": [
           {
             "name": "X-Organization-Id",
             "in": "header",
+            "description": "The ID of the organization.",
             "schema": {
               "type": "string"
             }
@@ -77,17 +79,20 @@
         "tags": [
           "Workspace"
         ],
+        "summary": "Create a new workspace in the organization.",
         "operationId": "CreateWorkspace",
         "parameters": [
           {
             "name": "X-Organization-Id",
             "in": "header",
+            "description": "The ID of the organization.",
             "schema": {
               "type": "string"
             }
           }
         ],
         "requestBody": {
+          "description": "The create request to apply.",
           "content": {
             "application/json": {
               "schema": {
@@ -135,11 +140,13 @@
         "tags": [
           "Workspace"
         ],
+        "summary": "Get a workspace by its ID or Ingest Key.",
         "operationId": "GetWorkspaceById",
         "parameters": [
           {
             "name": "X-Organization-Id",
             "in": "header",
+            "description": "The ID of the organization.",
             "schema": {
               "type": "string"
             }
@@ -147,6 +154,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The ID of the workspace, or the Ingest Key.",
             "required": true,
             "schema": {
               "type": "string"
@@ -200,11 +208,13 @@
         "tags": [
           "Workspace"
         ],
+        "summary": "Update a workspace by its ID.",
         "operationId": "UpdateWorkspace",
         "parameters": [
           {
             "name": "X-Organization-Id",
             "in": "header",
+            "description": "The ID of the organization.",
             "schema": {
               "type": "string"
             }
@@ -212,6 +222,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The ID of the workspace, or the Ingest Key.",
             "required": true,
             "schema": {
               "type": "string"
@@ -219,6 +230,7 @@
           }
         ],
         "requestBody": {
+          "description": "The update request to apply.",
           "content": {
             "application/json": {
               "schema": {
@@ -284,11 +296,13 @@
         "tags": [
           "Workspace"
         ],
+        "summary": "Delete a workspace by its ID.",
         "operationId": "DeleteWorkspace",
         "parameters": [
           {
             "name": "X-Organization-Id",
             "in": "header",
+            "description": "The ID of the organization.",
             "schema": {
               "type": "string"
             }
@@ -296,6 +310,7 @@
           {
             "name": "id",
             "in": "path",
+            "description": "The ID of the workspace, or the Ingest Key.",
             "required": true,
             "schema": {
               "type": "string"
@@ -420,6 +435,10 @@
             "nullable": true
           },
           "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "ingestKey": {
             "type": "string",
             "nullable": true
           },

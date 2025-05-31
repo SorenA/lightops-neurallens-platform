@@ -12,6 +12,7 @@ public class WorkspaceViewModelMapper : IMapper<Workspace, WorkspaceViewModel>
             source.Id,
             source.OrganizationId,
             source.Name,
+            source.IngestKey,
             source.CreatedAt,
             source.UpdatedAt)
         {
