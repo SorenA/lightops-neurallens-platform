@@ -1,12 +1,25 @@
 using System.Reflection;
+using LightOps.DependencyInjection.Configuration;
+using LightOps.Mapping.Api.Mappers;
+using LightOps.Mapping.Configuration;
 using LightOps.NeuralLens.Component.ServiceDefaults;
+using LightOps.NeuralLens.IngestApi.Domain.Mappers;
+using LightOps.NeuralLens.IngestApi.Domain.MappingModels;
 using LightOps.NeuralLens.IngestApi.GrpcServices;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Proto.Trace.V1;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
 
+// Add mappers
+builder.Services.AddTransient<IMapper<ResourceSpans, ObservabilityTraceMappingResult?>, OpenTelemetryTraceMapper>();
+
 // Add services to the container.
+builder.Services.AddLightOpsDependencyInjection(root =>
+{
+    root.AddMapping();
+});
 builder.Services.AddGrpc(o => o.EnableDetailedErrors = true)
     .AddJsonTranscoding();
 builder.Services.AddControllers();

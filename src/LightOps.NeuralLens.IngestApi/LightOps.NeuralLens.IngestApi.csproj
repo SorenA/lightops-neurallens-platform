@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
+    <PackageReference Include="LightOps.Mapping" Version="0.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.Grpc.JsonTranscoding" Version="9.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Grpc.Swagger" Version="0.9.5" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.2" />
@@ -16,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LightOps.NeuralLens.Component.ServiceDefaults\LightOps.NeuralLens.Component.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\LightOps.NeuralLens.Data.Contract.Observability\LightOps.NeuralLens.Data.Contract.Observability.csproj" />
   </ItemGroup>
 
   <ItemGroup>
