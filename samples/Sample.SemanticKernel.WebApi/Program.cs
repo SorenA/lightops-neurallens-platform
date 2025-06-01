@@ -42,12 +42,13 @@ builder.Services.AddOpenTelemetry()
         .AddService("Sample.SemanticKernel.WebApi", serviceVersion: "0.0.1")
         .AddAttributes(new Dictionary<string, object>
         {
-            ["environment.name"] = "wat",
+            ["deployment.environment"] = "local",
         }))
     .WithTracing(tracing =>
     {
         tracing.AddSource(builder.Environment.ApplicationName)
             .AddSource("Microsoft.SemanticKernel*")
+            .AddSource("OpenAI.*")
             .AddAspNetCoreInstrumentation()
             .AddHttpClientInstrumentation();
         tracing.AddConsoleExporter()
