@@ -16,10 +16,13 @@ var redis = builder.AddRedis("redis", 6379)
         interval: TimeSpan.FromSeconds(30),
         keysChangedThreshold: 10);
 
-var clickhouse = builder.AddClickHouse("clickhouse", port: 8123)
+var clickhousePassword = builder.AddParameter("clickhouse-password", true);
+var clickhouse = builder.AddClickHouse("clickhouse", port: 8123, password: clickhousePassword)
     .WithLifetime(ContainerLifetime.Persistent)
-    .WithDataBindMount("./../../data/clickhouse")
-    .WithImageTag("25.5");
+    /*.WithDataBindMount("./../../data/clickhouse")*/
+    .WithDataVolume("clickhouse") // Temporarily use named volume while bind mount bug is not fixed
+    .WithImageTag("25.5")
+    .WithExternalHttpEndpoints();
 var clickhouseObservabilityDb = clickhouse.AddDatabase("clickhouse-observability-db", "observability_db");
 var clickhouseEvaluationDb = clickhouse.AddDatabase("clickhouse-evaluation-db", "evaluation_db");
 var clickHouseUi = builder
@@ -29,7 +32,7 @@ var clickHouseUi = builder
     .WithHttpEndpoint(5521, 5521)
     .WithEnvironment("VITE_CLICKHOUSE_URL", "http://localhost:8123")
     .WithEnvironment("VITE_CLICKHOUSE_USER", "default")
-    .WithEnvironment("VITE_CLICKHOUSE_PASS", clickhouse.Resource.PasswordParameter.Value);
+    .WithEnvironment("VITE_CLICKHOUSE_PASS", clickhousePassword);
 
 // Add worker services
 var clickhouseMigrationWorker = builder

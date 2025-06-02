@@ -3,8 +3,8 @@ using ClickHouse.Facades.Migrations;
 
 namespace LightOps.NeuralLens.ClickHouseMigrationWorker.Migrations;
 
-[ClickHouseMigration(1, nameof(M001_Observability_Traces_CreateTable))]
-public class M001_Observability_Traces_CreateTable : ClickHouseMigration
+[ClickHouseMigration(2, nameof(M002_Observability_Traces_CreateTable))]
+public class M002_Observability_Traces_CreateTable : ClickHouseMigration
 {
     protected override void Up(ClickHouseMigrationBuilder migrationBuilder)
     {
@@ -26,12 +26,11 @@ public class M001_Observability_Traces_CreateTable : ClickHouseMigration
                 `deleted_at` Nullable(DateTime64(3)),
                 `tags` Array(String),
                 `metadata` Map(LowCardinality(String), String),
-
                 INDEX idx_id id TYPE bloom_filter(0.001) GRANULARITY 1,
                 INDEX idx_res_metadata_key mapKeys(metadata) TYPE bloom_filter(0.01) GRANULARITY 1,
                 INDEX idx_res_metadata_value mapValues(metadata) TYPE bloom_filter(0.01) GRANULARITY 1
-            )
-            ENGINE = ReplacingMergeTree(updated_at, is_deleted) Partition by toYYYYMM(started_at)
+            ) ENGINE = ReplacingMergeTree(updated_at)
+            PARTITION BY toYYYYMM(started_at)
             PRIMARY KEY (
                  workspace_id,
                  toDate(started_at)

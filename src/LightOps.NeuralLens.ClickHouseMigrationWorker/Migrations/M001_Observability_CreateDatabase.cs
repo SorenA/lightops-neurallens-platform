@@ -2,8 +2,8 @@
 
 namespace LightOps.NeuralLens.ClickHouseMigrationWorker.Migrations;
 
-[ClickHouseMigration(0, nameof(M000_Observability_CreateDatabase))]
-public class M000_Observability_CreateDatabase : ClickHouseMigration
+[ClickHouseMigration(1, nameof(M001_Observability_CreateDatabase))]
+public class M001_Observability_CreateDatabase : ClickHouseMigration
 {
     protected override void Up(ClickHouseMigrationBuilder migrationBuilder)
     {

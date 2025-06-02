@@ -21,7 +21,10 @@ builder.Services.AddHttpClient("ClickHouseClient")
         MaxConnectionsPerServer = 8,
     });
 builder.Services.AddClickHouseContext<NeuralLensClickHouseDbContext, NeuralLensClickHouseDbContextFactory>(
-    serviceBuilder => serviceBuilder.AddFacade<ObservabilityFacade>());
+    serviceBuilder =>
+    {
+        serviceBuilder.AddFacade<ObservabilityFacade>();
+    });
 
 // Add ClickHouse migrations
 builder.Services.AddClickHouseMigrations<NeuralLensClickHouseMigrationInstructions, NeuralLensClickHouseMigrationsLocator>();
