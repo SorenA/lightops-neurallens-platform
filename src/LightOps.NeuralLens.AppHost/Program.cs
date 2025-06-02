@@ -1,6 +1,3 @@
-using Aspire.Hosting;
-using Google.Protobuf.WellKnownTypes;
-
 var builder = DistributedApplication.CreateBuilder(args);
 
 // Add databases
@@ -19,11 +16,32 @@ var redis = builder.AddRedis("redis", 6379)
         interval: TimeSpan.FromSeconds(30),
         keysChangedThreshold: 10);
 
+var clickhouse = builder.AddClickHouse("clickhouse", port: 8123)
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithDataBindMount("./../../data/clickhouse")
+    .WithImageTag("25.5");
+var clickhouseObservabilityDb = clickhouse.AddDatabase("clickhouse-observability-db", "observability_db");
+var clickhouseEvaluationDb = clickhouse.AddDatabase("clickhouse-evaluation-db", "evaluation_db");
+var clickHouseUi = builder
+    .AddContainer("clickhouse-ui", "ghcr.io/caioricciuti/ch-ui")
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithExternalHttpEndpoints()
+    .WithHttpEndpoint(5521, 5521)
+    .WithEnvironment("VITE_CLICKHOUSE_URL", "http://localhost:8123")
+    .WithEnvironment("VITE_CLICKHOUSE_USER", "default")
+    .WithEnvironment("VITE_CLICKHOUSE_PASS", clickhouse.Resource.PasswordParameter.Value);
+
+// Add worker services
+var clickhouseMigrationWorker = builder
+    .AddProject<Projects.LightOps_NeuralLens_ClickHouseMigrationWorker>("clickhouse-migration-worker")
+    .WithReference(clickhouse)
+    .WaitFor(clickhouse);
+
 // Add API services
 var ingestApi = builder
     .AddProject<Projects.LightOps_NeuralLens_IngestApi>("ingest-api")
-    .WithReference(redis)
-    .WaitFor(redis);
+    .WithReference(clickhouseObservabilityDb)
+    .WaitFor(clickhouseObservabilityDb);
 var organizationApi = builder
     .AddProject<Projects.LightOps_NeuralLens_OrganizationApi>("organization-api")
     .WithReference(mongoOrganizationDb)
