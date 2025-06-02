@@ -3,9 +3,7 @@ using System.ClientModel.Primitives;
 using System.Reflection;
 using Microsoft.OpenApi.Models;
 using OpenAI;
-using OpenTelemetry;
 using OpenTelemetry.Exporter;
-using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
