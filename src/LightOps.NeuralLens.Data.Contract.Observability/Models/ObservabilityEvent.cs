@@ -4,6 +4,7 @@ public class ObservabilityEvent(
     string id,
     string spanId,
     string traceId,
+    string workspaceId,
     string name,
     DateTime startedAt,
     DateTime createdAt,
@@ -23,6 +24,11 @@ public class ObservabilityEvent(
     /// Gets the identifier for the trace to which the event belongs.
     /// </summary>
     public string TraceId { get; } = traceId;
+
+    /// <summary>
+    /// Gets the identifier for the workspace to which the event belongs.
+    /// </summary>
+    public string WorkspaceId { get; } = workspaceId;
 
     /// <summary>
     /// Gets or sets the name of the event.

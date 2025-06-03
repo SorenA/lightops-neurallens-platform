@@ -2,10 +2,12 @@
 
 namespace LightOps.NeuralLens.ClickHouseMigrationWorker.Domain;
 
-public class NeuralLensClickHouseMigrationInstructions(
+public class OlapMigrationInstructions(
     IConfiguration configuration)
     : IClickHouseMigrationInstructions
 {
+    public static string ObservabilityDb => "observability_db";
+
     private readonly string _connectionString = configuration.GetConnectionString("clickhouse")
                                                 ?? throw new ArgumentNullException(
                                                     "clickhouse connection string is not configured.");

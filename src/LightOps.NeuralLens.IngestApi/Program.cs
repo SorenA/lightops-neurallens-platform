@@ -1,8 +1,11 @@
+using System.Net;
 using System.Reflection;
+using ClickHouse.Facades;
 using LightOps.DependencyInjection.Configuration;
 using LightOps.Mapping.Api.Mappers;
 using LightOps.Mapping.Configuration;
 using LightOps.NeuralLens.Component.ServiceDefaults;
+using LightOps.NeuralLens.IngestApi.Domain.DbContexts;
 using LightOps.NeuralLens.IngestApi.Domain.Mappers;
 using LightOps.NeuralLens.IngestApi.Domain.MappingModels;
 using LightOps.NeuralLens.IngestApi.GrpcServices;
@@ -14,6 +17,26 @@ builder.AddServiceDefaults();
 
 // Add mappers
 builder.Services.AddTransient<IMapper<ResourceSpans, ObservabilityTraceMappingResult?>, OpenTelemetryTraceMapper>();
+
+// Add ClickHouse contexts
+builder.Services.AddHttpClient(OlapDbContextFactory.HttpClientName)
+    .ConfigureHttpClient((_, httpClient) =>
+    {
+        httpClient.Timeout = TimeSpan.FromSeconds(60);
+    })
+    .SetHandlerLifetime(Timeout.InfiniteTimeSpan)
+    .ConfigurePrimaryHttpMessageHandler(_ => new HttpClientHandler
+    {
+        AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate,
+        MaxConnectionsPerServer = 8,
+    });
+builder.Services.AddClickHouseContext<OlapDbContext, OlapDbContextFactory>(
+    serviceBuilder =>
+    {
+        serviceBuilder.AddFacade<TraceFacade>();
+        serviceBuilder.AddFacade<SpanFacade>();
+        serviceBuilder.AddFacade<EventFacade>();
+    });
 
 // Add services to the container.
 builder.Services.AddLightOpsDependencyInjection(root =>

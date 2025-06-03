@@ -1,4 +1,5 @@
 ﻿using ClickHouse.Facades.Migrations;
+using LightOps.NeuralLens.ClickHouseMigrationWorker.Domain;
 
 namespace LightOps.NeuralLens.ClickHouseMigrationWorker.Migrations;
 
@@ -7,13 +8,13 @@ public class M001_Observability_CreateDatabase : ClickHouseMigration
 {
     protected override void Up(ClickHouseMigrationBuilder migrationBuilder)
     {
-        migrationBuilder.AddRawSqlStatement(@"
-            CREATE DATABASE IF NOT EXISTS observability_db
+        migrationBuilder.AddRawSqlStatement($@"
+            CREATE DATABASE IF NOT EXISTS {OlapMigrationInstructions.ObservabilityDb}
             ");
     }
 
     protected override void Down(ClickHouseMigrationBuilder migrationBuilder)
     {
-        migrationBuilder.AddRawSqlStatement("DROP DATABASE IF EXISTS observability_db");
+        migrationBuilder.AddRawSqlStatement($"DROP DATABASE IF EXISTS {OlapMigrationInstructions.ObservabilityDb}");
     }
 }

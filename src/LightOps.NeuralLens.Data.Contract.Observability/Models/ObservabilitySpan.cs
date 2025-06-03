@@ -6,6 +6,7 @@
 public class ObservabilitySpan(
     string id,
     string traceId,
+    string workspaceId,
     string name,
     ObservabilitySpanKind kind,
     DateTime startedAt,
@@ -22,6 +23,11 @@ public class ObservabilitySpan(
     /// Gets the identifier for the trace to which the span belongs.
     /// </summary>
     public string TraceId { get; } = traceId;
+
+    /// <summary>
+    /// Gets the identifier for the workspace to which the span belongs.
+    /// </summary>
+    public string WorkspaceId { get; } = workspaceId;
 
     /// <summary>
     /// Gets or sets the identifier of the parent span, if any.

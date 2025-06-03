@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="ClickHouse.Client" Version="7.14.0" />
+    <PackageReference Include="ClickHouse.Facades" Version="2.5.11" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
     <PackageReference Include="LightOps.Mapping" Version="0.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.Grpc.JsonTranscoding" Version="9.0.5" />
@@ -23,10 +24,6 @@
 
   <ItemGroup>
     <Protobuf Include="..\..\protos\opentelemetry\**\*.proto" ProtoRoot="..\..\protos" GrpcServices="Server" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Domain\Repositories\" />
   </ItemGroup>
 
 </Project>
