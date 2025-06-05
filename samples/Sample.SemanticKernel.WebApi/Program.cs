@@ -4,6 +4,8 @@ using System.Reflection;
 using Microsoft.OpenApi.Models;
 using OpenAI;
 using OpenTelemetry.Exporter;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
@@ -28,7 +30,11 @@ builder.Services.AddSingleton(provider =>
 });
 
 // Log to console - not connected to Aspire
-builder.Logging.AddConsole().AddOpenTelemetry();
+builder.Logging.AddConsole().AddOpenTelemetry(logger =>
+{
+    // Export to AppHost
+    logger.AddOtlpExporter();
+});
 
 // Enable model diagnostics with sensitive data.
 AppContext.SetSwitch("Microsoft.SemanticKernel.Experimental.GenAI.EnableOTelDiagnosticsSensitive", true);
@@ -49,33 +55,30 @@ builder.Services.AddOpenTelemetry()
             .AddSource("OpenAI.*")
             .AddAspNetCoreInstrumentation()
             .AddHttpClientInstrumentation();
-        tracing.AddConsoleExporter()
-            .AddOtlpExporter(options =>
+
+        // Export to console
+        tracing.AddConsoleExporter();
+
+        // Export to ingest API
+        tracing.AddOtlpExporter(options =>
             {
                 options.Protocol = OtlpExportProtocol.Grpc;
                 options.Endpoint = new Uri(ingestApiBase);
             });
+
+        // Export to AppHost
+        tracing.AddOtlpExporter();
+    })
+    .WithMetrics(metrics =>
+    {
+        metrics.AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation()
+            .AddRuntimeInstrumentation();
+
+        // Export to AppHost
+        metrics.AddOtlpExporter();
     });
     //.UseOtlpExporter(OtlpExportProtocol.HttpProtobuf, new Uri("https://ingest-api/otlp"));
-
-// Export OpenTelemetry traces to ingest API
-/*builder.Services.AddOpenTelemetry()
-    .WithTracing(tracing => tracing
-        .ConfigureResource(resourceBuilder => resourceBuilder
-            .AddService("Sample.SemanticKernel.WebApi", serviceVersion: "0.0.1")
-            .AddAttributes(new Dictionary<string, object>
-            {
-                ["environment.name"] = "wat",
-            })
-            .AddEnvironmentVariableDetector())
-        .AddSource("Microsoft.SemanticKernel*")
-        .AddAspNetCoreInstrumentation()
-        .AddConsoleExporter()
-        .AddOtlpExporter(options =>
-        {
-            options.Protocol = OtlpExportProtocol.HttpProtobuf;
-            options.Endpoint = new Uri("https://ingest-api/otlp/v1/traces");
-        }));*/
 
 // Add services to the container
 builder.Services.AddControllers();
