@@ -1,5 +1,4 @@
 ﻿using ClickHouse.Facades;
-using Google.Api;
 using Grpc.Core;
 using LightOps.Mapping.Api.Services;
 using LightOps.NeuralLens.IngestApi.Domain.DbContexts;

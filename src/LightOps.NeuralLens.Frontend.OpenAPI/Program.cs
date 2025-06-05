@@ -30,6 +30,9 @@ if (app.Environment.IsDevelopment())
 
         var ingestApiBase = Environment.GetEnvironmentVariable("services__ingest-api__https__0");
         options.SwaggerEndpoint($"{ingestApiBase}/openapi/v1.json", "Ingest API v1");
+
+        var authApiBase = Environment.GetEnvironmentVariable("services__auth-api__https__0");
+        options.SwaggerEndpoint($"{authApiBase}/openapi/v1.json", "Auth API v1");
     });
 }
 

@@ -4,6 +4,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 var mongo = builder.AddMongoDB("mongo", 27017)
     .WithLifetime(ContainerLifetime.Persistent)
     .WithDataBindMount("./../../data/mongo");
+var mongoAuthDb = mongo.AddDatabase("mongo-auth-db", "auth_db");
 var mongoOrganizationDb = mongo.AddDatabase("mongo-organization-db", "organization_db");
 var mongoWorkspaceDb = mongo.AddDatabase("mongo-workspace-db", "workspace_db");
 var mongoObservabilityDb = mongo.AddDatabase("mongo-observability-db", "observability_db");
@@ -37,62 +38,83 @@ var clickHouseUi = builder
 // Add worker services
 var clickhouseMigrationWorker = builder
     .AddProject<Projects.LightOps_NeuralLens_ClickHouseMigrationWorker>("clickhouse-migration-worker")
-    .WithReference(clickhouse)
-    .WaitFor(clickhouse);
+    .WithReference(clickhouse).WaitFor(clickhouse);
+
+// Create auth encryption key and client secrets
+var authApiClientSecret = builder.AddParameter("auth-api-client-secret", true);
+var evaluationApiClientSecret = builder.AddParameter("evaluation-api-client-secret", true);
+var ingestApiClientSecret = builder.AddParameter("ingest-api-client-secret", true);
+var observabilityApiClientSecret = builder.AddParameter("observability-api-client-secret", true);
+var organizationApiClientSecret = builder.AddParameter("organization-api-client-secret", true);
+var workspaceApiClientSecret = builder.AddParameter("workspace-api-client-secret", true);
+var frontendManagementClientSecret = builder.AddParameter("frontend-management-client-secret", true);
 
 // Add API services
-var ingestApi = builder
-    .AddProject<Projects.LightOps_NeuralLens_IngestApi>("ingest-api")
-    .WithReference(clickhouseObservabilityDb)
-    .WaitFor(clickhouseObservabilityDb);
-var organizationApi = builder
-    .AddProject<Projects.LightOps_NeuralLens_OrganizationApi>("organization-api")
-    .WithReference(mongoOrganizationDb)
-    .WaitFor(mongoOrganizationDb);
-var workspaceApi = builder
-    .AddProject<Projects.LightOps_NeuralLens_WorkspaceApi>("workspace-api")
-    .WithReference(mongoWorkspaceDb)
-    .WaitFor(mongoWorkspaceDb);
-var observabilityApi = builder
-    .AddProject<Projects.LightOps_NeuralLens_ObservabilityApi>("observability-api")
-    .WithReference(mongoObservabilityDb)
-    .WaitFor(mongoObservabilityDb);
+var authApi = builder
+    .AddProject<Projects.LightOps_NeuralLens_AuthApi>("auth-api")
+    .WithReference(mongoAuthDb).WaitFor(mongoAuthDb)
+    .WithEnvironment("Auth__Clients__AuthApi__ClientSecret", authApiClientSecret)
+    .WithEnvironment("Auth__Clients__EvaluationApi__ClientSecret", evaluationApiClientSecret)
+    .WithEnvironment("Auth__Clients__IngestApi__ClientSecret", ingestApiClientSecret)
+    .WithEnvironment("Auth__Clients__ObservabilityApi__ClientSecret", observabilityApiClientSecret)
+    .WithEnvironment("Auth__Clients__OrganizationApi__ClientSecret", organizationApiClientSecret)
+    .WithEnvironment("Auth__Clients__WorkspaceApi__ClientSecret", workspaceApiClientSecret)
+    .WithEnvironment("Auth__Clients__FrontendManagement__ClientSecret", frontendManagementClientSecret);
 var evaluationApi = builder
     .AddProject<Projects.LightOps_NeuralLens_EvaluationApi>("evaluation-api")
-    .WithReference(mongoEvaluationDb)
-    .WaitFor(mongoEvaluationDb);
+    .WithReference(mongoEvaluationDb).WaitFor(mongoEvaluationDb)
+    .WithReference(authApi)
+    .WithEnvironment("Auth__ClientSecret", evaluationApiClientSecret);
+var ingestApi = builder
+    .AddProject<Projects.LightOps_NeuralLens_IngestApi>("ingest-api")
+    .WithReference(clickhouseObservabilityDb).WaitFor(clickhouseObservabilityDb)
+    .WithReference(authApi)
+    .WithEnvironment("Auth__ClientSecret", ingestApiClientSecret);
+var observabilityApi = builder
+    .AddProject<Projects.LightOps_NeuralLens_ObservabilityApi>("observability-api")
+    .WithReference(mongoObservabilityDb).WaitFor(mongoObservabilityDb)
+    .WithReference(authApi)
+    .WithEnvironment("Auth__ClientSecret", observabilityApiClientSecret);
+var organizationApi = builder
+    .AddProject<Projects.LightOps_NeuralLens_OrganizationApi>("organization-api")
+    .WithReference(mongoOrganizationDb).WaitFor(mongoOrganizationDb)
+    .WithReference(authApi)
+    .WithEnvironment("Auth__ClientSecret", organizationApiClientSecret);
+var workspaceApi = builder
+    .AddProject<Projects.LightOps_NeuralLens_WorkspaceApi>("workspace-api")
+    .WithReference(mongoWorkspaceDb).WaitFor(mongoWorkspaceDb)
+    .WithReference(authApi)
+    .WithEnvironment("Auth__ClientSecret", workspaceApiClientSecret);
 
 // Add frontend services
-builder
+var managementFrontend = builder
     .AddProject<Projects.LightOps_NeuralLens_Frontend_Management>("frontend-management")
     .WithExternalHttpEndpoints()
-    .WithReference(organizationApi)
-    .WaitFor(organizationApi)
-    .WithReference(workspaceApi)
-    .WaitFor(workspaceApi)
-    .WithReference(observabilityApi)
-    .WaitFor(observabilityApi)
+    .WithReference(authApi)
     .WithReference(evaluationApi)
-    .WaitFor(evaluationApi);
+    .WithReference(observabilityApi)
+    .WithReference(organizationApi).WaitFor(organizationApi)
+    .WithReference(workspaceApi).WaitFor(workspaceApi)
+    .WithEnvironment("Auth__ClientSecret", frontendManagementClientSecret);
 
 builder
     .AddProject<Projects.LightOps_NeuralLens_Frontend_OpenAPI>("frontend-openapi")
     .WithExternalHttpEndpoints()
-    .WithReference(organizationApi)
-    .WaitFor(organizationApi)
-    .WithReference(workspaceApi)
-    .WaitFor(workspaceApi)
-    .WithReference(observabilityApi)
-    .WaitFor(observabilityApi)
+    .WithReference(authApi)
     .WithReference(evaluationApi)
-    .WaitFor(evaluationApi)
     .WithReference(ingestApi)
-    .WaitFor(ingestApi);
+    .WithReference(observabilityApi)
+    .WithReference(organizationApi)
+    .WithReference(workspaceApi);
 
 // Add sample runtimes
 builder
     .AddProject<Projects.Sample_SemanticKernel_WebApi>("sample-semantickernel-api")
-    .WithReference(ingestApi)
-    .WaitFor(ingestApi);
+    .WithReference(ingestApi).WaitFor(ingestApi);
+
+// Add references to Auth API
+authApi.WithReference(organizationApi)
+    .WithReference(workspaceApi)
+    .WithReference(managementFrontend);
 
 builder.Build().Run();

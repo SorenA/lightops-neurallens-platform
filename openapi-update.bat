@@ -24,5 +24,9 @@ rem Ingest API
 echo Downloading Ingest OpenAPI specifications...
 curl --output openapi/ingest-api.v1.json --url https://localhost:20614/openapi/v1.json
 
+rem Auth API
+echo Downloading Auth OpenAPI specifications...
+curl --output openapi/auth-api.v1.json --url https://localhost:20615/openapi/v1.json
+
 echo OpenAPI specifications updated.
 echo ---
