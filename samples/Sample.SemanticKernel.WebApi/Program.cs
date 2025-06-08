@@ -8,6 +8,7 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,18 +84,19 @@ builder.Services.AddOpenTelemetry()
 // Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
+builder.Services.AddOpenApi("v1", options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo
+    options.AddDocumentTransformer((document, _, _) =>
     {
-        Title = "Sample API",
-        Description = "A sample Web API with OpenTelemetry instrumentation.",
-        Version = "v1",
-    });
+        document.Info = new OpenApiInfo
+        {
+            Title = "Sample API",
+            Description = "A sample Web API with OpenTelemetry instrumentation.",
+            Version = "v1",
+        };
 
-    // Add comments to the generated Swagger JSON
-    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+        return Task.CompletedTask;
+    });
 });
 builder.Services.AddCors(options =>
 {
@@ -111,8 +113,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseCors("AllowAll");
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.MapScalarApiReference("/");
 }
 
 app.UseHttpsRedirection();

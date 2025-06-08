@@ -12,10 +12,10 @@
     <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="6.3.0" />
     <PackageReference Include="OpenIddict.Validation.ServerIntegration" Version="6.3.0" />
     <PackageReference Include="OpenIddict.MongoDb" Version="6.3.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LightOps.NeuralLens.Component.ServiceDefaults.OpenApi\LightOps.NeuralLens.Component.ServiceDefaults.OpenApi.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.Component.ServiceDefaults\LightOps.NeuralLens.Component.ServiceDefaults.csproj" />
   </ItemGroup>
 

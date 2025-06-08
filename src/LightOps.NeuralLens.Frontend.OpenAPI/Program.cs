@@ -1,4 +1,5 @@
 using LightOps.NeuralLens.Component.ServiceDefaults;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults();
@@ -12,27 +13,25 @@ app.MapDefaultEndpoints();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwaggerUI(options =>
+    var organizationApiBase = builder.Configuration.GetValue<string>("Services:organization-api:Https:0");
+    var workspaceApiBase = builder.Configuration.GetValue<string>("Services:workspace-api:Https:0");
+    var observabilityApiBase = builder.Configuration.GetValue<string>("Services:observability-api:Https:0");
+    var evaluationApiBase = builder.Configuration.GetValue<string>("Services:evaluation-api:Https:0");
+    var ingestApiBase = builder.Configuration.GetValue<string>("Services:ingest-api:Https:0");
+    var authApiBase = builder.Configuration.GetValue<string>("Services:auth-api:Https:0");
+
+    app.MapScalarApiReference("/", options =>
     {
-        options.RoutePrefix = string.Empty;
+        options.AddDocument("Organization API V1", routePattern: $"{organizationApiBase}/openapi/v1.json");
+        options.AddDocument("Workspace API V1", routePattern: $"{workspaceApiBase}/openapi/v1.json");
+        options.AddDocument("Observability API V1", routePattern: $"{observabilityApiBase}/openapi/v1.json");
+        options.AddDocument("Evaluation API V1", routePattern: $"{evaluationApiBase}/openapi/v1.json");
+        options.AddDocument("Ingest API V1", routePattern: $"{ingestApiBase}/openapi/v1.json");
+        options.AddDocument("Auth API V1", routePattern: $"{authApiBase}/openapi/v1.json");
 
-        var organizationApiBase = Environment.GetEnvironmentVariable("services__organization-api__https__0");
-        options.SwaggerEndpoint($"{organizationApiBase}/openapi/v1.json", "Organization API v1");
+        options.AddPreferredSecuritySchemes(["OAuth2"]);
 
-        var workspaceApiBase = Environment.GetEnvironmentVariable("services__workspace-api__https__0");
-        options.SwaggerEndpoint($"{workspaceApiBase}/openapi/v1.json", "Workspace API v1");
-
-        var observabilityApiBase = Environment.GetEnvironmentVariable("services__observability-api__https__0");
-        options.SwaggerEndpoint($"{observabilityApiBase}/openapi/v1.json", "Observability API v1");
-
-        var evaluationApiBase = Environment.GetEnvironmentVariable("services__evaluation-api__https__0");
-        options.SwaggerEndpoint($"{evaluationApiBase}/openapi/v1.json", "Evaluation API v1");
-
-        var ingestApiBase = Environment.GetEnvironmentVariable("services__ingest-api__https__0");
-        options.SwaggerEndpoint($"{ingestApiBase}/openapi/v1.json", "Ingest API v1");
-
-        var authApiBase = Environment.GetEnvironmentVariable("services__auth-api__https__0");
-        options.SwaggerEndpoint($"{authApiBase}/openapi/v1.json", "Auth API v1");
+        options.WithPersistentAuthentication();
     });
 }
 

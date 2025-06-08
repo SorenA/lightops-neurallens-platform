@@ -53,7 +53,7 @@ var frontendManagementClientSecret = builder.AddParameter("frontend-management-c
 var authApi = builder
     .AddProject<Projects.LightOps_NeuralLens_AuthApi>("auth-api")
     .WithReference(mongoAuthDb).WaitFor(mongoAuthDb)
-    .WithEnvironment("Auth__Clients__AuthApi__ClientSecret", authApiClientSecret)
+    .WithEnvironment("Services__auth-api__ClientSecret", authApiClientSecret)
     .WithEnvironment("Auth__Clients__EvaluationApi__ClientSecret", evaluationApiClientSecret)
     .WithEnvironment("Auth__Clients__IngestApi__ClientSecret", ingestApiClientSecret)
     .WithEnvironment("Auth__Clients__ObservabilityApi__ClientSecret", observabilityApiClientSecret)
@@ -64,27 +64,27 @@ var evaluationApi = builder
     .AddProject<Projects.LightOps_NeuralLens_EvaluationApi>("evaluation-api")
     .WithReference(mongoEvaluationDb).WaitFor(mongoEvaluationDb)
     .WithReference(authApi)
-    .WithEnvironment("Auth__ClientSecret", evaluationApiClientSecret);
+    .WithEnvironment("Services__auth-api__ClientSecret", evaluationApiClientSecret);
 var ingestApi = builder
     .AddProject<Projects.LightOps_NeuralLens_IngestApi>("ingest-api")
     .WithReference(clickhouseObservabilityDb).WaitFor(clickhouseObservabilityDb)
     .WithReference(authApi)
-    .WithEnvironment("Auth__ClientSecret", ingestApiClientSecret);
+    .WithEnvironment("Services__auth-api__ClientSecret", ingestApiClientSecret);
 var observabilityApi = builder
     .AddProject<Projects.LightOps_NeuralLens_ObservabilityApi>("observability-api")
     .WithReference(mongoObservabilityDb).WaitFor(mongoObservabilityDb)
     .WithReference(authApi)
-    .WithEnvironment("Auth__ClientSecret", observabilityApiClientSecret);
+    .WithEnvironment("Services__auth-api__ClientSecret", observabilityApiClientSecret);
 var organizationApi = builder
     .AddProject<Projects.LightOps_NeuralLens_OrganizationApi>("organization-api")
     .WithReference(mongoOrganizationDb).WaitFor(mongoOrganizationDb)
     .WithReference(authApi)
-    .WithEnvironment("Auth__ClientSecret", organizationApiClientSecret);
+    .WithEnvironment("Services__auth-api__ClientSecret", organizationApiClientSecret);
 var workspaceApi = builder
     .AddProject<Projects.LightOps_NeuralLens_WorkspaceApi>("workspace-api")
     .WithReference(mongoWorkspaceDb).WaitFor(mongoWorkspaceDb)
     .WithReference(authApi)
-    .WithEnvironment("Auth__ClientSecret", workspaceApiClientSecret);
+    .WithEnvironment("Services__auth-api__ClientSecret", workspaceApiClientSecret);
 
 // Add frontend services
 var managementFrontend = builder
@@ -95,7 +95,7 @@ var managementFrontend = builder
     .WithReference(observabilityApi)
     .WithReference(organizationApi).WaitFor(organizationApi)
     .WithReference(workspaceApi).WaitFor(workspaceApi)
-    .WithEnvironment("Auth__ClientSecret", frontendManagementClientSecret);
+    .WithEnvironment("Services__auth-api__ClientSecret", frontendManagementClientSecret);
 
 builder
     .AddProject<Projects.LightOps_NeuralLens_Frontend_OpenAPI>("frontend-openapi")

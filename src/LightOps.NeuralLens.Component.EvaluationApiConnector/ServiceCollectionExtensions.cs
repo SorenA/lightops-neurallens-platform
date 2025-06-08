@@ -17,7 +17,10 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IEvaluationApiClient>(provider =>
         {
             var factory = provider.GetRequiredService<IHttpClientFactory>();
-            return new EvaluationApiClient(apiPrefix, factory.CreateClient(nameof(EvaluationApiClient)));
+            return new EvaluationApiClient(factory.CreateClient(nameof(EvaluationApiClient)))
+            {
+                BaseUrl = apiPrefix,
+            };
         });
 
         return services;

@@ -5,6 +5,11 @@
     "description": "A Web API for observability as part of the LightOps NeuralLens Platform.",
     "version": "v1"
   },
+  "servers": [
+    {
+      "url": "https://localhost:20612/"
+    }
+  ],
   "paths": {
     "/traces": {
       "get": {
@@ -20,5 +25,36 @@
       }
     }
   },
-  "components": { }
+  "components": {
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "Bearer",
+        "bearerFormat": "Json Web Token"
+      },
+      "OAuth2": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://localhost:20615/token",
+            "scopes": { }
+          },
+          "authorizationCode": {
+            "authorizationUrl": "https://localhost:20615/authorize",
+            "tokenUrl": "https://localhost:20615/token",
+            "scopes": { }
+          }
+        }
+      },
+      "OIDC": {
+        "type": "openIdConnect",
+        "openIdConnectUrl": "https://localhost:20615/.well-known/openid-configuration"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Trace"
+    }
+  ]
 }

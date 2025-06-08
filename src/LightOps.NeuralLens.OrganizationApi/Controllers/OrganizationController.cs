@@ -1,15 +1,18 @@
 using LightOps.Mapping.Api.Services;
+using LightOps.NeuralLens.Component.ServiceDefaults;
 using LightOps.NeuralLens.OrganizationApi.Domain.Exceptions;
 using LightOps.NeuralLens.OrganizationApi.Domain.Models;
 using LightOps.NeuralLens.OrganizationApi.Domain.Services;
 using LightOps.NeuralLens.OrganizationApi.Models;
 using LightOps.NeuralLens.OrganizationApi.Requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LightOps.NeuralLens.OrganizationApi.Controllers;
 
 [ApiController]
 [Route("organizations")]
+[Authorize(Policy = AuthScopes.Organizations.Read)]
 public class OrganizationController(
     ILogger<OrganizationController> logger,
     IMappingService mappingService,
@@ -45,6 +48,7 @@ public class OrganizationController(
         }
     }
 
+    [Authorize(Policy = AuthScopes.Organizations.Write)]
     [HttpPatch("{id}", Name = "UpdateOrganization")]
     [ProducesResponseType<OrganizationViewModel>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -62,6 +66,7 @@ public class OrganizationController(
         }
     }
 
+    [Authorize(Policy = AuthScopes.Organizations.Write)]
     [HttpDelete("{id}", Name = "DeleteOrganization")]
     [ProducesResponseType<OrganizationViewModel>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -79,6 +84,7 @@ public class OrganizationController(
         }
     }
 
+    [Authorize(Policy = AuthScopes.Organizations.Write)]
     [HttpPost("", Name = "CreateOrganization")]
     [ProducesResponseType<OrganizationViewModel>(StatusCodes.Status200OK)]
     public async Task<ActionResult> CreateOrganization([FromBody] CreateOrganizationRequest request)

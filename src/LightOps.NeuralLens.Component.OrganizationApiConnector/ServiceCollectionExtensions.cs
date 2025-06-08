@@ -17,7 +17,10 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IOrganizationApiClient>(provider =>
         {
             var factory = provider.GetRequiredService<IHttpClientFactory>();
-            return new OrganizationApiClient(apiPrefix, factory.CreateClient(nameof(OrganizationApiClient)));
+            return new OrganizationApiClient(factory.CreateClient(nameof(OrganizationApiClient)))
+            {
+                BaseUrl = apiPrefix,
+            };
         });
 
         return services;

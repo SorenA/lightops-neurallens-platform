@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -7,10 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.2" />
+    <PackageReference Include="OpenIddict.Client.SystemNetHttp" Version="6.3.0" />
+    <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="6.3.0" />
+    <PackageReference Include="OpenIddict.Validation.SystemNetHttp" Version="6.3.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LightOps.NeuralLens.Component.ServiceDefaults.OpenApi\LightOps.NeuralLens.Component.ServiceDefaults.OpenApi.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.Component.ServiceDefaults\LightOps.NeuralLens.Component.ServiceDefaults.csproj" />
   </ItemGroup>
 

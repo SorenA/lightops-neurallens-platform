@@ -5,6 +5,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <IncludeHttpRuleProtos>true</IncludeHttpRuleProtos>
+    <UserSecretsId>e61abf38-d6ef-409d-821b-d1afbd13e655</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,10 +18,10 @@
     <PackageReference Include="OpenIddict.Client.SystemNetHttp" Version="6.3.0" />
     <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="6.3.0" />
     <PackageReference Include="OpenIddict.Validation.SystemNetHttp" Version="6.3.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LightOps.NeuralLens.Component.ServiceDefaults.OpenApi\LightOps.NeuralLens.Component.ServiceDefaults.OpenApi.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.Component.ServiceDefaults\LightOps.NeuralLens.Component.ServiceDefaults.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.Data.Contract.Observability\LightOps.NeuralLens.Data.Contract.Observability.csproj" />
   </ItemGroup>

@@ -1,13 +1,13 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Ingest API",
-    "description": "A Web API for ingest as part of the LightOps NeuralLens Platform.",
+    "title": "Auth API",
+    "description": "A Web API for auth as part of the LightOps NeuralLens Platform.",
     "version": "v1"
   },
   "servers": [
     {
-      "url": "https://localhost:20614/"
+      "url": "https://localhost:20615/"
     }
   ],
   "paths": { },
@@ -22,19 +22,19 @@
         "type": "oauth2",
         "flows": {
           "clientCredentials": {
-            "tokenUrl": "https://localhost:20615/token",
+            "tokenUrl": "/token",
             "scopes": { }
           },
           "authorizationCode": {
-            "authorizationUrl": "https://localhost:20615/authorize",
-            "tokenUrl": "https://localhost:20615/token",
+            "authorizationUrl": "/authorize",
+            "tokenUrl": "/token",
             "scopes": { }
           }
         }
       },
       "OIDC": {
         "type": "openIdConnect",
-        "openIdConnectUrl": "https://localhost:20615/.well-known/openid-configuration"
+        "openIdConnectUrl": "/.well-known/openid-configuration"
       }
     }
   }

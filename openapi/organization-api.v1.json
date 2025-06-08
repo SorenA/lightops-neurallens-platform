@@ -5,6 +5,11 @@
     "description": "A Web API for organizations as part of the LightOps NeuralLens Platform.",
     "version": "v1"
   },
+  "servers": [
+    {
+      "url": "https://localhost:20610/"
+    }
+  ],
   "paths": {
     "/organizations": {
       "get": {
@@ -86,7 +91,8 @@
                 "$ref": "#/components/schemas/CreateOrganizationRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -108,8 +114,27 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OIDC": [
+              "organizations:write"
+            ],
+            "OAuth2": [
+              "organizations:write"
+            ],
+            "Bearer": [
+              "organizations:write"
+            ]
+          }
+        ]
       }
     },
     "/organizations/{id}": {
@@ -203,7 +228,8 @@
                 "$ref": "#/components/schemas/UpdateOrganizationRequest"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -245,8 +271,27 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OIDC": [
+              "organizations:write"
+            ],
+            "OAuth2": [
+              "organizations:write"
+            ],
+            "Bearer": [
+              "organizations:write"
+            ]
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -303,41 +348,65 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OIDC": [
+              "organizations:write"
+            ],
+            "OAuth2": [
+              "organizations:write"
+            ],
+            "Bearer": [
+              "organizations:write"
+            ]
+          }
+        ]
       }
     }
   },
   "components": {
     "schemas": {
       "CreateOrganizationRequest": {
+        "required": [
+          "name",
+          "description"
+        ],
         "type": "object",
         "properties": {
           "name": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "description": {
             "type": "string",
             "nullable": true
           }
-        },
-        "additionalProperties": false
+        }
       },
       "OrganizationViewModel": {
+        "required": [
+          "id",
+          "name",
+          "createdAt",
+          "updatedAt"
+        ],
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "name": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "description": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "createdAt": {
             "type": "string",
@@ -347,8 +416,7 @@
             "type": "string",
             "format": "date-time"
           }
-        },
-        "additionalProperties": false
+        }
       },
       "ProblemDetails": {
         "type": "object",
@@ -374,23 +442,60 @@
             "type": "string",
             "nullable": true
           }
-        },
-        "additionalProperties": { }
+        }
       },
       "UpdateOrganizationRequest": {
+        "required": [
+          "name",
+          "description"
+        ],
         "type": "object",
         "properties": {
           "name": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "description": {
             "type": "string",
             "nullable": true
           }
-        },
-        "additionalProperties": false
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "Bearer",
+        "bearerFormat": "Json Web Token"
+      },
+      "OAuth2": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://localhost:20615/token",
+            "scopes": {
+              "organizations:read": "Read organizations",
+              "organizations:write": "Write organizations"
+            }
+          },
+          "authorizationCode": {
+            "authorizationUrl": "https://localhost:20615/authorize",
+            "tokenUrl": "https://localhost:20615/token",
+            "scopes": {
+              "organizations:read": "Read organizations",
+              "organizations:write": "Write organizations"
+            }
+          }
+        }
+      },
+      "OIDC": {
+        "type": "openIdConnect",
+        "openIdConnectUrl": "https://localhost:20615/.well-known/openid-configuration"
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "Organization"
+    }
+  ]
 }

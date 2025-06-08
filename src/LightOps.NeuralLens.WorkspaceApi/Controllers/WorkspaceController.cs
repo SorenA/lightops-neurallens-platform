@@ -1,16 +1,19 @@
 using LightOps.Mapping.Api.Services;
+using LightOps.NeuralLens.Component.ServiceDefaults;
 using LightOps.NeuralLens.WorkspaceApi.Domain.Constants;
 using LightOps.NeuralLens.WorkspaceApi.Domain.Exceptions;
 using LightOps.NeuralLens.WorkspaceApi.Domain.Models;
 using LightOps.NeuralLens.WorkspaceApi.Domain.Services;
 using LightOps.NeuralLens.WorkspaceApi.Models;
 using LightOps.NeuralLens.WorkspaceApi.Requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LightOps.NeuralLens.WorkspaceApi.Controllers;
 
 [ApiController]
 [Route("workspaces")]
+[Authorize(Policy = AuthScopes.Workspaces.Read)]
 public class WorkspaceController(
     ILogger<WorkspaceController> logger,
     IMappingService mappingService,
@@ -79,6 +82,7 @@ public class WorkspaceController(
     /// <param name="id">The ID of the workspace, or the Ingest Key.</param>
     /// <param name="request">The update request to apply.</param>
     /// <returns>The updated organization.</returns>
+    [Authorize(Policy = AuthScopes.Workspaces.Write)]
     [HttpPatch("{id}", Name = "UpdateWorkspace")]
     [ProducesResponseType<WorkspaceViewModel>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -105,6 +109,7 @@ public class WorkspaceController(
     /// <param name="organizationId">The ID of the organization.</param>
     /// <param name="id">The ID of the workspace, or the Ingest Key.</param>
     /// <returns>The deleted organization.</returns>
+    [Authorize(Policy = AuthScopes.Workspaces.Write)]
     [HttpDelete("{id}", Name = "DeleteWorkspace")]
     [ProducesResponseType<WorkspaceViewModel>(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -130,6 +135,7 @@ public class WorkspaceController(
     /// <param name="organizationId">The ID of the organization.</param>
     /// <param name="request">The create request to apply.</param>
     /// <returns>The newly created organization.</returns>
+    [Authorize(Policy = AuthScopes.Workspaces.Write)]
     [HttpPost("", Name = "CreateWorkspace")]
     [ProducesResponseType<WorkspaceViewModel>(StatusCodes.Status200OK)]
     public async Task<ActionResult> CreateWorkspace(

@@ -17,7 +17,10 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IObservabilityApiClient>(provider =>
         {
             var factory = provider.GetRequiredService<IHttpClientFactory>();
-            return new ObservabilityApiClient(apiPrefix, factory.CreateClient(nameof(ObservabilityApiClient)));
+            return new ObservabilityApiClient(factory.CreateClient(nameof(ObservabilityApiClient)))
+            {
+                BaseUrl = apiPrefix,
+            };
         });
 
         return services;

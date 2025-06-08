@@ -17,7 +17,10 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IWorkspaceApiClient>(provider =>
         {
             var factory = provider.GetRequiredService<IHttpClientFactory>();
-            return new WorkspaceApiClient(apiPrefix, factory.CreateClient(nameof(WorkspaceApiClient)));
+            return new WorkspaceApiClient(factory.CreateClient(nameof(WorkspaceApiClient)))
+            {
+                BaseUrl = apiPrefix,
+            };
         });
 
         return services;
