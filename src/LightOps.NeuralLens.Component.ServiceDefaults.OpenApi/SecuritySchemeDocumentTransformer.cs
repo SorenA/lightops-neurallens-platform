@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.OpenApi;
+using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 
 namespace LightOps.NeuralLens.Component.ServiceDefaults.OpenApi;
@@ -34,7 +36,7 @@ public class SecuritySchemeDocumentTransformer : IOpenApiDocumentTransformer
                 Name = "Authorization",
                 Scheme = "Bearer",
                 In = ParameterLocation.Header,
-                BearerFormat = "Json Web Token",
+                BearerFormat = "JWT",
             },
             ["OAuth2"] = new()
             {
@@ -46,11 +48,19 @@ public class SecuritySchemeDocumentTransformer : IOpenApiDocumentTransformer
                         AuthorizationUrl = new Uri($"{_authIssuer}/authorize", UriKind.RelativeOrAbsolute),
                         TokenUrl = new Uri($"{_authIssuer}/token", UriKind.RelativeOrAbsolute),
                         Scopes = _authScopes,
+                        Extensions = new Dictionary<string, IOpenApiExtension>()
+                        {
+                            ["x-usePkce"] = new OpenApiString("SHA-256"),
+                        },
                     },
                     ClientCredentials = new OpenApiOAuthFlow
                     {
                         TokenUrl = new Uri($"{_authIssuer}/token", UriKind.RelativeOrAbsolute),
                         Scopes = _authScopes,
+                        Extensions = new Dictionary<string, IOpenApiExtension>()
+                        {
+                            ["x-usePkce"] = new OpenApiString("SHA-256"),
+                        },
                     },
                 },
             },
@@ -58,6 +68,10 @@ public class SecuritySchemeDocumentTransformer : IOpenApiDocumentTransformer
             {
                 Type = SecuritySchemeType.OpenIdConnect,
                 OpenIdConnectUrl = new Uri($"{_authIssuer}/.well-known/openid-configuration", UriKind.RelativeOrAbsolute),
+                Extensions = new Dictionary<string, IOpenApiExtension>()
+                {
+                    ["x-usePkce"] = new OpenApiString("SHA-256"),
+                },
             },
         };
 

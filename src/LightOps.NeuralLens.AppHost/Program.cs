@@ -5,10 +5,10 @@ var mongo = builder.AddMongoDB("mongo", 27017)
     .WithLifetime(ContainerLifetime.Persistent)
     .WithDataBindMount("./../../data/mongo");
 var mongoAuthDb = mongo.AddDatabase("mongo-auth-db", "auth_db");
+var mongoEvaluationDb = mongo.AddDatabase("mongo-evaluation-db", "evaluation_db");
+var mongoObservabilityDb = mongo.AddDatabase("mongo-observability-db", "observability_db");
 var mongoOrganizationDb = mongo.AddDatabase("mongo-organization-db", "organization_db");
 var mongoWorkspaceDb = mongo.AddDatabase("mongo-workspace-db", "workspace_db");
-var mongoObservabilityDb = mongo.AddDatabase("mongo-observability-db", "observability_db");
-var mongoEvaluationDb = mongo.AddDatabase("mongo-evaluation-db", "evaluation_db");
 
 var redis = builder.AddRedis("redis", 6379)
     .WithLifetime(ContainerLifetime.Persistent)
@@ -47,7 +47,6 @@ var ingestApiClientSecret = builder.AddParameter("ingest-api-client-secret", tru
 var observabilityApiClientSecret = builder.AddParameter("observability-api-client-secret", true);
 var organizationApiClientSecret = builder.AddParameter("organization-api-client-secret", true);
 var workspaceApiClientSecret = builder.AddParameter("workspace-api-client-secret", true);
-var managementFrontendClientSecret = builder.AddParameter("management-frontend-client-secret", true);
 
 // Add API services
 var authApi = builder
@@ -94,10 +93,9 @@ var managementFrontend = builder
     .WithReference(evaluationApi)
     .WithReference(observabilityApi)
     .WithReference(organizationApi).WaitFor(organizationApi)
-    .WithReference(workspaceApi).WaitFor(workspaceApi)
-    .WithEnvironment("Services__auth-api__ClientSecret", managementFrontendClientSecret);
+    .WithReference(workspaceApi).WaitFor(workspaceApi);
 
-builder
+var documentationFrontend = builder
     .AddProject<Projects.LightOps_NeuralLens_DocumentationFrontend>("documentation-frontend")
     .WithExternalHttpEndpoints()
     .WithReference(authApi)
