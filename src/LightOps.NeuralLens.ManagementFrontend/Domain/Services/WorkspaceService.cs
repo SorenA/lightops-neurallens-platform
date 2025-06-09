@@ -1,6 +1,6 @@
 ﻿using LightOps.NeuralLens.Component.WorkspaceApiConnector.Codegen;
 
-namespace LightOps.NeuralLens.Frontend.Management.Domain.Services;
+namespace LightOps.NeuralLens.ManagementFrontend.Domain.Services;
 public class WorkspaceService(IWorkspaceApiClient workspaceApiClient)
 {
     public async Task<WorkspaceViewModel?> GetCurrent(string? organizationId, string? workspaceId)

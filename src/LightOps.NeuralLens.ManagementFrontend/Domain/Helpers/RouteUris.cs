@@ -1,4 +1,4 @@
-﻿namespace LightOps.NeuralLens.Frontend.Management.Domain.Helpers;
+﻿namespace LightOps.NeuralLens.ManagementFrontend.Domain.Helpers;
 
 public static class RouteUris
 {

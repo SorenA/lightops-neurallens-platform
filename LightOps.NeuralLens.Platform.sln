@@ -21,13 +21,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontends", "Frontends", "{523B8D76-EBEF-490C-8CEF-519DE1A39FAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.Frontend.Management", "src\LightOps.NeuralLens.Frontend.Management\LightOps.NeuralLens.Frontend.Management.csproj", "{CD25576E-A192-4AE8-8A62-AF24C323E36E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.ManagementFrontend", "src\LightOps.NeuralLens.ManagementFrontend\LightOps.NeuralLens.ManagementFrontend.csproj", "{CD25576E-A192-4AE8-8A62-AF24C323E36E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Runtimes", "Runtimes", "{77117863-B62A-4DCC-9793-22E68E3A1BD1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.ObservabilityApi", "src\LightOps.NeuralLens.ObservabilityApi\LightOps.NeuralLens.ObservabilityApi.csproj", "{F9AC15E1-7689-4CCF-A599-388E834C6EC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.Frontend.OpenAPI", "src\LightOps.NeuralLens.Frontend.OpenAPI\LightOps.NeuralLens.Frontend.OpenAPI.csproj", "{C8BB3688-58EB-45A0-B9D0-3CE53C0D5516}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.DocumentationFrontend", "src\LightOps.NeuralLens.DocumentationFrontend\LightOps.NeuralLens.DocumentationFrontend.csproj", "{C8BB3688-58EB-45A0-B9D0-3CE53C0D5516}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.EvaluationApi", "src\LightOps.NeuralLens.EvaluationApi\LightOps.NeuralLens.EvaluationApi.csproj", "{8602A3EA-FF25-4F11-B9E1-0E67CB347741}"
 EndProject

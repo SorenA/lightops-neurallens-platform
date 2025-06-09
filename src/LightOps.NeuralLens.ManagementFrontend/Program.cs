@@ -3,8 +3,8 @@ using LightOps.NeuralLens.Component.ObservabilityApiConnector;
 using LightOps.NeuralLens.Component.OrganizationApiConnector;
 using LightOps.NeuralLens.Component.ServiceDefaults;
 using LightOps.NeuralLens.Component.WorkspaceApiConnector;
-using LightOps.NeuralLens.Frontend.Management.Components;
-using LightOps.NeuralLens.Frontend.Management.Domain.Services;
+using LightOps.NeuralLens.ManagementFrontend.Components;
+using LightOps.NeuralLens.ManagementFrontend.Domain.Services;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);

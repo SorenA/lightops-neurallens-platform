@@ -47,7 +47,7 @@ var ingestApiClientSecret = builder.AddParameter("ingest-api-client-secret", tru
 var observabilityApiClientSecret = builder.AddParameter("observability-api-client-secret", true);
 var organizationApiClientSecret = builder.AddParameter("organization-api-client-secret", true);
 var workspaceApiClientSecret = builder.AddParameter("workspace-api-client-secret", true);
-var frontendManagementClientSecret = builder.AddParameter("frontend-management-client-secret", true);
+var managementFrontendClientSecret = builder.AddParameter("management-frontend-client-secret", true);
 
 // Add API services
 var authApi = builder
@@ -59,7 +59,7 @@ var authApi = builder
     .WithEnvironment("Auth__Clients__ObservabilityApi__ClientSecret", observabilityApiClientSecret)
     .WithEnvironment("Auth__Clients__OrganizationApi__ClientSecret", organizationApiClientSecret)
     .WithEnvironment("Auth__Clients__WorkspaceApi__ClientSecret", workspaceApiClientSecret)
-    .WithEnvironment("Auth__Clients__FrontendManagement__ClientSecret", frontendManagementClientSecret);
+    .WithEnvironment("Auth__Clients__ManagementFrontend__ClientSecret", managementFrontendClientSecret);
 var evaluationApi = builder
     .AddProject<Projects.LightOps_NeuralLens_EvaluationApi>("evaluation-api")
     .WithReference(mongoEvaluationDb).WaitFor(mongoEvaluationDb)
@@ -88,17 +88,17 @@ var workspaceApi = builder
 
 // Add frontend services
 var managementFrontend = builder
-    .AddProject<Projects.LightOps_NeuralLens_Frontend_Management>("frontend-management")
+    .AddProject<Projects.LightOps_NeuralLens_ManagementFrontend>("management-frontend")
     .WithExternalHttpEndpoints()
     .WithReference(authApi)
     .WithReference(evaluationApi)
     .WithReference(observabilityApi)
     .WithReference(organizationApi).WaitFor(organizationApi)
     .WithReference(workspaceApi).WaitFor(workspaceApi)
-    .WithEnvironment("Services__auth-api__ClientSecret", frontendManagementClientSecret);
+    .WithEnvironment("Services__auth-api__ClientSecret", managementFrontendClientSecret);
 
 builder
-    .AddProject<Projects.LightOps_NeuralLens_Frontend_OpenAPI>("frontend-openapi")
+    .AddProject<Projects.LightOps_NeuralLens_DocumentationFrontend>("documentation-frontend")
     .WithExternalHttpEndpoints()
     .WithReference(authApi)
     .WithReference(evaluationApi)

@@ -3,7 +3,7 @@
 @inject IOrganizationApiClient OrganizationApiClient
 @inject ISnackbar Snackbar
 
-<MudDialog>
+<MudDialog DefaultFocus="DefaultFocus.None">
     <TitleContent>
         <MudText Typo="Typo.subtitle1">@(Organization.Id == null ? "Create new organization" : "Edit organization")</MudText>
     </TitleContent>

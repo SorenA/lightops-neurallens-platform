@@ -20,7 +20,7 @@ if (app.Environment.IsDevelopment())
     var ingestApiBase = builder.Configuration.GetValue<string>("Services:ingest-api:Https:0");
     var authApiBase = builder.Configuration.GetValue<string>("Services:auth-api:Https:0");
 
-    app.MapScalarApiReference("/", options =>
+    app.MapScalarApiReference("/api", options =>
     {
         options.AddDocument("Organization API V1", routePattern: $"{organizationApiBase}/openapi/v1.json");
         options.AddDocument("Workspace API V1", routePattern: $"{workspaceApiBase}/openapi/v1.json");
@@ -38,5 +38,11 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
+app.MapGet("/", ctx =>
+{
+    // Redirect to the API documentation
+    ctx.Response.Redirect("/api", false);
+    return Task.CompletedTask;
+});
 
 app.Run();

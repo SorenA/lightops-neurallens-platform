@@ -1,6 +1,6 @@
 ﻿using LightOps.NeuralLens.Component.OrganizationApiConnector.Codegen;
 
-namespace LightOps.NeuralLens.Frontend.Management.Domain.Services;
+namespace LightOps.NeuralLens.ManagementFrontend.Domain.Services;
 
 public class OrganizationService(IOrganizationApiClient organizationApiClient)
 {

@@ -3,7 +3,7 @@
 @inject IWorkspaceApiClient WorkspaceApiClient
 @inject ISnackbar Snackbar
 
-<MudDialog>
+<MudDialog DefaultFocus="DefaultFocus.None">
     <TitleContent>
         <MudText Typo="Typo.subtitle1">@(Workspace.Id == null ? "Create new workspace" : "Edit workspace")</MudText>
     </TitleContent>
