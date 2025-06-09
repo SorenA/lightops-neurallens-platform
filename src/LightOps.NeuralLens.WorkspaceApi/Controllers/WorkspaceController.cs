@@ -1,7 +1,6 @@
 using LightOps.Mapping.Api.Services;
 using LightOps.NeuralLens.Component.ServiceDefaults;
 using LightOps.NeuralLens.WorkspaceApi.Domain.Constants;
-using LightOps.NeuralLens.WorkspaceApi.Domain.Exceptions;
 using LightOps.NeuralLens.WorkspaceApi.Domain.Models;
 using LightOps.NeuralLens.WorkspaceApi.Domain.Services;
 using LightOps.NeuralLens.WorkspaceApi.Models;
@@ -32,7 +31,6 @@ public class WorkspaceController(
     public async Task<ActionResult> GetWorkspaces(
         [FromHeader(Name = HeaderNameConstants.OrganizationId)] string organizationId)
     {
-        logger.LogInformation("GetWorkspaces called");
         var entities = await workspaceService.GetAll(organizationId);
 
         return Ok(mappingService.Map<Workspace, WorkspaceViewModel>(entities)
@@ -52,26 +50,23 @@ public class WorkspaceController(
         [FromHeader(Name = HeaderNameConstants.OrganizationId)] string organizationId,
         string id)
     {
-        try
+        if (ingestKeyService.IsFormatValid(id))
         {
-            if (ingestKeyService.IsFormatValid(id))
-            {
-                logger.LogInformation("GetWorkspaceById called with Ingest Key");
-                // We assume the ID is an Ingest Key
-                return Ok(mappingService.Map<Workspace, WorkspaceViewModel>(
-                    await workspaceService.GetByIngestKey(organizationId, id)));
-            }
-            else
-            {
-                logger.LogInformation("GetWorkspaceById called");
-                // We assume the ID is a workspace ID
-                return Ok(mappingService.Map<Workspace, WorkspaceViewModel>(
-                    await workspaceService.GetById(organizationId, id)));
-            }
+            logger.LogInformation("GetWorkspaceById called with Ingest Key");
+            // We assume the ID is an Ingest Key
+            var entity = await workspaceService.GetByIngestKey(organizationId, id);
+            return entity == null
+                ? NotFound()
+                : Ok(mappingService.Map<Workspace, WorkspaceViewModel>(entity));
         }
-        catch (WorkspaceNotFoundException)
+        else
         {
-            return NotFound();
+            logger.LogInformation("GetWorkspaceById called");
+            // We assume the ID is a workspace ID
+            var entity = await workspaceService.GetById(organizationId, id);
+            return entity == null
+                ? NotFound()
+                : Ok(mappingService.Map<Workspace, WorkspaceViewModel>(entity));
         }
     }
 
@@ -91,16 +86,10 @@ public class WorkspaceController(
         string id,
         [FromBody] UpdateWorkspaceRequest request)
     {
-        logger.LogInformation("UpdateWorkspace called");
-        try
-        {
-            var entity = await workspaceService.Update(organizationId, id, request);
-            return Ok(mappingService.Map<Workspace, WorkspaceViewModel>(entity));
-        }
-        catch (WorkspaceNotFoundException)
-        {
-            return NotFound();
-        }
+        var entity = await workspaceService.Update(organizationId, id, request);
+        return entity == null
+            ? NotFound()
+            : Ok(mappingService.Map<Workspace, WorkspaceViewModel>(entity));
     }
 
     /// <summary>
@@ -117,16 +106,10 @@ public class WorkspaceController(
         [FromHeader(Name = HeaderNameConstants.OrganizationId)] string organizationId,
         string id)
     {
-        logger.LogInformation("DeleteWorkspace called");
-        try
-        {
-            var entity = await workspaceService.Delete(organizationId, id);
-            return Ok(mappingService.Map<Workspace, WorkspaceViewModel>(entity));
-        }
-        catch (WorkspaceNotFoundException)
-        {
-            return NotFound();
-        }
+        var entity = await workspaceService.Delete(organizationId, id);
+        return entity == null
+            ? NotFound()
+            : Ok(mappingService.Map<Workspace, WorkspaceViewModel>(entity));
     }
 
     /// <summary>
@@ -142,7 +125,6 @@ public class WorkspaceController(
         [FromHeader(Name = HeaderNameConstants.OrganizationId)] string organizationId,
         [FromBody] CreateWorkspaceRequest request)
     {
-        logger.LogInformation("CreateWorkspace called");
         var entity = await workspaceService.Create(organizationId, request);
 
         return Ok(mappingService.Map<Workspace, WorkspaceViewModel>(entity));

@@ -1,4 +1,3 @@
-using LightOps.NeuralLens.WorkspaceApi.Domain.Exceptions;
 using LightOps.NeuralLens.WorkspaceApi.Domain.Models;
 using LightOps.NeuralLens.WorkspaceApi.Domain.Repositories;
 using LightOps.NeuralLens.WorkspaceApi.Requests;
@@ -14,26 +13,14 @@ public class WorkspaceService(
         return await workspaceRepository.GetAll(organizationId);
     }
 
-    public async Task<Workspace> GetById(string organizationId, string id)
+    public async Task<Workspace?> GetById(string organizationId, string id)
     {
-        var entity = await workspaceRepository.GetById(organizationId, id);
-        if (entity == null)
-        {
-            throw WorkspaceNotFoundException.FromId(id);
-        }
-
-        return entity;
+        return await workspaceRepository.GetById(organizationId, id);
     }
 
-    public async Task<Workspace> GetByIngestKey(string organizationId, string ingestKey)
+    public async Task<Workspace?> GetByIngestKey(string organizationId, string ingestKey)
     {
-        var entity = await workspaceRepository.GetByIngestKey(organizationId, ingestKey);
-        if (entity == null)
-        {
-            throw WorkspaceNotFoundException.FromIngestKey(ingestKey);
-        }
-
-        return entity;
+        return await workspaceRepository.GetByIngestKey(organizationId, ingestKey);
     }
 
     public async Task<Workspace> Create(string organizationId, CreateWorkspaceRequest request)
@@ -53,12 +40,12 @@ public class WorkspaceService(
         return await workspaceRepository.Create(organizationId, entity);
     }
 
-    public async Task<Workspace> Update(string organizationId, string id, UpdateWorkspaceRequest request)
+    public async Task<Workspace?> Update(string organizationId, string id, UpdateWorkspaceRequest request)
     {
         var entity = await workspaceRepository.GetById(organizationId, id);
         if (entity == null)
         {
-            throw new WorkspaceNotFoundException(id);
+            return null;
         }
 
         // Map request to domain model
@@ -69,12 +56,12 @@ public class WorkspaceService(
         return await workspaceRepository.Update(organizationId, id, entity);
     }
 
-    public async Task<Workspace> Delete(string organizationId, string id)
+    public async Task<Workspace?> Delete(string organizationId, string id)
     {
         var entity = await workspaceRepository.GetById(organizationId, id);
         if (entity == null)
         {
-            throw new WorkspaceNotFoundException(id);
+            return null;
         }
 
         // Soft-delete

@@ -1,5 +1,4 @@
 using LightOps.NeuralLens.WorkspaceApi.Domain.Constants;
-using LightOps.NeuralLens.WorkspaceApi.Domain.Exceptions;
 using LightOps.NeuralLens.WorkspaceApi.Domain.Models;
 using MongoDB.Driver;
 
@@ -57,7 +56,7 @@ public class MongoWorkspaceRepository(IMongoDatabase mongoDatabase) : IWorkspace
             .ContinueWith(_ => workspace);
     }
 
-    public Task<Workspace> Update(string organizationId, string id, Workspace workspace)
+    public Task<Workspace?> Update(string organizationId, string id, Workspace workspace)
     {
         return Collection
             .FindOneAndReplaceAsync(
@@ -66,15 +65,15 @@ public class MongoWorkspaceRepository(IMongoDatabase mongoDatabase) : IWorkspace
                     && m.OrganizationId == organizationId
                     && m.Id == id,
                 workspace)
-            .ContinueWith(_ => workspace);
+            .ContinueWith(_ => workspace)!;
     }
 
-    public Task<Workspace> Delete(string organizationId, string id)
+    public Task<Workspace?> Delete(string organizationId, string id)
     {
         return Collection
             .FindOneAndDeleteAsync(m =>
                 m.OrganizationId == organizationId
                 && m.Id == id)
-            .ContinueWith(task => task.Result ?? throw new WorkspaceNotFoundException(id));
+            .ContinueWith(task => task.Result)!;
     }
 }

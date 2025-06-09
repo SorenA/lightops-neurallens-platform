@@ -9,6 +9,6 @@ public interface IWorkspaceRepository
     Task<Workspace?> GetByIngestKey(string organizationId, string ingestKey);
     Task<bool> NameExists(string organizationId, string name, string? exceptId = null);
     Task<Workspace> Create(string organizationId, Workspace workspace);
-    Task<Workspace> Update(string organizationId, string id, Workspace workspace);
-    Task<Workspace> Delete(string organizationId, string id);
+    Task<Workspace?> Update(string organizationId, string id, Workspace workspace);
+    Task<Workspace?> Delete(string organizationId, string id);
 }

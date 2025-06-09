@@ -1,6 +1,5 @@
 using LightOps.Mapping.Api.Services;
 using LightOps.NeuralLens.Component.ServiceDefaults;
-using LightOps.NeuralLens.OrganizationApi.Domain.Exceptions;
 using LightOps.NeuralLens.OrganizationApi.Domain.Models;
 using LightOps.NeuralLens.OrganizationApi.Domain.Services;
 using LightOps.NeuralLens.OrganizationApi.Models;
@@ -14,7 +13,6 @@ namespace LightOps.NeuralLens.OrganizationApi.Controllers;
 [Route("organizations")]
 [Authorize(Policy = AuthScopes.Organizations.Read)]
 public class OrganizationController(
-    ILogger<OrganizationController> logger,
     IMappingService mappingService,
     OrganizationService organizationService)
     : ControllerBase
@@ -24,7 +22,6 @@ public class OrganizationController(
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetOrganizations()
     {
-        logger.LogInformation("GetOrganizations called");
         var entities = await organizationService.GetAll();
 
         return Ok(mappingService.Map<Organization, OrganizationViewModel>(entities)
@@ -36,16 +33,10 @@ public class OrganizationController(
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> GetOrganizationById(string id)
     {
-        logger.LogInformation("GetOrganizationById called");
-        try
-        {
-            var entity = await organizationService.GetById(id);
-            return Ok(mappingService.Map<Organization, OrganizationViewModel>(entity));
-        }
-        catch (OrganizationNotFoundException)
-        {
-            return NotFound();
-        }
+        var entity = await organizationService.GetById(id);
+        return entity == null
+            ? NotFound()
+            : Ok(mappingService.Map<Organization, OrganizationViewModel>(entity));
     }
 
     [Authorize(Policy = AuthScopes.Organizations.Write)]
@@ -54,16 +45,10 @@ public class OrganizationController(
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> UpdateOrganization(string id, [FromBody] UpdateOrganizationRequest request)
     {
-        logger.LogInformation("UpdateOrganization called");
-        try
-        {
-            var entity = await organizationService.Update(id, request);
-            return Ok(mappingService.Map<Organization, OrganizationViewModel>(entity));
-        }
-        catch (OrganizationNotFoundException)
-        {
-            return NotFound();
-        }
+        var entity = await organizationService.Update(id, request);
+        return entity == null
+            ? NotFound()
+            : Ok(mappingService.Map<Organization, OrganizationViewModel>(entity));
     }
 
     [Authorize(Policy = AuthScopes.Organizations.Write)]
@@ -72,16 +57,10 @@ public class OrganizationController(
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult> DeleteOrganization(string id)
     {
-        logger.LogInformation("DeleteOrganization called");
-        try
-        {
-            var entity = await organizationService.Delete(id);
-            return Ok(mappingService.Map<Organization, OrganizationViewModel>(entity));
-        }
-        catch (OrganizationNotFoundException)
-        {
-            return NotFound();
-        }
+        var entity = await organizationService.Delete(id);
+        return entity == null
+            ? NotFound()
+            : Ok(mappingService.Map<Organization, OrganizationViewModel>(entity));
     }
 
     [Authorize(Policy = AuthScopes.Organizations.Write)]
@@ -89,7 +68,6 @@ public class OrganizationController(
     [ProducesResponseType<OrganizationViewModel>(StatusCodes.Status200OK)]
     public async Task<ActionResult> CreateOrganization([FromBody] CreateOrganizationRequest request)
     {
-        logger.LogInformation("CreateOrganization called");
         var entity = await organizationService.Create(request);
 
         return Ok(mappingService.Map<Organization, OrganizationViewModel>(entity));

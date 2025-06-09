@@ -8,6 +8,6 @@ public interface IOrganizationRepository
     Task<Organization?> GetById(string id);
     Task<bool> NameExists(string name, string? exceptId = null);
     Task<Organization> Create(Organization organization);
-    Task<Organization> Update(string id, Organization organization);
-    Task<Organization> Delete(string id);
+    Task<Organization?> Update(string id, Organization organization);
+    Task<Organization?> Delete(string id);
 }

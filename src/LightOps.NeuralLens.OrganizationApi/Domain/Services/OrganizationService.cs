@@ -1,5 +1,4 @@
-﻿using LightOps.NeuralLens.OrganizationApi.Domain.Exceptions;
-using LightOps.NeuralLens.OrganizationApi.Domain.Models;
+﻿using LightOps.NeuralLens.OrganizationApi.Domain.Models;
 using LightOps.NeuralLens.OrganizationApi.Domain.Repositories;
 using LightOps.NeuralLens.OrganizationApi.Requests;
 
@@ -13,15 +12,9 @@ public class OrganizationService(
         return await organizationRepository.GetAll();
     }
 
-    public async Task<Organization> GetById(string id)
+    public async Task<Organization?> GetById(string id)
     {
-        var entity = await organizationRepository.GetById(id);
-        if (entity == null)
-        {
-            throw new OrganizationNotFoundException(id);
-        }
-
-        return entity;
+        return await organizationRepository.GetById(id);
     }
 
     public async Task<Organization> Create(CreateOrganizationRequest request)
@@ -39,12 +32,12 @@ public class OrganizationService(
         return await organizationRepository.Create(entity);
     }
 
-    public async Task<Organization> Update(string id, UpdateOrganizationRequest request)
+    public async Task<Organization?> Update(string id, UpdateOrganizationRequest request)
     {
         var entity = await organizationRepository.GetById(id);
         if (entity == null)
         {
-            throw new OrganizationNotFoundException(id);
+            return null;
         }
 
         // Map request to domain model
@@ -55,12 +48,12 @@ public class OrganizationService(
         return await organizationRepository.Update(id, entity);
     }
 
-    public async Task<Organization> Delete(string id)
+    public async Task<Organization?> Delete(string id)
     {
         var entity = await organizationRepository.GetById(id);
         if (entity == null)
         {
-            throw new OrganizationNotFoundException(id);
+            return null;
         }
 
         // Soft-delete
