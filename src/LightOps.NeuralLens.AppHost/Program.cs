@@ -53,12 +53,11 @@ var authApi = builder
     .AddProject<Projects.LightOps_NeuralLens_AuthApi>("auth-api")
     .WithReference(mongoAuthDb).WaitFor(mongoAuthDb)
     .WithEnvironment("Services__auth-api__ClientSecret", authApiClientSecret)
-    .WithEnvironment("Auth__Clients__EvaluationApi__ClientSecret", evaluationApiClientSecret)
-    .WithEnvironment("Auth__Clients__IngestApi__ClientSecret", ingestApiClientSecret)
-    .WithEnvironment("Auth__Clients__ObservabilityApi__ClientSecret", observabilityApiClientSecret)
-    .WithEnvironment("Auth__Clients__OrganizationApi__ClientSecret", organizationApiClientSecret)
-    .WithEnvironment("Auth__Clients__WorkspaceApi__ClientSecret", workspaceApiClientSecret)
-    .WithEnvironment("Auth__Clients__ManagementFrontend__ClientSecret", managementFrontendClientSecret);
+    .WithEnvironment("Services__evaluation-api__ClientSecret", evaluationApiClientSecret)
+    .WithEnvironment("Services__ingest-api__ClientSecret", ingestApiClientSecret)
+    .WithEnvironment("Services__observability-api__ClientSecret", observabilityApiClientSecret)
+    .WithEnvironment("Services__organization-api__ClientSecret", organizationApiClientSecret)
+    .WithEnvironment("Services__workspace-api__ClientSecret", workspaceApiClientSecret);
 var evaluationApi = builder
     .AddProject<Projects.LightOps_NeuralLens_EvaluationApi>("evaluation-api")
     .WithReference(mongoEvaluationDb).WaitFor(mongoEvaluationDb)
@@ -111,8 +110,13 @@ builder
     .WithReference(ingestApi).WaitFor(ingestApi);
 
 // Add references to Auth API
-authApi.WithReference(organizationApi)
+authApi
+    .WithReference(evaluationApi)
+    .WithReference(ingestApi)
+    .WithReference(observabilityApi)
+    .WithReference(organizationApi)
     .WithReference(workspaceApi)
-    .WithReference(managementFrontend);
+    .WithReference(managementFrontend)
+    .WithReference(documentationFrontend);
 
 builder.Build().Run();

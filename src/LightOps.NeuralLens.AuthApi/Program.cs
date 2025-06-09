@@ -13,7 +13,6 @@ builder.AddRuntimeAuth();
 builder.AddMongoDBClient(connectionName: "mongo-auth-db");
 
 // Add services to the container.
-builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddCors(options =>

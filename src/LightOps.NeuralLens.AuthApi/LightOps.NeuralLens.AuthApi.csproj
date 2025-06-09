@@ -4,10 +4,13 @@
     <TargetFramework>net9.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
+    <UserSecretsId>a31407aa-9507-404e-8250-fcfe38cbb08f</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Aspire.MongoDB.Driver.v3" Version="9.3.0" />
+    <PackageReference Include="OpenIddict.Client.AspNetCore" Version="6.3.0" />
+    <PackageReference Include="OpenIddict.Client.WebIntegration" Version="6.3.0" />
     <PackageReference Include="OpenIddict.Server.AspNetCore" Version="6.3.0" />
     <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="6.3.0" />
     <PackageReference Include="OpenIddict.Validation.ServerIntegration" Version="6.3.0" />

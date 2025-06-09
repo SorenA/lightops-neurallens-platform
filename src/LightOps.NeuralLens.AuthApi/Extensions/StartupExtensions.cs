@@ -1,4 +1,7 @@
-﻿using LightOps.NeuralLens.Component.ServiceDefaults.OpenApi;
+﻿using LightOps.NeuralLens.AuthApi.Domain.Repositories;
+using LightOps.NeuralLens.AuthApi.Domain.Services;
+using LightOps.NeuralLens.Component.ServiceDefaults.OpenApi;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace LightOps.NeuralLens.AuthApi.Extensions
 {
@@ -10,7 +13,11 @@ namespace LightOps.NeuralLens.AuthApi.Extensions
         /// <param name="builder">The application builder to use for registration.</param>
         public static void AddRuntimeServices(this IHostApplicationBuilder builder)
         {
-            // None
+            // Add repositories
+            builder.Services.AddTransient<IApplicationUserRepository, MongoApplicationUserRepository>();
+
+            // Add services
+            builder.Services.AddTransient<ApplicationUserService>();
         }
 
         /// <summary>
@@ -24,17 +31,10 @@ namespace LightOps.NeuralLens.AuthApi.Extensions
                 {
                     options.UseMongoDb();
                 })
-                .AddServer(options =>
+                .AddClient(options =>
                 {
-                    // Enable the authorization, introspection and token endpoints.
-                    options.SetAuthorizationEndpointUris("authorize")
-                        .SetIntrospectionEndpointUris("introspect")
-                        .SetTokenEndpointUris("token");
-
                     // Enable authorization code and refresh token flows.
-                    options.AllowAuthorizationCodeFlow()
-                        .AllowRefreshTokenFlow()
-                        .AllowClientCredentialsFlow();
+                    options.AllowAuthorizationCodeFlow();
 
                     if (builder.Environment.IsDevelopment())
                     {
@@ -43,13 +43,49 @@ namespace LightOps.NeuralLens.AuthApi.Extensions
                             .AddDevelopmentSigningCertificate();
                     }
 
-                    options.UseAspNetCore();
+                    options.UseAspNetCore()
+                        .EnableRedirectionEndpointPassthrough();
+
+                    options.UseWebProviders()
+                        .AddGitHub(o =>
+                        {
+                            o.SetClientId(builder.Configuration.GetValue<string>("AuthProviders:GitHub:ClientId")!)
+                                .SetClientSecret(
+                                    builder.Configuration.GetValue<string>("AuthProviders:GitHub:ClientSecret")!)
+                                .SetRedirectUri("callback/login/github");
+                        });
+                })
+                .AddServer(options =>
+                {
+                    // Enable the authorization, introspection and token endpoints
+                    options.SetAuthorizationEndpointUris("authorize")
+                        .SetIntrospectionEndpointUris("introspect")
+                        .SetTokenEndpointUris("token");
+
+                    // Enable authorization code and refresh token flows
+                    options.AllowAuthorizationCodeFlow()
+                        .AllowRefreshTokenFlow()
+                        .AllowClientCredentialsFlow();
+
+                    if (builder.Environment.IsDevelopment())
+                    {
+                        // Register the signing and encryption credentials
+                        options.AddDevelopmentEncryptionCertificate()
+                            .AddDevelopmentSigningCertificate();
+                    }
+
+                    options.UseAspNetCore()
+                        .EnableAuthorizationEndpointPassthrough();
                 })
                 .AddValidation(options =>
                 {
                     options.UseLocalServer();
                     options.UseAspNetCore();
                 });
+
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie();
+            builder.Services.AddAuthorization();
         }
 
         /// <summary>

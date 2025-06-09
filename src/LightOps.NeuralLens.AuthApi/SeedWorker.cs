@@ -25,13 +25,13 @@ public class SeedWorker(
         var applicationManager = scope.ServiceProvider.GetRequiredService<IOpenIddictApplicationManager>();
 
         // Ensure Ingest API client exists
-        var ingestApiClientId = configuration.GetValue<string>("Auth:Clients:IngestApi:ClientId")!;
+        var ingestApiClientId = configuration.GetValue<string>("Services:ingest-api:ClientId")!;
         if (await applicationManager.FindByClientIdAsync(ingestApiClientId) is null)
         {
             await applicationManager.CreateAsync(new OpenIddictApplicationDescriptor
             {
                 ClientId = ingestApiClientId,
-                ClientSecret = configuration.GetValue<string>("Auth:Clients:IngestApi:ClientSecret")!,
+                ClientSecret = configuration.GetValue<string>("Services:ingest-api:ClientSecret")!,
                 DisplayName = "Ingest API",
                 ClientType = ClientTypes.Confidential,
                 Permissions =
@@ -40,6 +40,8 @@ public class SeedWorker(
                     Permissions.ResponseTypes.Token,
                     Permissions.Endpoints.Token,
                     Permissions.Endpoints.Introspection,
+
+                    // Scopes
                     Permissions.Prefixes.Scope + AuthScopes.Workspaces.Read,
                 },
             });
@@ -48,13 +50,13 @@ public class SeedWorker(
         }
 
         // Ensure Organization API client exists
-        var organizationApiClientId = configuration.GetValue<string>("Auth:Clients:OrganizationApi:ClientId")!;
+        var organizationApiClientId = configuration.GetValue<string>("Services:organization-api:ClientId")!;
         if (await applicationManager.FindByClientIdAsync(organizationApiClientId) is null)
         {
             await applicationManager.CreateAsync(new OpenIddictApplicationDescriptor
             {
                 ClientId = organizationApiClientId,
-                ClientSecret = configuration.GetValue<string>("Auth:Clients:OrganizationApi:ClientSecret")!,
+                ClientSecret = configuration.GetValue<string>("Services:organization-api:ClientSecret")!,
                 DisplayName = "Organization API",
                 ClientType = ClientTypes.Confidential,
                 Permissions =
@@ -70,13 +72,13 @@ public class SeedWorker(
         }
 
         // Ensure Workspace API client exists
-        var workspaceApiClientId = configuration.GetValue<string>("Auth:Clients:WorkspaceApi:ClientId")!;
+        var workspaceApiClientId = configuration.GetValue<string>("Services:workspace-api:ClientId")!;
         if (await applicationManager.FindByClientIdAsync(workspaceApiClientId) is null)
         {
             await applicationManager.CreateAsync(new OpenIddictApplicationDescriptor
             {
                 ClientId = workspaceApiClientId,
-                ClientSecret = configuration.GetValue<string>("Auth:Clients:WorkspaceApi:ClientSecret")!,
+                ClientSecret = configuration.GetValue<string>("Services:workspace-api:ClientSecret")!,
                 DisplayName = "Workspace API",
                 ClientType = ClientTypes.Confidential,
                 Permissions =
@@ -85,11 +87,88 @@ public class SeedWorker(
                     Permissions.ResponseTypes.Token,
                     Permissions.Endpoints.Token,
                     Permissions.Endpoints.Introspection,
+
+                    // Scopes
                     Permissions.Prefixes.Scope + AuthScopes.Organizations.Read,
                 },
             });
 
             logger.LogInformation("Created Workspace API client.");
+        }
+
+        // Ensure Management frontend client exists
+        var managementFrontendClientId = configuration.GetValue<string>("Services:management-frontend:ClientId")!;
+        if (await applicationManager.FindByClientIdAsync(managementFrontendClientId) is null)
+        {
+            await applicationManager.CreateAsync(new OpenIddictApplicationDescriptor
+            {
+                ClientId = managementFrontendClientId,
+                DisplayName = "Management frontend",
+                ClientType = ClientTypes.Public,
+                Permissions =
+                {
+                    Permissions.GrantTypes.AuthorizationCode,
+                    Permissions.GrantTypes.RefreshToken,
+                    Permissions.ResponseTypes.Code,
+                    Permissions.Endpoints.Authorization,
+                    Permissions.Endpoints.Token,
+
+                    // Scopes
+                    Permissions.Scopes.Email,
+                    Permissions.Scopes.Profile,
+                    Permissions.Scopes.Roles,
+                    Permissions.Prefixes.Scope + AuthScopes.Organizations.Read,
+                    Permissions.Prefixes.Scope + AuthScopes.Organizations.Write,
+                    Permissions.Prefixes.Scope + AuthScopes.Workspaces.Read,
+                    Permissions.Prefixes.Scope + AuthScopes.Workspaces.Write,
+                },
+                Requirements =
+                {
+                    Requirements.Features.ProofKeyForCodeExchange,
+                },
+            });
+
+            logger.LogInformation("Created Management frontend client.");
+        }
+
+        // Ensure Documentation frontend client exists
+        var documentationFrontendClientId = configuration.GetValue<string>("Services:documentation-frontend:ClientId")!;
+        var documentationFrontendUrl = configuration.GetValue<string>("Services:documentation-frontend:Https:0")!;
+        if (await applicationManager.FindByClientIdAsync(documentationFrontendClientId) is null)
+        {
+            await applicationManager.CreateAsync(new OpenIddictApplicationDescriptor
+            {
+                ClientId = documentationFrontendClientId,
+                DisplayName = "Documentation frontend",
+                ClientType = ClientTypes.Public,
+                RedirectUris =
+                {
+                    new Uri($"{documentationFrontendUrl}/api/"),
+                },
+                Permissions =
+                {
+                    Permissions.GrantTypes.AuthorizationCode,
+                    Permissions.GrantTypes.RefreshToken,
+                    Permissions.ResponseTypes.Code,
+                    Permissions.Endpoints.Authorization,
+                    Permissions.Endpoints.Token,
+
+                    // Scopes
+                    Permissions.Scopes.Email,
+                    Permissions.Scopes.Profile,
+                    Permissions.Scopes.Roles,
+                    Permissions.Prefixes.Scope + AuthScopes.Organizations.Read,
+                    Permissions.Prefixes.Scope + AuthScopes.Organizations.Write,
+                    Permissions.Prefixes.Scope + AuthScopes.Workspaces.Read,
+                    Permissions.Prefixes.Scope + AuthScopes.Workspaces.Write,
+                },
+                Requirements =
+                {
+                    Requirements.Features.ProofKeyForCodeExchange,
+                },
+            });
+
+            logger.LogInformation("Created Management frontend client.");
         }
     }
 
