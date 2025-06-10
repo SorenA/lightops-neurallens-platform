@@ -3,8 +3,11 @@
 @using LightOps.NeuralLens.ManagementFrontend
 @using LightOps.NeuralLens.ManagementFrontend.Components
 @using LightOps.NeuralLens.ManagementFrontend.Components.Dialogs
+@using LightOps.NeuralLens.ManagementFrontend.Components.Redirects
 @using LightOps.NeuralLens.ManagementFrontend.Domain.Helpers
 @using LightOps.NeuralLens.ManagementFrontend.Domain.Services
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
@@ -13,3 +16,4 @@
 @using Microsoft.JSInterop
 @using MudBlazor
 @using static Microsoft.AspNetCore.Components.Web.RenderMode
+@attribute [Authorize]

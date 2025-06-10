@@ -20,11 +20,11 @@
                 <MudText Typo="Typo.h5" Class="ml-3">LightOps NeuralLens</MudText>
                 <MudSpacer />
                 <MudToggleIconButton @bind-Toggled="_isDarkMode"
-                                     Icon="@Icons.Material.TwoTone.LightMode"
-                                     ToggledIcon="@Icons.Material.TwoTone.DarkMode"
-                                     Color="Color.Inherit" />
+                Icon="@Icons.Material.TwoTone.LightMode"
+                ToggledIcon="@Icons.Material.TwoTone.DarkMode"
+                Color="Color.Inherit" />
             </MudAppBar>
-            <MudDrawer @bind-Open="_isDrawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+            <MudDrawer @bind-Open="_isDrawerOpen" Variant="@DrawerVariant.Mini" Elevation="2">
                 <NavMenu />
             </MudDrawer>
             <MudMainContent>
@@ -52,7 +52,7 @@
         NavigationManager.LocationChanged += async (_, _) => await RefreshCurrentSettings();
     }
 
-    private async Task RefreshCurrentSettings()
+    private Task RefreshCurrentSettings()
     {
         if (RouteData != null)
         {
@@ -62,7 +62,7 @@
             var organizationId = organizationIdValue as string;
             if (_organization?.Id != organizationId || organizationId == null)
             {
-                _organization = await OrganizationService.GetCurrent(organizationId);
+                _organization = null; // await OrganizationService.GetCurrent(organizationId);
                 stateHasChanged = true;
             }
 
@@ -70,7 +70,7 @@
             var workspaceId = workspaceIdValue as string;
             if (_workspace?.Id != workspaceId || workspaceId == null)
             {
-                _workspace = await WorkspaceService.GetCurrent(_organization?.Id, workspaceId);
+                _workspace = null; // await WorkspaceService.GetCurrent(_organization?.Id, workspaceId);
                 stateHasChanged = true;
             }
 
@@ -79,6 +79,8 @@
                 StateHasChanged();
             }
         }
+
+        return Task.CompletedTask;
     }
 
     private void ToggleDrawer()
