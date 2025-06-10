@@ -2,6 +2,8 @@
 
 public static class AuthScopes
 {
+    public const string Profile = "profile";
+
     public static class Organizations
     {
         public const string Read = "organizations:read";

@@ -2,6 +2,7 @@ using System.Security.Claims;
 using LightOps.NeuralLens.AuthApi.Domain.Services;
 using LightOps.NeuralLens.AuthApi.Requests;
 using LightOps.NeuralLens.Component.ServiceDefaults;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,8 @@ public class AuthController(
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IResult> Authorize()
     {
+        var request = HttpContext.GetOpenIddictServerRequest();
+
         // Check if the user is authenticated via the local authentication scheme
         var authResult = await HttpContext.AuthenticateAsync();
         var principal = authResult?.Principal;
@@ -58,12 +61,17 @@ public class AuthController(
             nameType: Claims.Name,
             roleType: Claims.Role);
         identity.AddClaim(new Claim(Claims.Subject, applicationUser.Id));
-        identity.AddClaim(new Claim(Claims.Name, applicationUser.Name ?? string.Empty)
-            .SetDestinations(Destinations.AccessToken));
-        identity.AddClaim(new Claim(Claims.PreferredUsername, applicationUser.Name ?? string.Empty)
-            .SetDestinations(Destinations.AccessToken));
-        identity.AddClaim(new Claim(Claims.Picture, applicationUser.PictureUrl ?? string.Empty)
-            .SetDestinations(Destinations.AccessToken));
+
+        // Pass profile claims if requested
+        if (request?.HasScope(AuthScopes.Profile) ?? false)
+        {
+            identity.AddClaim(new Claim(Claims.Name, applicationUser.Name ?? string.Empty)
+                .SetDestinations(Destinations.AccessToken));
+            identity.AddClaim(new Claim(Claims.PreferredUsername, applicationUser.Name ?? string.Empty)
+                .SetDestinations(Destinations.AccessToken));
+            identity.AddClaim(new Claim(Claims.Picture, applicationUser.PictureUrl ?? string.Empty)
+                .SetDestinations(Destinations.AccessToken));
+        }
 
         return Results.SignIn(new ClaimsPrincipal(identity), properties: null, OpenIddictServerAspNetCoreDefaults.AuthenticationScheme);
     }

@@ -15,8 +15,9 @@ public class SeedWorker(
         await SeedApplications();
 
         // Seed scopes
-        await SeedWorkspaceScopes();
+        await SeedGlobalScopes();
         await SeedOrganizationScopes();
+        await SeedWorkspaceScopes();
     }
 
     private async Task SeedApplications()
@@ -98,6 +99,7 @@ public class SeedWorker(
 
         // Ensure Management frontend client exists
         var managementFrontendClientId = configuration.GetValue<string>("Services:management-frontend:ClientId")!;
+        var managementFrontendUrl = configuration.GetValue<string>("Services:management-frontend:Https:0")!;
         if (await applicationManager.FindByClientIdAsync(managementFrontendClientId) is null)
         {
             await applicationManager.CreateAsync(new OpenIddictApplicationDescriptor
@@ -105,6 +107,10 @@ public class SeedWorker(
                 ClientId = managementFrontendClientId,
                 DisplayName = "Management frontend",
                 ClientType = ClientTypes.Public,
+                RedirectUris =
+                {
+                    new Uri($"{managementFrontendUrl}/signin-oidc"),
+                },
                 Permissions =
                 {
                     Permissions.GrantTypes.AuthorizationCode,
@@ -114,9 +120,7 @@ public class SeedWorker(
                     Permissions.Endpoints.Token,
 
                     // Scopes
-                    Permissions.Scopes.Email,
                     Permissions.Scopes.Profile,
-                    Permissions.Scopes.Roles,
                     Permissions.Prefixes.Scope + AuthScopes.Organizations.Read,
                     Permissions.Prefixes.Scope + AuthScopes.Organizations.Write,
                     Permissions.Prefixes.Scope + AuthScopes.Workspaces.Read,
@@ -154,9 +158,7 @@ public class SeedWorker(
                     Permissions.Endpoints.Token,
 
                     // Scopes
-                    Permissions.Scopes.Email,
                     Permissions.Scopes.Profile,
-                    Permissions.Scopes.Roles,
                     Permissions.Prefixes.Scope + AuthScopes.Organizations.Read,
                     Permissions.Prefixes.Scope + AuthScopes.Organizations.Write,
                     Permissions.Prefixes.Scope + AuthScopes.Workspaces.Read,
@@ -169,6 +171,22 @@ public class SeedWorker(
             });
 
             logger.LogInformation("Created Management frontend client.");
+        }
+    }
+
+    public async Task SeedGlobalScopes()
+    {
+        using var scope = serviceScopeFactory.CreateScope();
+        var scopeManager = scope.ServiceProvider.GetRequiredService<IOpenIddictScopeManager>();
+
+        if (await scopeManager.FindByNameAsync(AuthScopes.Profile) is null)
+        {
+            await scopeManager.CreateAsync(new OpenIddictScopeDescriptor
+            {
+                Name = AuthScopes.Profile,
+                DisplayName = "Read profile",
+            });
+            logger.LogInformation($"Created scope '{AuthScopes.Profile}'.");
         }
     }
 
