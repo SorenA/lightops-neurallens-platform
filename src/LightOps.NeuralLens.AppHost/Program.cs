@@ -1,3 +1,5 @@
+using LightOps.NeuralLens.AppHost;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 // Add databases
@@ -85,14 +87,22 @@ var workspaceApi = builder
     .WithEnvironment("Services__auth-api__ClientSecret", workspaceApiClientSecret);
 
 // Add frontend services
-var managementFrontend = builder
+var managementFrontend = builder.AddTurboRepoProject("management-frontend", "../LightOps.NeuralLens.Frontends/apps/management", scriptName: "dev")
+    .WithHttpsEndpoint(20601, env: "PORT")
+    .WithExternalHttpEndpoints()
+    .WithReference(authApi)
+    .WithReference(evaluationApi)
+    .WithReference(observabilityApi)
+    .WithReference(organizationApi)
+    .WithReference(workspaceApi);
+/*var managementFrontend = builder
     .AddProject<Projects.LightOps_NeuralLens_ManagementFrontend>("management-frontend")
     .WithExternalHttpEndpoints()
     .WithReference(authApi)
     .WithReference(evaluationApi)
     .WithReference(observabilityApi)
-    .WithReference(organizationApi).WaitFor(organizationApi)
-    .WithReference(workspaceApi).WaitFor(workspaceApi);
+    .WithReference(organizationApi)
+    .WithReference(workspaceApi);*/
 
 var documentationFrontend = builder
     .AddProject<Projects.LightOps_NeuralLens_DocumentationFrontend>("documentation-frontend")
