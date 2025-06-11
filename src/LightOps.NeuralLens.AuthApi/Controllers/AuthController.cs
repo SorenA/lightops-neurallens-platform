@@ -61,6 +61,7 @@ public class AuthController(
             nameType: Claims.Name,
             roleType: Claims.Role);
         identity.AddClaim(new Claim(Claims.Subject, applicationUser.Id));
+        identity.SetScopes(request?.GetScopes());
 
         // Pass profile claims if requested
         if (request?.HasScope(AuthScopes.Profile) ?? false)
@@ -70,6 +71,8 @@ public class AuthController(
             identity.AddClaim(new Claim(Claims.PreferredUsername, applicationUser.Name ?? string.Empty)
                 .SetDestinations(Destinations.AccessToken));
             identity.AddClaim(new Claim(Claims.Picture, applicationUser.PictureUrl ?? string.Empty)
+                .SetDestinations(Destinations.AccessToken));
+            identity.AddClaim(new Claim(Claims.UpdatedAt, applicationUser.UpdatedAt.ToString("O"))
                 .SetDestinations(Destinations.AccessToken));
         }
 
@@ -108,5 +111,22 @@ public class AuthController(
             RedirectUri = result.Properties!.RedirectUri,
         };
         return Results.SignIn(new ClaimsPrincipal(identity), properties);
+    }
+
+    [HttpGet("endsession", Name = "GetEndSession")]
+    [HttpPost("endsession", Name = "PostEndSession")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public IResult EndSession()
+    {
+        var request = HttpContext.GetOpenIddictServerRequest();
+
+        return Results.SignOut(
+            authenticationSchemes: [OpenIddictServerAspNetCoreDefaults.AuthenticationScheme],
+            properties: new AuthenticationProperties
+            {
+                RedirectUri = request?.PostLogoutRedirectUri,
+            });
     }
 }

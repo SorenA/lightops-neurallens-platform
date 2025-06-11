@@ -82,6 +82,7 @@ public class ApplicationUserService(
             new Claim(ClaimTypes.NameIdentifier, user.Id),
             new Claim(AuthClaims.Name, user.Name ?? string.Empty),
             new Claim(AuthClaims.Picture, user.PictureUrl ?? string.Empty),
+            new Claim(AuthClaims.UpdatedAt, user.UpdatedAt.ToString("O")),
         ]);
 
         return identity;

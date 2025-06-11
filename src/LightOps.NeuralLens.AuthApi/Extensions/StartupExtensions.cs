@@ -1,7 +1,9 @@
-﻿using LightOps.NeuralLens.AuthApi.Domain.Repositories;
+﻿using LightOps.NeuralLens.AuthApi.Domain.EventHandlers;
+using LightOps.NeuralLens.AuthApi.Domain.Repositories;
 using LightOps.NeuralLens.AuthApi.Domain.Services;
 using LightOps.NeuralLens.Component.ServiceDefaults.OpenApi;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using OpenIddict.Server;
 
 namespace LightOps.NeuralLens.AuthApi.Extensions
 {
@@ -18,6 +20,9 @@ namespace LightOps.NeuralLens.AuthApi.Extensions
 
             // Add services
             builder.Services.AddTransient<ApplicationUserService>();
+
+            // Add event handlers
+            builder.Services.AddScoped<IOpenIddictServerHandler<OpenIddictServerEvents.HandleUserInfoRequestContext>, UserInfoRequestContextEventHandler>();
         }
 
         /// <summary>
@@ -60,12 +65,16 @@ namespace LightOps.NeuralLens.AuthApi.Extensions
                     // Enable the authorization, introspection and token endpoints
                     options.SetAuthorizationEndpointUris("authorize")
                         .SetIntrospectionEndpointUris("introspect")
-                        .SetTokenEndpointUris("token");
+                        .SetTokenEndpointUris("token")
+                        .SetUserInfoEndpointUris("userinfo")
+                        .SetEndSessionEndpointUris("endsession");
 
                     // Enable authorization code and refresh token flows
                     options.AllowAuthorizationCodeFlow()
                         .AllowRefreshTokenFlow()
                         .AllowClientCredentialsFlow();
+
+                    options.AddEventHandler<OpenIddictServerEvents.HandleUserInfoRequestContext>(b => b.UseScopedHandler<UserInfoRequestContextEventHandler>());
 
                     if (builder.Environment.IsDevelopment())
                     {
@@ -75,7 +84,8 @@ namespace LightOps.NeuralLens.AuthApi.Extensions
                     }
 
                     options.UseAspNetCore()
-                        .EnableAuthorizationEndpointPassthrough();
+                        .EnableAuthorizationEndpointPassthrough()
+                        .EnableEndSessionEndpointPassthrough();
                 })
                 .AddValidation(options =>
                 {

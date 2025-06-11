@@ -140,6 +140,7 @@ _TeamCity*
 # Visual Studio code coverage results
 *.coverage
 *.coveragexml
+coverage
 
 # NCrunch
 _NCrunch_*
@@ -187,7 +188,7 @@ PublishScripts/
 # NuGet Symbol Packages
 *.snupkg
 # The packages folder can be ignored because of Package Restore
-**/[Pp]ackages/*
+# **/[Pp]asckages/*
 # except build/, which is used as an MSBuild target.
 !**/[Pp]ackages/build/
 # Uncomment if necessary however generally it will be regenerated when needed
@@ -274,6 +275,8 @@ FakesAssemblies/
 # Node.js Tools for Visual Studio
 .ntvs_analysis.dat
 node_modules/
+.pnp
+.pnp.js
 
 # Visual Studio 6 build log
 *.plg
@@ -351,9 +354,35 @@ MigrationBackup/
 *.orig
 .idea/
 
+# Next.js
+.next/
+out/
+build
+.swc/
+
+# Turbo
+.turbo
+
+# UI
+dist/
+
+# Misc
+.DS_Store
+*.pem
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Local env files
+.env.local
+.env.*.local
 appsettings.local.json
 
 # Azure Functions localsettings file
 local.settings.json
 **/* - Backup*.csproj
 data
+
+#!src/LightOps.NeuralLens.Frontends/packages

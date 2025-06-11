@@ -15,4 +15,9 @@ public static class AuthClaims
     /// Profile picture URL.
     /// </summary>
     public const string Picture = "picture";
+
+    /// <summary>
+    /// A datetime indicating when the last update was made.
+    /// </summary>
+    public const string UpdatedAt = "updated_at";
 }

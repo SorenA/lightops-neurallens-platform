@@ -109,7 +109,11 @@ public class SeedWorker(
                 ClientType = ClientTypes.Public,
                 RedirectUris =
                 {
-                    new Uri($"{managementFrontendUrl}/signin-oidc"),
+                    new Uri($"{managementFrontendUrl}/api/auth/sign-in-oidc-callback"),
+                },
+                PostLogoutRedirectUris =
+                {
+                    new Uri($"{managementFrontendUrl}"),
                 },
                 Permissions =
                 {
@@ -118,6 +122,7 @@ public class SeedWorker(
                     Permissions.ResponseTypes.Code,
                     Permissions.Endpoints.Authorization,
                     Permissions.Endpoints.Token,
+                    Permissions.Endpoints.EndSession,
 
                     // Scopes
                     Permissions.Scopes.Profile,
@@ -170,7 +175,7 @@ public class SeedWorker(
                 },
             });
 
-            logger.LogInformation("Created Management frontend client.");
+            logger.LogInformation("Created Documentation frontend client.");
         }
     }
 

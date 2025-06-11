@@ -1,4 +1,5 @@
 using LightOps.NeuralLens.AppHost;
+using Microsoft.Extensions.Hosting;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
@@ -87,14 +88,18 @@ var workspaceApi = builder
     .WithEnvironment("Services__auth-api__ClientSecret", workspaceApiClientSecret);
 
 // Add frontend services
-var managementFrontend = builder.AddTurboRepoProject("management-frontend", "../LightOps.NeuralLens.Frontends/apps/management", scriptName: "dev")
+var managementFrontend = builder.AddTurboRepoProject(
+        "management-frontend",
+        "../LightOps.NeuralLens.Frontends/apps/management",
+        scriptName: "dev")
     .WithHttpsEndpoint(20601, env: "PORT")
     .WithExternalHttpEndpoints()
-    .WithReference(authApi)
-    .WithReference(evaluationApi)
-    .WithReference(observabilityApi)
-    .WithReference(organizationApi)
-    .WithReference(workspaceApi);
+    .WithEnvironment("NODE_TLS_REJECT_UNAUTHORIZED", builder.Environment.IsDevelopment() ? "0" : "1")
+    .WithEnvironment("NEXT_PUBLIC_AUTH_API_URL", authApi.GetEndpoint("https"))
+    .WithEnvironment("NEXT_PUBLIC_EVALUATION_API_URL", evaluationApi.GetEndpoint("https"))
+    .WithEnvironment("NEXT_PUBLIC_OBSERVABILITY_API_URL", observabilityApi.GetEndpoint("https"))
+    .WithEnvironment("NEXT_PUBLIC_ORGANIZATION_API_URL", organizationApi.GetEndpoint("https"))
+    .WithEnvironment("NEXT_PUBLIC_WORKSPACE_API_URL", workspaceApi.GetEndpoint("https"));
 /*var managementFrontend = builder
     .AddProject<Projects.LightOps_NeuralLens_ManagementFrontend>("management-frontend")
     .WithExternalHttpEndpoints()

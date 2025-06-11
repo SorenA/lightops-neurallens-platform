@@ -25,9 +25,8 @@ public class MongoApplicationUserRepository(IMongoDatabase mongoDatabase) : IApp
 
     public Task<ApplicationUser?> GetByExternalId(string provider, string id)
     {
-        string? externalId;
         return Collection
-            .Find(m => m.ExternalIds.TryGetValue(provider, out externalId) && externalId == id)
+            .Find(m => m.ExternalIds.ContainsKey(provider) && m.ExternalIds[provider] == id)
             .FirstOrDefaultAsync()!;
     }
 
