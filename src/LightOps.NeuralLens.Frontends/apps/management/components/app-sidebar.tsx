@@ -16,11 +16,11 @@ import {
   SquareTerminal,
 } from "lucide-react"
 
-import { NavMain } from "@repo/ui/components/nav-main"
-import { NavProjects } from "@repo/ui/components/nav-projects"
-import { NavUser } from "@repo/ui/components/nav-user"
-import { NavSecondary } from "@repo/ui/components/nav-secondary"
-import { OrganizationSwitcher } from "@repo/ui/components/organization-switcher"
+import { NavMain } from "@/components/nav-main"
+import { NavProjects } from "@/components/nav-projects"
+import { NavUser } from "@/components/nav-user"
+import { NavSecondary } from "@/components/nav-secondary"
+import { OrganizationSwitcher } from "@/components/organization-switcher"
 import {
   Sidebar,
   SidebarContent,
@@ -28,14 +28,11 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@repo/ui/components/sidebar"
+import useSession from "@/hooks/useSession"
+import useOrganizations from "@/hooks/useOrganizations"
 
 // This is sample data.
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   organizations: [
     {
       name: "Acme Inc",
@@ -172,10 +169,13 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { session, loading } = useSession()
+  const { organizations, loading: organizationsLoading } = useOrganizations()
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <OrganizationSwitcher organizations={data.organizations} />
+        <OrganizationSwitcher organizations={organizations} />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
@@ -183,7 +183,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={{ name: session?.userInfo?.name, picture: session?.userInfo?.picture}} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

@@ -7,6 +7,7 @@ export async function GET() {
       return Response.json({ defaultSession })
     }
     return Response.json({
+      access_token: session.access_token, // Passed to allow calling APIs from frontend, should not be exposed if all calls are made through local APIs
       isLoggedIn: session.isLoggedIn,
       userInfo: session.userInfo,
     })
