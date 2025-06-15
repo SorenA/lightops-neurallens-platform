@@ -79,12 +79,12 @@ namespace LightOps.NeuralLens.OrganizationApi.Extensions
                 options.AddPolicy(AuthScopes.Organizations.Read, policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim(OpenIddictConstants.Claims.Scope, AuthScopes.Organizations.Read);
+                    policy.RequireAssertion(x => x.User.HasScope(AuthScopes.Organizations.Read));
                 });
                 options.AddPolicy(AuthScopes.Organizations.Write, policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim(OpenIddictConstants.Claims.Scope, AuthScopes.Organizations.Write);
+                    policy.RequireAssertion(x => x.User.HasScope(AuthScopes.Organizations.Write));
                 });
             });
         }

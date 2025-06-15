@@ -80,12 +80,12 @@ namespace LightOps.NeuralLens.WorkspaceApi.Extensions
                 options.AddPolicy(AuthScopes.Workspaces.Read, policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim(OpenIddictConstants.Claims.Scope, AuthScopes.Workspaces.Read);
+                    policy.RequireAssertion(x => x.User.HasScope(AuthScopes.Workspaces.Read));
                 });
                 options.AddPolicy(AuthScopes.Workspaces.Write, policy =>
                 {
                     policy.RequireAuthenticatedUser();
-                    policy.RequireClaim(OpenIddictConstants.Claims.Scope, AuthScopes.Workspaces.Write);
+                    policy.RequireAssertion(x => x.User.HasScope(AuthScopes.Workspaces.Write));
                 });
             });
         }
