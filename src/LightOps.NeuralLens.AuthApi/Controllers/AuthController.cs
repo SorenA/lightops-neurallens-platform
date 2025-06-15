@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Security.Claims;
 using LightOps.NeuralLens.AuthApi.Domain.Services;
 using LightOps.NeuralLens.AuthApi.Requests;
@@ -17,7 +18,8 @@ namespace LightOps.NeuralLens.AuthApi.Controllers;
 [ApiController]
 [Route("")]
 public class AuthController(
-    ApplicationUserService applicationUserService)
+    ApplicationUserService applicationUserService,
+    IOpenIddictScopeManager scopeManager)
     : ControllerBase
 {
     [HttpGet("authorize", Name = "GetAuthorize")]
@@ -62,6 +64,12 @@ public class AuthController(
             roleType: Claims.Role);
         identity.AddClaim(new Claim(Claims.Subject, applicationUser.Id));
         identity.SetScopes(request?.GetScopes());
+
+        // Add audiences based on resources
+        var resources = scopeManager
+            .ListResourcesAsync(request?.GetScopes() ?? [])
+            .ToBlockingEnumerable();
+        identity.SetResources(resources);
 
         // Pass profile claims if requested
         if (request?.HasScope(AuthScopes.Profile) ?? false)

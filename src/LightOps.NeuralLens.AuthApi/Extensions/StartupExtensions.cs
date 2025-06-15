@@ -62,6 +62,9 @@ namespace LightOps.NeuralLens.AuthApi.Extensions
                 })
                 .AddServer(options =>
                 {
+                    options
+                        .UseReferenceRefreshTokens();
+
                     // Enable the authorization, introspection and token endpoints
                     options.SetAuthorizationEndpointUris("authorize")
                         .SetIntrospectionEndpointUris("introspect")
