@@ -7,7 +7,7 @@ import { useState } from 'react'
 
 const SignIn = () => {
   const { session, loading } = useSession()
-  const [redirecting, setRedirecting] = useState(false);
+  const [redirecting, setRedirecting] = useState(false)
 
   if (loading || redirecting) {
     return (

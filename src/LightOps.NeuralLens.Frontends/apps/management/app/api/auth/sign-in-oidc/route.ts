@@ -1,18 +1,17 @@
-import { getClientConfig, getSession, clientConfig } from '@/lib/auth'
+import { getClientConfig, clientConfig, SignInSession } from '@/lib/auth'
 import * as client from 'openid-client'
 
 export async function GET() {
-  const session = await getSession()
 
   // Build authorization url
   const codeVerifier = client.randomPKCECodeVerifier()
   const codeChallenge = await client.calculatePKCECodeChallenge(codeVerifier)
   const openIdClientConfig = await getClientConfig()
   const parameters: Record<string, string> = {
-    redirect_uri: clientConfig.redirect_uri,
+    redirect_uri: clientConfig.redirectUri,
     scope: clientConfig.scope,
     code_challenge: codeChallenge,
-    code_challenge_method: clientConfig.code_challenge_method,
+    code_challenge_method: clientConfig.codeChallengeMethod,
   }
 
   let state!: string
@@ -24,9 +23,10 @@ export async function GET() {
   const redirectTo = client.buildAuthorizationUrl(openIdClientConfig, parameters)
 
   // Update session
-  session.code_verifier = codeVerifier
-  session.state = state
-  await session.save()
+  const signInSession = await SignInSession.getSession()
+  signInSession.codeVerifier = codeVerifier
+  signInSession.state = state
+  await signInSession.save()
 
   // Redirect user to sign in endpoint
   return Response.redirect(redirectTo.href)

@@ -1,10 +1,10 @@
-import { getClientConfig, getSession, clientConfig } from '@/lib/auth'
+import { getClientConfig, clientConfig, SignInSession, AuthSession, AccessTokenSession, RefreshTokenSession } from '@/lib/auth'
 import { headers } from 'next/headers'
 import { NextRequest } from 'next/server'
 import * as client from 'openid-client'
 
 export async function GET(request: NextRequest) {
-  const session = await getSession()
+  const signInSession = await SignInSession.getSession()
 
   // Validate the authentication response
   const openIdClientConfig = await getClientConfig()
@@ -15,29 +15,42 @@ export async function GET(request: NextRequest) {
     `${protocol}://${host}${request.nextUrl.pathname}${request.nextUrl.search}`
   )
   const tokenSet = await client.authorizationCodeGrant(openIdClientConfig, currentUrl, {
-    pkceCodeVerifier: session.code_verifier,
-    expectedState: session.state,
+    pkceCodeVerifier: signInSession.codeVerifier,
+    expectedState: signInSession.state,
   })
 
   // Extract access token and claims
-  const { access_token } = tokenSet
+  const { access_token, refresh_token } = tokenSet
   const claims = tokenSet.claims()!
   const { sub } = claims
   
   // Call userinfo endpoint to get user info
   const userinfo = await client.fetchUserInfo(openIdClientConfig, access_token, sub)
   
-  // Update session
-  session.isLoggedIn = true
-  session.access_token = access_token
-  session.userInfo = {
+  // Clear sign-in session
+  await SignInSession.clearSession()
+
+  // Update auth sessions
+  const authSession = await AuthSession.getSession()
+  authSession.isLoggedIn = true
+  authSession.userInfo = {
     id: userinfo.sub,
     name: userinfo.name!,
     picture: userinfo.picture!,
     updated_at: (userinfo.updated_at! as any),
   }
-  await session.save()
+  await authSession.save()
+
+  // Update access token session
+  const accessTokenSession = await AccessTokenSession.getSession()
+  accessTokenSession.accessToken = access_token
+  await accessTokenSession.save()
+
+  // Update refresh token session
+  const refreshTokenSession = await RefreshTokenSession.getSession()
+  refreshTokenSession.refreshToken = refresh_token
+  await refreshTokenSession.save()
 
   // Redirect user to post login route
-  return Response.redirect(clientConfig.post_login_route)
+  return Response.redirect(clientConfig.postLoginRoute)
 }

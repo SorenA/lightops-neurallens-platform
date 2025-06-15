@@ -2,63 +2,139 @@ import { IronSession, SessionOptions, getIronSession } from 'iron-session'
 import { cookies } from 'next/headers'
 import * as client from 'openid-client'
 
+// Sessions are split to keep under cookie max size
+
+// #region Internal session functions
+function getSessionOptions(sessionName: string): SessionOptions {
+  return {
+    password: process.env.SESSION_PASSWORD!,
+    cookieName: `lightops_neurallens_${sessionName}`,
+    cookieOptions: {
+      // secure only works in `https` environments
+      // if your localhost is not on `https`, then use: `secure: process.env.NODE_ENV === "production"`
+      secure: process.env.NODE_ENV === 'production',
+    },
+    ttl: 60 * 60 * 24 * 7, // 1 week
+  }
+}
+
+async function getSession<T extends object>(sessionName: string): Promise<IronSession<T>> {
+  const cookiesList = await cookies()
+  return await getIronSession<T>(cookiesList, getSessionOptions(sessionName))
+}
+
+async function clearSession(sessionName: string): Promise<void> {
+  const session = await getSession(sessionName)
+  session.destroy()
+}
+// #endregion
+
+// #region Access token refreshing
+export async function refreshAccessToken(): Promise<IronSession<AccessTokenSessionData>> {
+    const openIdClientConfig = await getClientConfig()
+    const accessTokenSession = await AccessTokenSession.getSession()
+    const refreshTokenSession = await RefreshTokenSession.getSession()
+
+    try {
+        const tokenSet = await client.refreshTokenGrant(openIdClientConfig, refreshTokenSession.refreshToken!)
+        
+        // Update sessions
+        accessTokenSession.accessToken = tokenSet.access_token!
+        accessTokenSession.save()
+        refreshTokenSession.refreshToken = tokenSet.refresh_token ?? refreshTokenSession.refreshToken
+        refreshTokenSession.save()
+
+        return accessTokenSession
+    } catch (error) {
+        console.error('Token refresh failed:', error)
+        throw new Error('Unable to refresh access token')
+    }
+}
+// #endregion
+
+// #region Client configuration
 export const clientConfig = {
   url: process.env.NEXT_PUBLIC_AUTH_API_URL,
   audience: process.env.NEXT_PUBLIC_AUTH_API_URL,
-  client_id: process.env.NEXT_PUBLIC_AUTH_CLIENT_ID,
-  scope: 'openid profile'
+  clientId: process.env.NEXT_PUBLIC_AUTH_CLIENT_ID,
+  scope: 'openid profile offline_access'
     + ' organizations:read organizations:write'
     + ' workspaces:read workspaces:write',
-  redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/sign-in-oidc-callback`,
-  post_logout_redirect_uri: `${process.env.NEXT_PUBLIC_APP_URL}`,
+  redirectUri: `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/sign-in-oidc-callback`,
   response_type: 'code',
   grant_type: 'authorization_code',
-  post_login_route: `${process.env.NEXT_PUBLIC_APP_URL}`,
-  code_challenge_method: 'S256',
+  postLoginRoute: `${process.env.NEXT_PUBLIC_APP_URL}`,
+  postLogoutRedirectUri: `${process.env.NEXT_PUBLIC_APP_URL}`,
+  codeChallengeMethod: 'S256',
 }
 
-export interface SessionData {
+export async function getClientConfig() {
+  return await client.discovery(new URL(clientConfig.url!), clientConfig.clientId!)
+}
+// #endregion
+
+// #region Auth session
+const authSessionName = 'auth'
+
+export interface AuthSessionData {
   isLoggedIn: boolean
-  access_token?: string
-  code_verifier?: string
-  state?: string
-  userInfo?: {
+  userInfo: {
     id: string
     name: string
     picture: string
     updated_at: string
-  }
+  } | object
 }
 
-export const defaultSession: SessionData = {
-  isLoggedIn: false,
-  access_token: undefined,
-  code_verifier: undefined,
-  state: undefined,
-  userInfo: undefined,
-}
-
-export const sessionOptions: SessionOptions = {
-  password: process.env.SESSION_PASSWORD!,
-  cookieName: 'lightops_neurallens_session',
-  cookieOptions: {
-    // secure only works in `https` environments
-    // if your localhost is not on `https`, then use: `secure: process.env.NODE_ENV === "production"`
-    secure: process.env.NODE_ENV === 'production',
+export const AuthSession = {
+  getSession: async () => {
+    const session = await getSession<AuthSessionData>(authSessionName)
+    if (!session.isLoggedIn) {
+      session.isLoggedIn = false
+      session.userInfo = {}
+    }
+    return session
   },
-  ttl: 60 * 60 * 24 * 7, // 1 week
+  clearSession: async () => clearSession(authSessionName),
+}
+// #endregion
+
+// #region Access token session
+const accessTokenSessionName = 'at'
+
+export interface AccessTokenSessionData {
+  accessToken?: string
 }
 
-export async function getSession(): Promise<IronSession<SessionData>> {
-  const cookiesList = await cookies()
-  const session = await getIronSession<SessionData>(cookiesList, sessionOptions)
-  if (!session.isLoggedIn) {
-    session.access_token = defaultSession.access_token
-    session.userInfo = defaultSession.userInfo
-  }
-  return session
+export const AccessTokenSession = {
+  getSession: async () => getSession<AccessTokenSessionData>(accessTokenSessionName),
+  clearSession: async () => clearSession(accessTokenSessionName)
+}
+// #endregion
+
+// #region Refresh token session
+const refreshTokenSessionName = 'rt'
+
+export interface RefreshTokenSessionData {
+  refreshToken?: string
 }
 
-export async function getClientConfig() {
-  return await client.discovery(new URL(clientConfig.url!), clientConfig.client_id!)
+export const RefreshTokenSession = {
+  getSession: async () => getSession<RefreshTokenSessionData>(refreshTokenSessionName),
+  clearSession: async () => clearSession(refreshTokenSessionName)
 }
+// #endregion
+
+// #region Sign-in session
+const signInSessionName = 'signin'
+
+export interface SignInSessionData {
+  codeVerifier?: string
+  state?: string
+}
+
+export const SignInSession = {
+  getSession: async () => getSession<SignInSessionData>(signInSessionName),
+  clearSession: async () => clearSession(signInSessionName)
+}
+// #endregion
