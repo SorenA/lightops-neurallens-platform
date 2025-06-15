@@ -26,6 +26,12 @@ export function OrganizationSwitcher({
 }) {
   const { isMobile } = useSidebar()
   const [activeOrganization, setActiveOrganization] = React.useState(organizations?.[0])
+  
+  React.useEffect(() => {
+    if (!activeOrganization) {
+      setActiveOrganization(organizations?.[0])
+    }
+  }, [activeOrganization, organizations]);
 
   if (!activeOrganization) {
     return null
