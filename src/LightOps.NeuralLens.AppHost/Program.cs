@@ -100,14 +100,6 @@ var managementFrontend = builder.AddTurboRepoProject(
     .WithEnvironment("NEXT_PUBLIC_OBSERVABILITY_API_URL", observabilityApi.GetEndpoint("https"))
     .WithEnvironment("NEXT_PUBLIC_ORGANIZATION_API_URL", organizationApi.GetEndpoint("https"))
     .WithEnvironment("NEXT_PUBLIC_WORKSPACE_API_URL", workspaceApi.GetEndpoint("https"));
-/*var managementFrontend = builder
-    .AddProject<Projects.LightOps_NeuralLens_ManagementFrontend>("management-frontend")
-    .WithExternalHttpEndpoints()
-    .WithReference(authApi)
-    .WithReference(evaluationApi)
-    .WithReference(observabilityApi)
-    .WithReference(organizationApi)
-    .WithReference(workspaceApi);*/
 
 var documentationFrontend = builder
     .AddProject<Projects.LightOps_NeuralLens_DocumentationFrontend>("documentation-frontend")

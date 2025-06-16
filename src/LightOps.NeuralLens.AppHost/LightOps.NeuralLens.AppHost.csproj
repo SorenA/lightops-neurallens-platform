@@ -13,7 +13,6 @@
     <ProjectReference Include="..\..\samples\Sample.SemanticKernel.WebApi\Sample.SemanticKernel.WebApi.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.AuthApi\LightOps.NeuralLens.AuthApi.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.EvaluationApi\LightOps.NeuralLens.EvaluationApi.csproj" />
-    <ProjectReference Include="..\LightOps.NeuralLens.ManagementFrontend\LightOps.NeuralLens.ManagementFrontend.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.DocumentationFrontend\LightOps.NeuralLens.DocumentationFrontend.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.IngestApi\LightOps.NeuralLens.IngestApi.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.ObservabilityApi\LightOps.NeuralLens.ObservabilityApi.csproj" />
