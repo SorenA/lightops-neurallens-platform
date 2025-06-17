@@ -1,31 +1,22 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Workspace API",
-    "description": "A Web API for workspaces as part of the LightOps NeuralLens Platform.",
+    "title": "Permission API",
+    "description": "A Web API for permissions as part of the LightOps NeuralLens Platform.",
     "version": "v1"
   },
   "servers": [
     {
-      "url": "https://localhost:20611/"
+      "url": "https://localhost:20616/"
     }
   ],
   "paths": {
-    "/workspaces": {
+    "/user-role-assignments": {
       "get": {
         "tags": [
-          "Workspace"
+          "UserRoleAssignment"
         ],
-        "operationId": "GetWorkspaces",
-        "parameters": [
-          {
-            "name": "X-Organization-Id",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "operationId": "GetByAssignedScope",
         "responses": {
           "200": {
             "description": "OK",
@@ -34,7 +25,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/WorkspaceViewModel"
+                    "$ref": "#/components/schemas/UserRoleAssignmentViewModel"
                   }
                 }
               },
@@ -42,7 +33,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/WorkspaceViewModel"
+                    "$ref": "#/components/schemas/UserRoleAssignmentViewModel"
                   }
                 }
               },
@@ -50,7 +41,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/WorkspaceViewModel"
+                    "$ref": "#/components/schemas/UserRoleAssignmentViewModel"
                   }
                 }
               }
@@ -75,38 +66,48 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
           }
-        }
+        },
+        "security": [
+          {
+            "OIDC": [
+              "permissions:read"
+            ],
+            "OAuth2": [
+              "permissions:read"
+            ],
+            "Bearer": [
+              "permissions:read"
+            ]
+          }
+        ]
       },
       "post": {
         "tags": [
-          "Workspace"
+          "UserRoleAssignment"
         ],
-        "operationId": "CreateWorkspace",
-        "parameters": [
-          {
-            "name": "X-Organization-Id",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "operationId": "CreateUserRoleAssignment",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateWorkspaceRequest"
+                "$ref": "#/components/schemas/CreateUserRoleAssignmentRequest"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateWorkspaceRequest"
+                "$ref": "#/components/schemas/CreateUserRoleAssignmentRequest"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateWorkspaceRequest"
+                "$ref": "#/components/schemas/CreateUserRoleAssignmentRequest"
               }
             }
           },
@@ -118,17 +119,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/WorkspaceViewModel"
+                  "$ref": "#/components/schemas/UserRoleAssignmentViewModel"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WorkspaceViewModel"
+                  "$ref": "#/components/schemas/UserRoleAssignmentViewModel"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WorkspaceViewModel"
+                  "$ref": "#/components/schemas/UserRoleAssignmentViewModel"
                 }
               }
             }
@@ -143,32 +144,25 @@
         "security": [
           {
             "OIDC": [
-              "workspaces:write"
+              "permissions:write"
             ],
             "OAuth2": [
-              "workspaces:write"
+              "permissions:write"
             ],
             "Bearer": [
-              "workspaces:write"
+              "permissions:write"
             ]
           }
         ]
       }
     },
-    "/workspaces/{id}": {
+    "/user-role-assignments/{id}": {
       "get": {
         "tags": [
-          "Workspace"
+          "UserRoleAssignment"
         ],
-        "operationId": "GetWorkspaceById",
+        "operationId": "GetUserRoleAssignmentById",
         "parameters": [
-          {
-            "name": "X-Organization-Id",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "id",
             "in": "path",
@@ -184,102 +178,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/WorkspaceViewModel"
+                  "$ref": "#/components/schemas/UserRoleAssignmentViewModel"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WorkspaceViewModel"
+                  "$ref": "#/components/schemas/UserRoleAssignmentViewModel"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WorkspaceViewModel"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "Workspace"
-        ],
-        "operationId": "UpdateWorkspace",
-        "parameters": [
-          {
-            "name": "X-Organization-Id",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateWorkspaceRequest"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateWorkspaceRequest"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateWorkspaceRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/WorkspaceViewModel"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WorkspaceViewModel"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WorkspaceViewModel"
+                  "$ref": "#/components/schemas/UserRoleAssignmentViewModel"
                 }
               }
             }
@@ -314,30 +223,23 @@
         "security": [
           {
             "OIDC": [
-              "workspaces:write"
+              "permissions:read"
             ],
             "OAuth2": [
-              "workspaces:write"
+              "permissions:read"
             ],
             "Bearer": [
-              "workspaces:write"
+              "permissions:read"
             ]
           }
         ]
       },
       "delete": {
         "tags": [
-          "Workspace"
+          "UserRoleAssignment"
         ],
-        "operationId": "DeleteWorkspace",
+        "operationId": "DeleteUserRoleAssignment",
         "parameters": [
-          {
-            "name": "X-Organization-Id",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "id",
             "in": "path",
@@ -353,17 +255,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/WorkspaceViewModel"
+                  "$ref": "#/components/schemas/UserRoleAssignmentViewModel"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WorkspaceViewModel"
+                  "$ref": "#/components/schemas/UserRoleAssignmentViewModel"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/WorkspaceViewModel"
+                  "$ref": "#/components/schemas/UserRoleAssignmentViewModel"
                 }
               }
             }
@@ -398,13 +300,13 @@
         "security": [
           {
             "OIDC": [
-              "workspaces:write"
+              "permissions:write"
             ],
             "OAuth2": [
-              "workspaces:write"
+              "permissions:write"
             ],
             "Bearer": [
-              "workspaces:write"
+              "permissions:write"
             ]
           }
         ]
@@ -413,19 +315,22 @@
   },
   "components": {
     "schemas": {
-      "CreateWorkspaceRequest": {
+      "CreateUserRoleAssignmentRequest": {
         "required": [
-          "name",
-          "description"
+          "userId",
+          "roleId",
+          "assignedScope"
         ],
         "type": "object",
         "properties": {
-          "name": {
+          "userId": {
             "type": "string"
           },
-          "description": {
-            "type": "string",
-            "nullable": true
+          "roleId": {
+            "type": "string"
+          },
+          "assignedScope": {
+            "type": "string"
           }
         }
       },
@@ -455,53 +360,29 @@
           }
         }
       },
-      "UpdateWorkspaceRequest": {
-        "required": [
-          "name",
-          "description"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "WorkspaceViewModel": {
+      "UserRoleAssignmentViewModel": {
         "required": [
           "id",
-          "organizationId",
-          "name",
-          "ingestKey",
-          "createdAt",
-          "updatedAt"
+          "userId",
+          "roleId",
+          "assignedScope",
+          "createdAt"
         ],
         "type": "object",
         "properties": {
           "id": {
             "type": "string"
           },
-          "organizationId": {
+          "userId": {
             "type": "string"
           },
-          "name": {
+          "roleId": {
             "type": "string"
           },
-          "description": {
-            "type": "string"
-          },
-          "ingestKey": {
+          "assignedScope": {
             "type": "string"
           },
           "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
             "type": "string",
             "format": "date-time"
           }
@@ -520,8 +401,8 @@
           "clientCredentials": {
             "tokenUrl": "https://localhost:20615/token",
             "scopes": {
-              "workspaces:read": "Read workspaces",
-              "workspaces:write": "Write workspaces"
+              "permissions:read": "Read permissions",
+              "permissions:write": "Write permissions"
             },
             "x-usePkce": "SHA-256"
           },
@@ -529,8 +410,8 @@
             "authorizationUrl": "https://localhost:20615/authorize",
             "tokenUrl": "https://localhost:20615/token",
             "scopes": {
-              "workspaces:read": "Read workspaces",
-              "workspaces:write": "Write workspaces"
+              "permissions:read": "Read permissions",
+              "permissions:write": "Write permissions"
             },
             "x-usePkce": "SHA-256"
           }
@@ -545,7 +426,7 @@
   },
   "tags": [
     {
-      "name": "Workspace"
+      "name": "UserRoleAssignment"
     }
   ]
 }

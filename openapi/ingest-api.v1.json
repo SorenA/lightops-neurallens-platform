@@ -16,25 +16,28 @@
       "Bearer": {
         "type": "http",
         "scheme": "Bearer",
-        "bearerFormat": "Json Web Token"
+        "bearerFormat": "JWT"
       },
       "OAuth2": {
         "type": "oauth2",
         "flows": {
           "clientCredentials": {
             "tokenUrl": "https://localhost:20615/token",
-            "scopes": { }
+            "scopes": { },
+            "x-usePkce": "SHA-256"
           },
           "authorizationCode": {
             "authorizationUrl": "https://localhost:20615/authorize",
             "tokenUrl": "https://localhost:20615/token",
-            "scopes": { }
+            "scopes": { },
+            "x-usePkce": "SHA-256"
           }
         }
       },
       "OIDC": {
         "type": "openIdConnect",
-        "openIdConnectUrl": "https://localhost:20615/.well-known/openid-configuration"
+        "openIdConnectUrl": "https://localhost:20615/.well-known/openid-configuration",
+        "x-usePkce": "SHA-256"
       }
     }
   }
