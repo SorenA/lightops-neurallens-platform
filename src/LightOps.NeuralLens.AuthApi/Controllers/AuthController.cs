@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using System.Security.Claims;
 using LightOps.NeuralLens.AuthApi.Domain.Services;
 using LightOps.NeuralLens.AuthApi.Requests;

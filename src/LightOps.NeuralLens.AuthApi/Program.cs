@@ -1,9 +1,10 @@
-using LightOps.NeuralLens.AuthApi;
 using LightOps.NeuralLens.AuthApi.Extensions;
+using LightOps.NeuralLens.AuthApi.Workers;
 using LightOps.NeuralLens.Component.ServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddHostedService<SeedWorker>();
+builder.Services.AddHostedService<ScopeMigrationWorker>();
+builder.Services.AddHostedService<ApplicationMigrationWorker>();
 builder.AddServiceDefaults();
 builder.AddRuntimeServices();
 builder.AddRuntimeOpenApiSpecification();
