@@ -11,6 +11,7 @@ var mongoAuthDb = mongo.AddDatabase("mongo-auth-db", "auth_db");
 var mongoEvaluationDb = mongo.AddDatabase("mongo-evaluation-db", "evaluation_db");
 var mongoObservabilityDb = mongo.AddDatabase("mongo-observability-db", "observability_db");
 var mongoOrganizationDb = mongo.AddDatabase("mongo-organization-db", "organization_db");
+var mongoPermissionDb = mongo.AddDatabase("mongo-permission-db", "permission_db");
 var mongoWorkspaceDb = mongo.AddDatabase("mongo-workspace-db", "workspace_db");
 
 var redis = builder.AddRedis("redis", 6379)
@@ -49,6 +50,7 @@ var evaluationApiClientSecret = builder.AddParameter("evaluation-api-client-secr
 var ingestApiClientSecret = builder.AddParameter("ingest-api-client-secret", true);
 var observabilityApiClientSecret = builder.AddParameter("observability-api-client-secret", true);
 var organizationApiClientSecret = builder.AddParameter("organization-api-client-secret", true);
+var permissionApiClientSecret = builder.AddParameter("permission-api-client-secret", true);
 var workspaceApiClientSecret = builder.AddParameter("workspace-api-client-secret", true);
 
 // Add API services
@@ -60,6 +62,7 @@ var authApi = builder
     .WithEnvironment("Services__ingest-api__ClientSecret", ingestApiClientSecret)
     .WithEnvironment("Services__observability-api__ClientSecret", observabilityApiClientSecret)
     .WithEnvironment("Services__organization-api__ClientSecret", organizationApiClientSecret)
+    .WithEnvironment("Services__permission-api__ClientSecret", permissionApiClientSecret)
     .WithEnvironment("Services__workspace-api__ClientSecret", workspaceApiClientSecret);
 var evaluationApi = builder
     .AddProject<Projects.LightOps_NeuralLens_EvaluationApi>("evaluation-api")
@@ -81,6 +84,11 @@ var organizationApi = builder
     .WithReference(mongoOrganizationDb).WaitFor(mongoOrganizationDb)
     .WithReference(authApi)
     .WithEnvironment("Services__auth-api__ClientSecret", organizationApiClientSecret);
+var permissionApi = builder
+    .AddProject<Projects.LightOps_NeuralLens_PermissionApi>("permission-api")
+    .WithReference(mongoPermissionDb).WaitFor(mongoPermissionDb)
+    .WithReference(authApi)
+    .WithEnvironment("Services__auth-api__ClientSecret", permissionApiClientSecret);
 var workspaceApi = builder
     .AddProject<Projects.LightOps_NeuralLens_WorkspaceApi>("workspace-api")
     .WithReference(mongoWorkspaceDb).WaitFor(mongoWorkspaceDb)
@@ -109,6 +117,7 @@ var documentationFrontend = builder
     .WithReference(ingestApi)
     .WithReference(observabilityApi)
     .WithReference(organizationApi)
+    .WithReference(permissionApi)
     .WithReference(workspaceApi);
 
 // Add sample runtimes
@@ -122,6 +131,7 @@ authApi
     .WithReference(ingestApi)
     .WithReference(observabilityApi)
     .WithReference(organizationApi)
+    .WithReference(permissionApi)
     .WithReference(workspaceApi)
     .WithReference(managementFrontend)
     .WithReference(documentationFrontend);

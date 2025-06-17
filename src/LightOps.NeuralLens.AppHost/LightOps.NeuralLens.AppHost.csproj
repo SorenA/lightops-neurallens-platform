@@ -17,6 +17,7 @@
     <ProjectReference Include="..\LightOps.NeuralLens.IngestApi\LightOps.NeuralLens.IngestApi.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.ObservabilityApi\LightOps.NeuralLens.ObservabilityApi.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.OrganizationApi\LightOps.NeuralLens.OrganizationApi.csproj" />
+    <ProjectReference Include="..\LightOps.NeuralLens.PermissionApi\LightOps.NeuralLens.PermissionApi.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.WorkspaceApi\LightOps.NeuralLens.WorkspaceApi.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.ClickHouseMigrationWorker\LightOps.NeuralLens.ClickHouseMigrationWorker.csproj" />
   </ItemGroup>

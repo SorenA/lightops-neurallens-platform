@@ -28,5 +28,9 @@ rem Auth API
 echo Downloading Auth OpenAPI specifications...
 curl --output openapi/auth-api.v1.json --url https://localhost:20615/openapi/v1.json
 
+rem Permission API
+echo Downloading Permission OpenAPI specifications...
+curl --output openapi/permission-api.v1.json --url https://localhost:20616/openapi/v1.json
+
 echo OpenAPI specifications updated.
 echo ---

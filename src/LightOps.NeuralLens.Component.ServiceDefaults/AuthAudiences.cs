@@ -7,5 +7,6 @@ public static class AuthAudiences
     public const string IngestApi = "ingest-api";
     public const string ObservabilityApi = "observability-api";
     public const string OrganizationApi = "organization-api";
+    public const string PermissionApi = "permission-api";
     public const string WorkspaceApi = "workspace-api";
 }

@@ -65,6 +65,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.AuthApi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.Component.ServiceDefaults.OpenApi", "src\LightOps.NeuralLens.Component.ServiceDefaults.OpenApi\LightOps.NeuralLens.Component.ServiceDefaults.OpenApi.csproj", "{3338B41E-34B7-4B6A-BB11-030AA7E3A44C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.AuthApi.Tests", "tests\LightOps.NeuralLens.AuthApi.Tests\LightOps.NeuralLens.AuthApi.Tests.csproj", "{2F335640-2A75-4AB4-B5CE-10E499A25180}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.PermissionApi", "src\LightOps.NeuralLens.PermissionApi\LightOps.NeuralLens.PermissionApi.csproj", "{72A6CE11-162E-44B4-A281-DB5E5D7F86C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.PermissionApi.Tests", "tests\LightOps.NeuralLens.PermissionApi.Tests\LightOps.NeuralLens.PermissionApi.Tests.csproj", "{31DFC61B-9EED-4B8E-B2CC-62D20C711AEE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -143,6 +149,18 @@ Global
 		{3338B41E-34B7-4B6A-BB11-030AA7E3A44C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3338B41E-34B7-4B6A-BB11-030AA7E3A44C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3338B41E-34B7-4B6A-BB11-030AA7E3A44C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F335640-2A75-4AB4-B5CE-10E499A25180}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F335640-2A75-4AB4-B5CE-10E499A25180}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F335640-2A75-4AB4-B5CE-10E499A25180}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F335640-2A75-4AB4-B5CE-10E499A25180}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72A6CE11-162E-44B4-A281-DB5E5D7F86C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72A6CE11-162E-44B4-A281-DB5E5D7F86C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72A6CE11-162E-44B4-A281-DB5E5D7F86C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72A6CE11-162E-44B4-A281-DB5E5D7F86C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31DFC61B-9EED-4B8E-B2CC-62D20C711AEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31DFC61B-9EED-4B8E-B2CC-62D20C711AEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31DFC61B-9EED-4B8E-B2CC-62D20C711AEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31DFC61B-9EED-4B8E-B2CC-62D20C711AEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -170,6 +188,9 @@ Global
 		{048B59FB-0CF0-437A-B019-4CD1935761D2} = {77117863-B62A-4DCC-9793-22E68E3A1BD1}
 		{EC698CAB-9220-4132-BDF4-2F30471F15C3} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{3338B41E-34B7-4B6A-BB11-030AA7E3A44C} = {AB981933-FCBD-4642-9609-4CB24683A4CA}
+		{2F335640-2A75-4AB4-B5CE-10E499A25180} = {F5DF224C-36B5-4D5F-AAC4-4866B562FC55}
+		{72A6CE11-162E-44B4-A281-DB5E5D7F86C1} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{31DFC61B-9EED-4B8E-B2CC-62D20C711AEE} = {F5DF224C-36B5-4D5F-AAC4-4866B562FC55}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1EAE1BC1-E411-46F1-8594-B6D92E0CF8AE}
