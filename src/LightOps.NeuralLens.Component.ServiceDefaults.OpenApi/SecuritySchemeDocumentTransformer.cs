@@ -45,8 +45,8 @@ public class SecuritySchemeDocumentTransformer : IOpenApiDocumentTransformer
                 {
                     AuthorizationCode = new OpenApiOAuthFlow
                     {
-                        AuthorizationUrl = new Uri($"{_authIssuer}/authorize", UriKind.RelativeOrAbsolute),
-                        TokenUrl = new Uri($"{_authIssuer}/token", UriKind.RelativeOrAbsolute),
+                        AuthorizationUrl = new Uri($"{_authIssuer}/v1/auth/authorize", UriKind.RelativeOrAbsolute),
+                        TokenUrl = new Uri($"{_authIssuer}/v1/auth/token", UriKind.RelativeOrAbsolute),
                         Scopes = _authScopes,
                         Extensions = new Dictionary<string, IOpenApiExtension>()
                         {
@@ -55,7 +55,7 @@ public class SecuritySchemeDocumentTransformer : IOpenApiDocumentTransformer
                     },
                     ClientCredentials = new OpenApiOAuthFlow
                     {
-                        TokenUrl = new Uri($"{_authIssuer}/token", UriKind.RelativeOrAbsolute),
+                        TokenUrl = new Uri($"{_authIssuer}/v1/auth/token", UriKind.RelativeOrAbsolute),
                         Scopes = _authScopes,
                         Extensions = new Dictionary<string, IOpenApiExtension>()
                         {

@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\samples\Sample.SemanticKernel.WebApi\Sample.SemanticKernel.WebApi.csproj" />
+    <ProjectReference Include="..\LightOps.NeuralLens.ApiGateway\LightOps.NeuralLens.ApiGateway.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.AuthApi\LightOps.NeuralLens.AuthApi.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.EvaluationApi\LightOps.NeuralLens.EvaluationApi.csproj" />
     <ProjectReference Include="..\LightOps.NeuralLens.DocumentationFrontend\LightOps.NeuralLens.DocumentationFrontend.csproj" />

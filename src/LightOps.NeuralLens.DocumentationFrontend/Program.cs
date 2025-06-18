@@ -13,26 +13,26 @@ app.MapDefaultEndpoints();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    var authApiBase = builder.Configuration.GetValue<string>("Services:auth-api:Https:0");
-    var evaluationApiBase = builder.Configuration.GetValue<string>("Services:evaluation-api:Https:0");
-    var ingestApiBase = builder.Configuration.GetValue<string>("Services:ingest-api:Https:0");
-    var observabilityApiBase = builder.Configuration.GetValue<string>("Services:observability-api:Https:0");
-    var organizationApiBase = builder.Configuration.GetValue<string>("Services:organization-api:Https:0");
-    var permissionApiBase = builder.Configuration.GetValue<string>("Services:permission-api:Https:0");
-    var workspaceApiBase = builder.Configuration.GetValue<string>("Services:workspace-api:Https:0");
+    var apiGatewayBase = builder.Configuration.GetValue<string>("Services:api-gateway:Https:0")!;
 
     _ = app.MapScalarApiReference("/api", options =>
     {
-        options.AddDocument("Auth API V1", routePattern: $"{authApiBase}/openapi/v1.json");
-        options.AddDocument("Evaluation API V1", routePattern: $"{evaluationApiBase}/openapi/v1.json");
-        options.AddDocument("Ingest API V1", routePattern: $"{ingestApiBase}/openapi/v1.json");
-        options.AddDocument("Observability API V1", routePattern: $"{observabilityApiBase}/openapi/v1.json");
-        options.AddDocument("Organization API V1", routePattern: $"{organizationApiBase}/openapi/v1.json");
-        options.AddDocument("Permission API V1", routePattern: $"{permissionApiBase}/openapi/v1.json");
-        options.AddDocument("Workspace API V1", routePattern: $"{workspaceApiBase}/openapi/v1.json");
+        options.AddDocument("Auth API V1", routePattern: $"{apiGatewayBase}/openapi/auth-api/v1.json");
+        options.AddDocument("Evaluation API V1", routePattern: $"{apiGatewayBase}/openapi/evaluation-api/v1.json");
+        options.AddDocument("Ingest API V1", routePattern: $"{apiGatewayBase}/openapi/ingest-api/v1.json");
+        options.AddDocument("Observability API V1", routePattern: $"{apiGatewayBase}/openapi/observability-api/v1.json");
+        options.AddDocument("Organization API V1", routePattern: $"{apiGatewayBase}/openapi/organization-api/v1.json");
+        options.AddDocument("Permission API V1", routePattern: $"{apiGatewayBase}/openapi/permission-api/v1.json");
+        options.AddDocument("Workspace API V1", routePattern: $"{apiGatewayBase}/openapi/workspace-api/v1.json");
 
         options.AddPreferredSecuritySchemes(["OAuth2"]);
         options.WithPersistentAuthentication();
+
+        // Override servers
+        options.Servers = new List<ScalarServer>()
+        {
+            new(apiGatewayBase, "API Gateway")
+        };
     });
 }
 

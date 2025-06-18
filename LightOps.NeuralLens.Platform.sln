@@ -71,6 +71,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.Permiss
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.PermissionApi.Tests", "tests\LightOps.NeuralLens.PermissionApi.Tests\LightOps.NeuralLens.PermissionApi.Tests.csproj", "{31DFC61B-9EED-4B8E-B2CC-62D20C711AEE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightOps.NeuralLens.ApiGateway", "src\LightOps.NeuralLens.ApiGateway\LightOps.NeuralLens.ApiGateway.csproj", "{2CBB1282-5250-452E-8EBA-CBDD2B3E94B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -161,6 +163,10 @@ Global
 		{31DFC61B-9EED-4B8E-B2CC-62D20C711AEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31DFC61B-9EED-4B8E-B2CC-62D20C711AEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31DFC61B-9EED-4B8E-B2CC-62D20C711AEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CBB1282-5250-452E-8EBA-CBDD2B3E94B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CBB1282-5250-452E-8EBA-CBDD2B3E94B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CBB1282-5250-452E-8EBA-CBDD2B3E94B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CBB1282-5250-452E-8EBA-CBDD2B3E94B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -191,6 +197,7 @@ Global
 		{2F335640-2A75-4AB4-B5CE-10E499A25180} = {F5DF224C-36B5-4D5F-AAC4-4866B562FC55}
 		{72A6CE11-162E-44B4-A281-DB5E5D7F86C1} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{31DFC61B-9EED-4B8E-B2CC-62D20C711AEE} = {F5DF224C-36B5-4D5F-AAC4-4866B562FC55}
+		{2CBB1282-5250-452E-8EBA-CBDD2B3E94B1} = {77117863-B62A-4DCC-9793-22E68E3A1BD1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1EAE1BC1-E411-46F1-8594-B6D92E0CF8AE}

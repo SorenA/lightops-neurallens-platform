@@ -42,7 +42,8 @@ var clickHouseUi = builder
 // Add worker services
 var clickhouseMigrationWorker = builder
     .AddProject<Projects.LightOps_NeuralLens_ClickHouseMigrationWorker>("clickhouse-migration-worker")
-    .WithReference(clickhouse).WaitFor(clickhouse);
+    .WithReference(clickhouse).WaitFor(clickhouse)
+    .WithExternalHttpEndpoints();
 
 // Create auth encryption key and client secrets
 var authApiClientSecret = builder.AddParameter("auth-api-client-secret", true);
@@ -53,10 +54,16 @@ var organizationApiClientSecret = builder.AddParameter("organization-api-client-
 var permissionApiClientSecret = builder.AddParameter("permission-api-client-secret", true);
 var workspaceApiClientSecret = builder.AddParameter("workspace-api-client-secret", true);
 
+// Add API gateway
+var apiGateway = builder
+    .AddProject<Projects.LightOps_NeuralLens_ApiGateway>("api-gateway")
+    .WithExternalHttpEndpoints();
+
 // Add API services
 var authApi = builder
     .AddProject<Projects.LightOps_NeuralLens_AuthApi>("auth-api")
     .WithReference(mongoAuthDb).WaitFor(mongoAuthDb)
+    .WithReference(apiGateway)
     .WithEnvironment("Services__auth-api__ClientSecret", authApiClientSecret)
     .WithEnvironment("Services__evaluation-api__ClientSecret", evaluationApiClientSecret)
     .WithEnvironment("Services__ingest-api__ClientSecret", ingestApiClientSecret)
@@ -67,33 +74,33 @@ var authApi = builder
 var evaluationApi = builder
     .AddProject<Projects.LightOps_NeuralLens_EvaluationApi>("evaluation-api")
     .WithReference(mongoEvaluationDb).WaitFor(mongoEvaluationDb)
-    .WithReference(authApi)
-    .WithEnvironment("Services__auth-api__ClientSecret", evaluationApiClientSecret);
+    .WithReference(apiGateway)
+    .WithEnvironment("AuthManagedIdentity__ClientSecret", evaluationApiClientSecret);
 var ingestApi = builder
     .AddProject<Projects.LightOps_NeuralLens_IngestApi>("ingest-api")
     .WithReference(clickhouseObservabilityDb).WaitFor(clickhouseObservabilityDb)
-    .WithReference(authApi)
-    .WithEnvironment("Services__auth-api__ClientSecret", ingestApiClientSecret);
+    .WithReference(apiGateway)
+    .WithEnvironment("AuthManagedIdentity__ClientSecret", ingestApiClientSecret);
 var observabilityApi = builder
     .AddProject<Projects.LightOps_NeuralLens_ObservabilityApi>("observability-api")
     .WithReference(mongoObservabilityDb).WaitFor(mongoObservabilityDb)
-    .WithReference(authApi)
-    .WithEnvironment("Services__auth-api__ClientSecret", observabilityApiClientSecret);
+    .WithReference(apiGateway)
+    .WithEnvironment("AuthManagedIdentity__ClientSecret", observabilityApiClientSecret);
 var organizationApi = builder
     .AddProject<Projects.LightOps_NeuralLens_OrganizationApi>("organization-api")
     .WithReference(mongoOrganizationDb).WaitFor(mongoOrganizationDb)
-    .WithReference(authApi)
-    .WithEnvironment("Services__auth-api__ClientSecret", organizationApiClientSecret);
+    .WithReference(apiGateway)
+    .WithEnvironment("AuthManagedIdentity__ClientSecret", organizationApiClientSecret);
 var permissionApi = builder
     .AddProject<Projects.LightOps_NeuralLens_PermissionApi>("permission-api")
     .WithReference(mongoPermissionDb).WaitFor(mongoPermissionDb)
-    .WithReference(authApi)
-    .WithEnvironment("Services__auth-api__ClientSecret", permissionApiClientSecret);
+    .WithReference(apiGateway)
+    .WithEnvironment("AuthManagedIdentity__ClientSecret", permissionApiClientSecret);
 var workspaceApi = builder
     .AddProject<Projects.LightOps_NeuralLens_WorkspaceApi>("workspace-api")
     .WithReference(mongoWorkspaceDb).WaitFor(mongoWorkspaceDb)
-    .WithReference(authApi)
-    .WithEnvironment("Services__auth-api__ClientSecret", workspaceApiClientSecret);
+    .WithReference(apiGateway)
+    .WithEnvironment("AuthManagedIdentity__ClientSecret", workspaceApiClientSecret);
 
 // Add frontend services
 var managementFrontend = builder.AddTurboRepoProject(
@@ -112,13 +119,7 @@ var managementFrontend = builder.AddTurboRepoProject(
 var documentationFrontend = builder
     .AddProject<Projects.LightOps_NeuralLens_DocumentationFrontend>("documentation-frontend")
     .WithExternalHttpEndpoints()
-    .WithReference(authApi)
-    .WithReference(evaluationApi)
-    .WithReference(ingestApi)
-    .WithReference(observabilityApi)
-    .WithReference(organizationApi)
-    .WithReference(permissionApi)
-    .WithReference(workspaceApi);
+    .WithReference(apiGateway);
 
 // Add sample runtimes
 builder
@@ -127,13 +128,17 @@ builder
 
 // Add references to Auth API
 authApi
+    .WithReference(managementFrontend)
+    .WithReference(documentationFrontend);
+
+// Add references to API Gateway
+apiGateway
+    .WithReference(authApi)
     .WithReference(evaluationApi)
     .WithReference(ingestApi)
     .WithReference(observabilityApi)
     .WithReference(organizationApi)
     .WithReference(permissionApi)
-    .WithReference(workspaceApi)
-    .WithReference(managementFrontend)
-    .WithReference(documentationFrontend);
+    .WithReference(workspaceApi);
 
 builder.Build().Run();

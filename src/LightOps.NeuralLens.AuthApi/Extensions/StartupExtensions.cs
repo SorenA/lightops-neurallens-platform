@@ -31,6 +31,8 @@ namespace LightOps.NeuralLens.AuthApi.Extensions
         /// <param name="builder">The application builder to use for registration.</param>
         public static void AddRuntimeAuth(this IHostApplicationBuilder builder)
         {
+            var apiGatewayBase = builder.Configuration.GetValue<string>("Services:api-gateway:Https:0")!;
+
             builder.Services.AddOpenIddict()
                 .AddCore(options =>
                 {
@@ -57,7 +59,7 @@ namespace LightOps.NeuralLens.AuthApi.Extensions
                             o.SetClientId(builder.Configuration.GetValue<string>("AuthProviders:GitHub:ClientId")!)
                                 .SetClientSecret(
                                     builder.Configuration.GetValue<string>("AuthProviders:GitHub:ClientSecret")!)
-                                .SetRedirectUri("callback/login/github");
+                                .SetRedirectUri($"{apiGatewayBase}/v1/auth/callback/login/github");
                         });
                 })
                 .AddServer(options =>
@@ -66,11 +68,13 @@ namespace LightOps.NeuralLens.AuthApi.Extensions
                         .UseReferenceRefreshTokens();
 
                     // Enable the authorization, introspection and token endpoints
-                    options.SetAuthorizationEndpointUris("authorize")
-                        .SetIntrospectionEndpointUris("introspect")
-                        .SetTokenEndpointUris("token")
-                        .SetUserInfoEndpointUris("userinfo")
-                        .SetEndSessionEndpointUris("endsession");
+                    options.SetIssuer($"{apiGatewayBase}/v1/auth")
+                        .SetJsonWebKeySetEndpointUris($"{apiGatewayBase}/v1/auth/jwks")
+                        .SetAuthorizationEndpointUris($"{apiGatewayBase}/v1/auth/authorize")
+                        .SetIntrospectionEndpointUris($"{apiGatewayBase}/v1/auth/callback/login/github")
+                        .SetTokenEndpointUris($"{apiGatewayBase}/v1/auth/token")
+                        .SetUserInfoEndpointUris($"{apiGatewayBase}/v1/auth/userinfo")
+                        .SetEndSessionEndpointUris($"{apiGatewayBase}/v1/auth/endsession");
 
                     // Enable authorization code and refresh token flows
                     options.AllowAuthorizationCodeFlow()

@@ -43,9 +43,9 @@ namespace LightOps.NeuralLens.OrganizationApi.Extensions
         /// <param name="builder">The application builder to use for registration.</param>
         public static void AddRuntimeAuth(this IHostApplicationBuilder builder)
         {
-            var authIssuer = builder.Configuration.GetValue<string>("Services:auth-api:Https:0")!;
-            var authClientId = builder.Configuration.GetValue<string>("Services:auth-api:ClientId")!;
-            var authClientSecret = builder.Configuration.GetValue<string>("Services:auth-api:ClientSecret")!;
+            var authIssuer = builder.Configuration.GetValue<string>("Services:api-gateway:Https:0")!;
+            var authClientId = builder.Configuration.GetValue<string>("AuthManagedIdentity:ClientId")!;
+            var authClientSecret = builder.Configuration.GetValue<string>("AuthManagedIdentity:ClientSecret")!;
 
             builder.Services.AddOpenIddict()
                 .AddClient(options =>
@@ -112,7 +112,7 @@ namespace LightOps.NeuralLens.OrganizationApi.Extensions
                         "Organization API",
                         "A Web API for organizations as part of the LightOps NeuralLens Platform."));
                 options.AddDocumentTransformer(new SecuritySchemeDocumentTransformer()
-                    .WithAuthIssuer(builder.Configuration.GetValue<string>("Services:auth-api:Https:0")!)
+                    .WithAuthIssuer(builder.Configuration.GetValue<string>("Services:api-gateway:Https:0")!)
                     .AddScope(AuthScopes.Organizations.Read, "Read organizations")
                     .AddScope(AuthScopes.Organizations.Write, "Write organizations"));
                 options.AddOperationTransformer<SecuritySchemeOperationTransformer>();

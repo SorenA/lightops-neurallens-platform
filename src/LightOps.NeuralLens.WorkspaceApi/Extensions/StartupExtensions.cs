@@ -44,9 +44,9 @@ namespace LightOps.NeuralLens.WorkspaceApi.Extensions
         /// <param name="builder">The application builder to use for registration.</param>
         public static void AddRuntimeAuth(this IHostApplicationBuilder builder)
         {
-            var authIssuer = builder.Configuration.GetValue<string>("Services:auth-api:Https:0")!;
-            var authClientId = builder.Configuration.GetValue<string>("Services:auth-api:ClientId")!;
-            var authClientSecret = builder.Configuration.GetValue<string>("Services:auth-api:ClientSecret")!;
+            var authIssuer = builder.Configuration.GetValue<string>("Services:api-gateway:Https:0")!;
+            var authClientId = builder.Configuration.GetValue<string>("AuthManagedIdentity:ClientId")!;
+            var authClientSecret = builder.Configuration.GetValue<string>("AuthManagedIdentity:ClientSecret")!;
 
             builder.Services.AddOpenIddict()
                 .AddClient(options =>
@@ -113,7 +113,7 @@ namespace LightOps.NeuralLens.WorkspaceApi.Extensions
                         "Workspace API",
                         "A Web API for workspaces as part of the LightOps NeuralLens Platform."));
                 options.AddDocumentTransformer(new SecuritySchemeDocumentTransformer()
-                    .WithAuthIssuer(builder.Configuration.GetValue<string>("Services:auth-api:Https:0")!)
+                    .WithAuthIssuer(builder.Configuration.GetValue<string>("Services:api-gateway:Https:0")!)
                     .AddScope(AuthScopes.Workspaces.Read, "Read workspaces")
                     .AddScope(AuthScopes.Workspaces.Write, "Write workspaces"));
                 options.AddOperationTransformer<SecuritySchemeOperationTransformer>();
