@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Asp.Versioning;
 using LightOps.NeuralLens.AuthApi.Domain.Services;
 using LightOps.NeuralLens.AuthApi.Requests;
 using LightOps.NeuralLens.Component.ServiceDefaults;
@@ -14,8 +15,10 @@ using static OpenIddict.Abstractions.OpenIddictConstants;
 
 namespace LightOps.NeuralLens.AuthApi.Controllers;
 
+[ApiVersion(1.0)]
 [ApiController]
-[Route("")]
+[Tags("Auth")]
+[Route("v{version:apiVersion}/auth")]
 public class AuthController(
     ApplicationUserService applicationUserService,
     IOpenIddictScopeManager scopeManager)

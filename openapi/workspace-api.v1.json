@@ -11,10 +11,10 @@
     }
   ],
   "paths": {
-    "/workspaces": {
+    "/v1/workspaces": {
       "get": {
         "tags": [
-          "Workspace"
+          "Workspaces"
         ],
         "operationId": "GetWorkspaces",
         "parameters": [
@@ -80,7 +80,7 @@
       },
       "post": {
         "tags": [
-          "Workspace"
+          "Workspaces"
         ],
         "operationId": "CreateWorkspace",
         "parameters": [
@@ -155,10 +155,10 @@
         ]
       }
     },
-    "/workspaces/{id}": {
+    "/v1/workspaces/{id}": {
       "get": {
         "tags": [
-          "Workspace"
+          "Workspaces"
         ],
         "operationId": "GetWorkspaceById",
         "parameters": [
@@ -223,7 +223,7 @@
       },
       "patch": {
         "tags": [
-          "Workspace"
+          "Workspaces"
         ],
         "operationId": "UpdateWorkspace",
         "parameters": [
@@ -327,7 +327,7 @@
       },
       "delete": {
         "tags": [
-          "Workspace"
+          "Workspaces"
         ],
         "operationId": "DeleteWorkspace",
         "parameters": [
@@ -545,7 +545,7 @@
   },
   "tags": [
     {
-      "name": "Workspace"
+      "name": "Workspaces"
     }
   ]
 }

@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using LightOps.Mapping.Api.Services;
 using LightOps.NeuralLens.Component.ServiceDefaults;
 using LightOps.NeuralLens.PermissionApi.Domain.Models;
@@ -9,8 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LightOps.NeuralLens.PermissionApi.Controllers;
 
+[ApiVersion(1.0)]
 [ApiController]
-[Route("user-role-assignments")]
+[Tags("Permissions")]
+[Route("v{version:apiVersion}/permissions/user-role-assignments")]
 [Authorize(Policy = AuthScopes.Permissions.Read)]
 public class UserRoleAssignmentController(
     IMappingService mappingService,

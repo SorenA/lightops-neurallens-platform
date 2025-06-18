@@ -9,6 +9,7 @@ builder.AddServiceDefaults();
 builder.AddRuntimeServices();
 builder.AddRuntimeOpenApiSpecification();
 builder.AddRuntimeAuth();
+builder.AddRuntimeApiVersioning();
 
 // Add databases
 builder.AddMongoDBClient(connectionName: "mongo-workspace-db");

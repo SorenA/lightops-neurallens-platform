@@ -6,6 +6,7 @@ builder.AddServiceDefaults();
 builder.AddRuntimeServices();
 builder.AddRuntimeOpenApiSpecification();
 builder.AddRuntimeAuth();
+builder.AddRuntimeApiVersioning();
 
 // Add services to the container.
 builder.Services.AddControllers();

@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using LightOps.Mapping.Api.Services;
 using LightOps.NeuralLens.Component.ServiceDefaults;
 using LightOps.NeuralLens.OrganizationApi.Domain.Models;
@@ -9,8 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LightOps.NeuralLens.OrganizationApi.Controllers;
 
+[ApiVersion(1.0)]
 [ApiController]
-[Route("organizations")]
+[Tags("Organizations")]
+[Route("v{version:apiVersion}/organizations")]
 [Authorize(Policy = AuthScopes.Organizations.Read)]
 public class OrganizationController(
     IMappingService mappingService,

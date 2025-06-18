@@ -123,5 +123,24 @@ namespace LightOps.NeuralLens.PermissionApi.Extensions
         {
             app.MapOpenApi();
         }
+
+        /// <summary>
+        /// Add API versioning to the application builder.
+        /// </summary>
+        /// <param name="builder">The application builder to use for registration.</param>
+        public static void AddRuntimeApiVersioning(this IHostApplicationBuilder builder)
+        {
+            builder.Services.AddApiVersioning(
+                    options =>
+                    {
+                        options.ReportApiVersions = true;
+                    })
+                .AddApiExplorer(
+                    options =>
+                    {
+                        options.GroupNameFormat = "'v'VVV";
+                        options.SubstituteApiVersionInUrl = true;
+                    });
+        }
     }
 }

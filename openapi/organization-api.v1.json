@@ -11,10 +11,10 @@
     }
   ],
   "paths": {
-    "/organizations": {
+    "/v1/organizations": {
       "get": {
         "tags": [
-          "Organization"
+          "Organizations"
         ],
         "operationId": "GetOrganizations",
         "responses": {
@@ -71,7 +71,7 @@
       },
       "post": {
         "tags": [
-          "Organization"
+          "Organizations"
         ],
         "operationId": "CreateOrganization",
         "requestBody": {
@@ -137,10 +137,10 @@
         ]
       }
     },
-    "/organizations/{id}": {
+    "/v1/organizations/{id}": {
       "get": {
         "tags": [
-          "Organization"
+          "Organizations"
         ],
         "operationId": "GetOrganizationById",
         "parameters": [
@@ -198,7 +198,7 @@
       },
       "patch": {
         "tags": [
-          "Organization"
+          "Organizations"
         ],
         "operationId": "UpdateOrganization",
         "parameters": [
@@ -295,7 +295,7 @@
       },
       "delete": {
         "tags": [
-          "Organization"
+          "Organizations"
         ],
         "operationId": "DeleteOrganization",
         "parameters": [
@@ -498,7 +498,7 @@
   },
   "tags": [
     {
-      "name": "Organization"
+      "name": "Organizations"
     }
   ]
 }

@@ -11,10 +11,10 @@
     }
   ],
   "paths": {
-    "/user-role-assignments": {
+    "/v1/permissions/user-role-assignments": {
       "get": {
         "tags": [
-          "UserRoleAssignment"
+          "Permissions"
         ],
         "operationId": "GetByAssignedScope",
         "responses": {
@@ -90,7 +90,7 @@
       },
       "post": {
         "tags": [
-          "UserRoleAssignment"
+          "Permissions"
         ],
         "operationId": "CreateUserRoleAssignment",
         "requestBody": {
@@ -156,10 +156,10 @@
         ]
       }
     },
-    "/user-role-assignments/{id}": {
+    "/v1/permissions/user-role-assignments/{id}": {
       "get": {
         "tags": [
-          "UserRoleAssignment"
+          "Permissions"
         ],
         "operationId": "GetUserRoleAssignmentById",
         "parameters": [
@@ -236,7 +236,7 @@
       },
       "delete": {
         "tags": [
-          "UserRoleAssignment"
+          "Permissions"
         ],
         "operationId": "DeleteUserRoleAssignment",
         "parameters": [
@@ -426,7 +426,7 @@
   },
   "tags": [
     {
-      "name": "UserRoleAssignment"
+      "name": "Permissions"
     }
   ]
 }

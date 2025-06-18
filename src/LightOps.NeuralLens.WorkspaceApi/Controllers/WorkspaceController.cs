@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using LightOps.Mapping.Api.Services;
 using LightOps.NeuralLens.Component.ServiceDefaults;
 using LightOps.NeuralLens.WorkspaceApi.Domain.Constants;
@@ -10,8 +11,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LightOps.NeuralLens.WorkspaceApi.Controllers;
 
+[ApiVersion(1.0)]
 [ApiController]
-[Route("workspaces")]
+[Tags("Workspaces")]
+[Route("v{version:apiVersion}/workspaces")]
 [Authorize(Policy = AuthScopes.Workspaces.Read)]
 public class WorkspaceController(
     ILogger<WorkspaceController> logger,

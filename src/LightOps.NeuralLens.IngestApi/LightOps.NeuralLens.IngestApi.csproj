@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />
+    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
     <PackageReference Include="ClickHouse.Client" Version="7.14.0" />
     <PackageReference Include="ClickHouse.Facades" Version="2.5.11" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />

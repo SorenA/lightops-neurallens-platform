@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/authorize": {
+    "/v1/auth/authorize": {
       "get": {
         "tags": [
           "Auth"
@@ -115,7 +115,7 @@
         }
       }
     },
-    "/callback/login/github": {
+    "/v1/auth/callback/login/github": {
       "get": {
         "tags": [
           "Auth"
@@ -179,7 +179,7 @@
         }
       }
     },
-    "/endsession": {
+    "/v1/auth/endsession": {
       "get": {
         "tags": [
           "Auth"

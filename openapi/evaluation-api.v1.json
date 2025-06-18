@@ -11,10 +11,10 @@
     }
   ],
   "paths": {
-    "/evaluations": {
+    "/v1/evaluations": {
       "get": {
         "tags": [
-          "Evaluation"
+          "Evaluations"
         ],
         "operationId": "GetEvaluations",
         "responses": {
@@ -57,7 +57,7 @@
   },
   "tags": [
     {
-      "name": "Evaluation"
+      "name": "Evaluations"
     }
   ]
 }

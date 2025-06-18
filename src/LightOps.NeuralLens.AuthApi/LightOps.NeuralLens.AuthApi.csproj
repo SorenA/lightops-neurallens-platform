@@ -8,6 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />
+    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
     <PackageReference Include="Aspire.MongoDB.Driver.v3" Version="9.3.1" />
     <PackageReference Include="OpenIddict.Client.AspNetCore" Version="6.4.0" />
     <PackageReference Include="OpenIddict.Client.WebIntegration" Version="6.4.0" />

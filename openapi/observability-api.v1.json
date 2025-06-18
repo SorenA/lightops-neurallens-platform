@@ -11,10 +11,10 @@
     }
   ],
   "paths": {
-    "/traces": {
+    "/v1/traces": {
       "get": {
         "tags": [
-          "Trace"
+          "Traces"
         ],
         "operationId": "GetTraces",
         "responses": {
@@ -57,7 +57,7 @@
   },
   "tags": [
     {
-      "name": "Trace"
+      "name": "Traces"
     }
   ]
 }
