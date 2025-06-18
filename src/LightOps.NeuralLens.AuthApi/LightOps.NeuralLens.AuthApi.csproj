@@ -8,13 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.MongoDB.Driver.v3" Version="9.3.0" />
-    <PackageReference Include="OpenIddict.Client.AspNetCore" Version="6.3.0" />
-    <PackageReference Include="OpenIddict.Client.WebIntegration" Version="6.3.0" />
-    <PackageReference Include="OpenIddict.Server.AspNetCore" Version="6.3.0" />
-    <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="6.3.0" />
-    <PackageReference Include="OpenIddict.Validation.ServerIntegration" Version="6.3.0" />
-    <PackageReference Include="OpenIddict.MongoDb" Version="6.3.0" />
+    <PackageReference Include="Aspire.MongoDB.Driver.v3" Version="9.3.1" />
+    <PackageReference Include="OpenIddict.Client.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="OpenIddict.Client.WebIntegration" Version="6.4.0" />
+    <PackageReference Include="OpenIddict.Server.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="OpenIddict.Validation.ServerIntegration" Version="6.4.0" />
+    <PackageReference Include="OpenIddict.MongoDb" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.OpenApi;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 namespace LightOps.NeuralLens.Component.ServiceDefaults.OpenApi;

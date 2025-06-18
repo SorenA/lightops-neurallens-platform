@@ -13,11 +13,11 @@
     <PackageReference Include="ClickHouse.Facades" Version="2.5.11" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
     <PackageReference Include="LightOps.Mapping" Version="0.3.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Grpc.JsonTranscoding" Version="9.0.5" />
-    <PackageReference Include="Microsoft.AspNetCore.Grpc.Swagger" Version="0.9.5" />
-    <PackageReference Include="OpenIddict.Client.SystemNetHttp" Version="6.3.0" />
-    <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="6.3.0" />
-    <PackageReference Include="OpenIddict.Validation.SystemNetHttp" Version="6.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Grpc.JsonTranscoding" Version="9.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Grpc.Swagger" Version="0.9.6" />
+    <PackageReference Include="OpenIddict.Client.SystemNetHttp" Version="6.4.0" />
+    <PackageReference Include="OpenIddict.Validation.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="OpenIddict.Validation.SystemNetHttp" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
