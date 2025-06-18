@@ -100,7 +100,7 @@ var managementFrontend = builder.AddTurboRepoProject(
         "management-frontend",
         "../LightOps.NeuralLens.Frontends/apps/management",
         scriptName: "dev")
-    .WithHttpsEndpoint(20601, env: "PORT")
+    .WithHttpsEndpoint(20603, env: "PORT")
     .WithExternalHttpEndpoints()
     .WithEnvironment("NODE_TLS_REJECT_UNAUTHORIZED", builder.Environment.IsDevelopment() ? "0" : "1")
     .WithEnvironment("NEXT_PUBLIC_AUTH_API_URL", authApi.GetEndpoint("https"))
