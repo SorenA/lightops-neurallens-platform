@@ -54,8 +54,8 @@ export async function refreshAccessToken(): Promise<IronSession<AccessTokenSessi
 
 // #region Client configuration
 export const clientConfig = {
-  url: process.env.NEXT_PUBLIC_AUTH_API_URL,
-  audience: process.env.NEXT_PUBLIC_AUTH_API_URL,
+  url: process.env.NEXT_PUBLIC_API_GATEWAY_URL,
+  audience: process.env.NEXT_PUBLIC_API_GATEWAY_URL,
   clientId: process.env.NEXT_PUBLIC_AUTH_CLIENT_ID,
   scope: 'openid profile offline_access'
     + ' organizations:read organizations:write'

@@ -110,11 +110,7 @@ var managementFrontend = builder.AddTurboRepoProject(
     .WithHttpsEndpoint(20603, env: "PORT")
     .WithExternalHttpEndpoints()
     .WithEnvironment("NODE_TLS_REJECT_UNAUTHORIZED", builder.Environment.IsDevelopment() ? "0" : "1")
-    .WithEnvironment("NEXT_PUBLIC_AUTH_API_URL", authApi.GetEndpoint("https"))
-    .WithEnvironment("NEXT_PUBLIC_EVALUATION_API_URL", evaluationApi.GetEndpoint("https"))
-    .WithEnvironment("NEXT_PUBLIC_OBSERVABILITY_API_URL", observabilityApi.GetEndpoint("https"))
-    .WithEnvironment("NEXT_PUBLIC_ORGANIZATION_API_URL", organizationApi.GetEndpoint("https"))
-    .WithEnvironment("NEXT_PUBLIC_WORKSPACE_API_URL", workspaceApi.GetEndpoint("https"));
+    .WithEnvironment("NEXT_PUBLIC_API_GATEWAY_URL", apiGateway.GetEndpoint("https"));
 
 var documentationFrontend = builder
     .AddProject<Projects.LightOps_NeuralLens_DocumentationFrontend>("documentation-frontend")

@@ -74,7 +74,7 @@ namespace LightOps.NeuralLens.AuthApi.Extensions
                         .SetAuthorizationEndpointUris($"{apiGatewayBase}/v1/auth/authorize", "/v1/auth/authorize")
                         .SetIntrospectionEndpointUris($"{apiGatewayBase}/v1/auth/callback/login/github", "/v1/auth/callback/login/github")
                         .SetTokenEndpointUris($"{apiGatewayBase}/v1/auth/token", "/v1/auth/token")
-                        .SetUserInfoEndpointUris($"{apiGatewayBase}/v1/auth/userinfo", "/v1/token/userinfo")
+                        .SetUserInfoEndpointUris($"{apiGatewayBase}/v1/auth/userinfo", "/v1/auth/userinfo")
                         .SetEndSessionEndpointUris($"{apiGatewayBase}/v1/auth/endsession", "/v1/auth/endsession");
 
                     // Enable authorization code and refresh token flows
