@@ -31,9 +31,6 @@ public class ApplicationMigrationWorker(
                 Permissions.ResponseTypes.Token,
                 Permissions.Endpoints.Token,
                 Permissions.Endpoints.Introspection,
-
-                // Scopes
-                Permissions.Prefixes.Scope + AuthScopes.Workspaces.Read,
             },
         });
 
@@ -79,9 +76,6 @@ public class ApplicationMigrationWorker(
                 Permissions.ResponseTypes.Token,
                 Permissions.Endpoints.Token,
                 Permissions.Endpoints.Introspection,
-
-                // Scopes
-                Permissions.Prefixes.Scope + AuthScopes.Organizations.Read,
             },
         });
     }
